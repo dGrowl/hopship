@@ -5,16 +5,13 @@ interface SearchFormProps {
   id: string | null
 }
 
-const platforms = [
-  "Twitch",
-  "Twitter",
-]
+const platforms = ['Twitch', 'Twitter']
 
 const buildPlatformSelector = (platform: string | null) => {
-  const selected = platform ? platform.toLowerCase() : "twitter"
+  const selected = platform ? platform.toLowerCase() : 'twitter'
   return (
     <select name="platform" defaultValue={selected}>
-      {platforms.map(p => {
+      {platforms.map((p) => {
         const value = p.toLowerCase()
         return (
           <option key={value} value={value}>
@@ -33,7 +30,7 @@ export default function SearchForm(props: SearchFormProps) {
       <label>Platform</label>
       {buildPlatformSelector(platform)}
       <label>ID</label>
-      <input name="id" defaultValue={id || ""} />
+      <input name="id" defaultValue={id || ''} />
       <input type="submit" value="Search" />
     </form>
   )

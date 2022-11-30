@@ -5,7 +5,7 @@ interface ResultsListProps {
 }
 
 const buildRows = (results: Result[]) => {
-  return results.map(r => (
+  return results.map((r) => (
     <tr key={r.platform + r.id}>
       <td>{r.platform}</td>
       <td>{r.id}</td>
@@ -22,9 +22,7 @@ export default function ResultsList(props: ResultsListProps) {
           <td>ID</td>
         </tr>
       </thead>
-      <tbody>
-        {buildRows(props.results)}
-      </tbody>
+      <tbody>{buildRows(props.results)}</tbody>
     </table>
   )
 }

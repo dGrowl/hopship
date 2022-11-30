@@ -18,14 +18,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { query } = context
   const platform = query.platform || null
   const id = query.id || null
-  const results = (id && platform) ? [{ platform, id }] : []
+  const results = id && platform ? [{ platform, id }] : []
   return {
-    props: { platform, id, results }
+    props: { platform, id, results },
   }
 }
 
 export default function Home(props: HomeProps) {
-  let title = "Also"
+  let title = 'Also'
   const { platform, id, results } = props
   if (platform && id) {
     title += `: ${props.platform}/${props.id}`
@@ -39,9 +39,7 @@ export default function Home(props: HomeProps) {
       </Head>
 
       <header>
-        <h1 className={styles.title}>
-          also
-        </h1>
+        <h1 className={styles.title}>also</h1>
       </header>
 
       <main className={styles.main}>
