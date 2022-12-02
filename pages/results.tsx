@@ -1,5 +1,6 @@
 import { GetServerSidePropsContext } from 'next'
 import { ParsedUrlQuery } from 'querystring'
+import { useEffect } from 'react'
 import Head from 'next/head'
 
 import { Result } from '../lib/types'
@@ -54,12 +55,18 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 
-export default function Home(props: HomeProps) {
+export default function Results(props: HomeProps) {
   const { platform, id, results } = props
   let title = 'Also'
   if (platform && id) {
     title += `: ${props.platform}/${props.id}`
   }
+  useEffect(() => {
+    if (platform && id) {
+      localStorage.setItem('platform', platform)
+      localStorage.setItem('id', id)
+    }
+  })
   return (
     <>
       <Head>
