@@ -9,6 +9,7 @@ const buildRows = (results: Result[]) => {
     <tr key={r.platform + r.id}>
       <td>{r.platform}</td>
       <td>{r.id}</td>
+      <td>{r.desc}</td>
     </tr>
   ))
 }
@@ -20,6 +21,7 @@ export default function ResultsList(props: ResultsListProps) {
         <tr>
           <td>Platform</td>
           <td>ID</td>
+          <td>Description</td>
         </tr>
       </thead>
       <tbody>{buildRows(props.results)}</tbody>
