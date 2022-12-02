@@ -8,16 +8,11 @@ interface SearchFormProps {
 const platforms = ['Twitch', 'Twitter']
 
 const buildPlatformSelector = (platform: string | null) => {
-  const selected = platform ? platform.toLowerCase() : 'twitter'
+  const selected = platform || 'Twitter'
   return (
     <select name="platform" defaultValue={selected}>
       {platforms.map((p) => {
-        const value = p.toLowerCase()
-        return (
-          <option key={value} value={value}>
-            {p}
-          </option>
-        )
+        return <option key={p}>{p}</option>
       })}
     </select>
   )
