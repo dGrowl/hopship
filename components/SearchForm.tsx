@@ -21,7 +21,7 @@ const buildPlatformSelector = (platform: string | null) => {
 export default function SearchForm(props: SearchFormProps) {
   const { platform, id } = props
   return (
-    <form className={styles.form}>
+    <form action="/results" className={styles.form}>
       <label>Platform</label>
       {buildPlatformSelector(platform)}
       <label>ID</label>
