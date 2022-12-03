@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import Head from 'next/head'
 
 export default function UserForm() {
+  const [registerMode, setRegisterMode] = useState(false)
   return (
     <>
       <Head>
@@ -9,17 +11,19 @@ export default function UserForm() {
       <div>
         <form>
           <div>
-            <button name="login-mode">Login</button>
-            <button name="register-mode">Register</button>
+            <button onClick={() => setRegisterMode(false)}>Login</button>
+            <button onClick={() => setRegisterMode(true)}>Register</button>
           </div>
           <label htmlFor="email">Email</label>
           <input name="email" />
           <label htmlFor="password">Password</label>
           <input name="password" type="password" />
-          <label htmlFor="password-confirm">
-            Password (Again)
-          </label>
-          <input name="password-confirm" type="password" />
+          {registerMode ? (
+            <>
+              <label htmlFor="repassword">Password (Again)</label>
+              <input name="repassword" type="password" />
+            </>
+          ) : null}
           <button>Submit</button>
         </form>
       </div>
