@@ -1,19 +1,54 @@
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
+import { NextRouter, useRouter } from 'next/router'
 import Head from 'next/head'
 
-export default function UserForm() {
+import { jsonHeaders } from '../lib/util'
+
+interface LoginFormFields extends EventTarget {
+  email: HTMLInputElement
+  password: HTMLInputElement
+  repassword: HTMLInputElement
+}
+
+const processForm = async (
+  e: FormEvent,
+  registerMode: boolean,
+  router: NextRouter
+) => {
+  e.preventDefault()
+  const fields = e.target as LoginFormFields
+  const email = fields.email.value
+  const password = fields.password.value
+  if (registerMode) {
+  } else {
+    const data = { email, password }
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: jsonHeaders,
+      body: JSON.stringify(data),
+    })
+    if (response.status === 200) {
+      router.push('/profile')
+    } else {
+      router.push('/login')
+    }
+  }
+}
+
+export default function Login() {
   const [registerMode, setRegisterMode] = useState(false)
+  const router = useRouter()
   return (
     <>
       <Head>
         <title>Also: Login/Register</title>
       </Head>
       <div>
-        <form>
-          <div>
-            <button onClick={() => setRegisterMode(false)}>Login</button>
-            <button onClick={() => setRegisterMode(true)}>Register</button>
-          </div>
+        <div>
+          <button onClick={() => setRegisterMode(false)}>Login</button>
+          <button onClick={() => setRegisterMode(true)}>Register</button>
+        </div>
+        <form onSubmit={(e) => processForm(e, registerMode, router)}>
           <label htmlFor="email">Email</label>
           <input name="email" />
           <label htmlFor="password">Password</label>

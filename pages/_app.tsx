@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app'
 
 import '../styles/globals.css'
 import styles from '../styles/App.module.css'
+import Link from 'next/link'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -16,6 +17,9 @@ export default function App({ Component, pageProps }: AppProps) {
       <header>
         <h1 className={styles.title}>also</h1>
       </header>
+      <nav>
+        <Link href="/login">Login</Link>
+      </nav>
 
       <main className={styles.main}>
         <Component {...pageProps} />
