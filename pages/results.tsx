@@ -3,18 +3,21 @@ import { ParsedUrlQuery } from 'querystring'
 import { useEffect } from 'react'
 import Head from 'next/head'
 
-import { Result } from '../lib/types'
+import { Identity } from '../lib/types'
 import db from '../lib/db'
-import ResultsList from '../components/ResultsList'
+import IdentitiesList from '../components/IdentitiesList'
 import SearchForm from '../components/SearchForm'
 
-interface HomeProps {
+interface ResultsProps {
   platform: string | null
   id: string | null
-  results: Result[]
+  identities: Identity[]
 }
 
-const getResults = async (platform: string | null, id: string | null) => {
+const getConnectedIdentities = async (
+  platform: string | null,
+  id: string | null
+) => {
   if (!platform || !id) return []
   try {
     const results = await db.query(
@@ -23,7 +26,7 @@ const getResults = async (platform: string | null, id: string | null) => {
           platform_tag AS platform,
           tag          AS id,
           description  AS desc
-        FROM public.get_links($1, $2);
+        FROM public.get_identities($1, $2);
       `,
       [platform, id]
     )
@@ -49,14 +52,14 @@ const processQuery = (query: ParsedUrlQuery) => {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { query } = context
   const { platform, id } = processQuery(query)
-  const results = await getResults(platform, id)
+  const identities = await getConnectedIdentities(platform, id)
   return {
-    props: { platform, id, results },
+    props: { platform, id, identities },
   }
 }
 
-export default function Results(props: HomeProps) {
-  const { platform, id, results } = props
+export default function Results(props: ResultsProps) {
+  const { platform, id, identities } = props
   let title = 'Also'
   if (platform && id) {
     title += `: ${props.platform}/${props.id}`
@@ -73,7 +76,7 @@ export default function Results(props: HomeProps) {
         <title>{title}</title>
       </Head>
       <SearchForm platform={platform} id={id} />
-      <ResultsList results={results} />
+      <IdentitiesList identities={identities} />
     </>
   )
 }

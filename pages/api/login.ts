@@ -47,8 +47,8 @@ export default async function handler(
           res.status(200).setHeader('Set-Cookie', cookie.join('; ')).json({})
           return
         }
-      } catch (err) {
-        console.log(err)
+      } catch (error) {
+        console.log(error)
       }
     }
   }

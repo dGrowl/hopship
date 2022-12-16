@@ -1,11 +1,11 @@
-import { Result } from '../lib/types'
+import { Identity } from '../lib/types'
 
-interface ResultsListProps {
-  results: Result[]
+interface IdentitiesListProps {
+  identities: Identity[]
 }
 
-const buildRows = (results: Result[]) => {
-  return results.map((r) => (
+const buildRows = (identities: Identity[]) => {
+  return identities.map((r) => (
     <tr key={r.platform + r.id}>
       <td>{r.platform}</td>
       <td>{r.id}</td>
@@ -14,7 +14,7 @@ const buildRows = (results: Result[]) => {
   ))
 }
 
-export default function ResultsList(props: ResultsListProps) {
+export default function IdentitiesList(props: IdentitiesListProps) {
   return (
     <table>
       <thead>
@@ -24,7 +24,7 @@ export default function ResultsList(props: ResultsListProps) {
           <td>Description</td>
         </tr>
       </thead>
-      <tbody>{buildRows(props.results)}</tbody>
+      <tbody>{buildRows(props.identities)}</tbody>
     </table>
   )
 }
