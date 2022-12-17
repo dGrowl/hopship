@@ -4,6 +4,11 @@ interface UserMenuProps {
   tag: string | null
 }
 
+const logout = async () => {
+  await fetch('/api/logout')
+  document.location.reload()
+}
+
 export default function UserMenu({ tag }: UserMenuProps) {
   if (tag === null) {
     return (
@@ -19,7 +24,7 @@ export default function UserMenu({ tag }: UserMenuProps) {
       <Link href="/profile">
         <div>{tag}</div>
       </Link>
-      <div>Logout</div>
+      <div onClick={() => logout()}>Logout</div>
     </div>
   )
 }

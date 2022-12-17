@@ -10,7 +10,7 @@ export interface Identity {
 }
 
 export interface ExtendedAppProps extends AppProps {
-  tag: string
+  userTag: string
 }
 
 export type ExtendedRequest = NextIncomingMessage & {

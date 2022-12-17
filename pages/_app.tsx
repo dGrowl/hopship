@@ -8,7 +8,11 @@ import UserMenu from '../components/UserMenu'
 import '../styles/globals.css'
 import styles from '../styles/App.module.css'
 
-export default function App({ Component, pageProps, userTag }: ExtendedAppProps) {
+export default function App({
+  Component,
+  pageProps,
+  userTag,
+}: ExtendedAppProps) {
   return (
     <div className={styles.container}>
       <Head>
