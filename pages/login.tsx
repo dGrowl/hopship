@@ -1,6 +1,8 @@
 import { FormEvent, useState } from 'react'
+import { GetServerSidePropsContext } from 'next'
 import { NextRouter, useRouter } from 'next/router'
 import Head from 'next/head'
+import jwt from 'jsonwebtoken'
 
 import { jsonHeaders } from '../lib/util'
 
@@ -32,6 +34,31 @@ const processForm = async (
     } else {
       router.push('/login')
     }
+  }
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { auth: token } = context.req.cookies
+
+  try {
+    if (!process.env.JWT_AUTH_SECRET) {
+      throw 'Environment is missing JWT secret'
+    }
+    if (token) {
+      jwt.verify(token, process.env.JWT_AUTH_SECRET)
+      return {
+        redirect: {
+          destination: '/profile',
+          permanent: false,
+        },
+      }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+
+  return {
+    props: {},
   }
 }
 
