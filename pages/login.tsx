@@ -9,7 +9,8 @@ import { jsonHeaders } from '../lib/util'
 interface LoginFormFields extends EventTarget {
   email: HTMLInputElement
   password: HTMLInputElement
-  repassword: HTMLInputElement
+  tag?: HTMLInputElement
+  repassword?: HTMLInputElement
 }
 
 const processForm = async (
@@ -22,18 +23,34 @@ const processForm = async (
   const email = fields.email.value
   const password = fields.password.value
   if (registerMode) {
-  } else {
-    const data = { email, password }
-    const response = await fetch('/api/login', {
+    if (!fields.tag || !fields.repassword) {
+      return
+    }
+    const tag = fields.tag.value
+    const repassword = fields.repassword.value
+    if (password !== repassword) {
+      return
+    }
+    const data = { email, tag, password }
+    const response = await fetch('/api/users', {
       method: 'POST',
       headers: jsonHeaders,
       body: JSON.stringify(data),
     })
-    if (response.status === 200) {
-      router.push('/profile')
-    } else {
-      router.push('/login')
+    if (response.status !== 200) {
+      return
     }
+  }
+  const data = { email, password }
+  const response = await fetch('/api/login', {
+    method: 'POST',
+    headers: jsonHeaders,
+    body: JSON.stringify(data),
+  })
+  if (response.status === 200) {
+    router.push('/profile')
+  } else {
+    router.push('/login')
   }
 }
 
@@ -77,7 +94,13 @@ export default function Login() {
         </div>
         <form onSubmit={(e) => processForm(e, registerMode, router)}>
           <label htmlFor="email">Email</label>
-          <input name="email" />
+          <input name="email" type="email" />
+          {registerMode ? (
+            <>
+              <label htmlFor="tag">ID</label>
+              <input name="tag" />
+            </>
+          ) : null}
           <label htmlFor="password">Password</label>
           <input name="password" type="password" />
           {registerMode ? (
