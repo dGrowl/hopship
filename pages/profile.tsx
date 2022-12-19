@@ -63,7 +63,7 @@ const buildIdentitiesList = (identities: Identity[]) => {
   if (identities.length === 0) {
     return <div>You haven&apos;t added any identities yet!</div>
   }
-  return <IdentitiesList identities={identities} />
+  return <IdentitiesList identities={identities} editable />
 }
 
 export default function Profile(props: AccountProps) {
