@@ -1,18 +1,14 @@
 import { GetServerSidePropsContext } from 'next'
 import Head from 'next/head'
-import jwt, { JwtPayload } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 
+import { AuthPayload, Identity } from '../lib/types'
 import db from '../lib/db'
-import { Identity } from '../lib/types'
 import IdentitiesList from '../components/IdentitiesList'
 
 interface AccountProps {
   tag: string
   identities: Identity[]
-}
-
-interface AuthPayload extends JwtPayload {
-  tag: string
 }
 
 const getUserIdentities = async (user_tag: string) => {
@@ -30,8 +26,8 @@ const getUserIdentities = async (user_tag: string) => {
     return result.rows
   } catch (error) {
     console.error(error)
-    return []
   }
+  return []
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -63,9 +59,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 
-const buildIdentityList = (identities: Identity[]) => {
+const buildIdentitiesList = (identities: Identity[]) => {
   if (identities.length === 0) {
-    return <div>You haven&apos;t set up any identities yet!</div>
+    return <div>You haven&apos;t added any identities yet!</div>
   }
   return <IdentitiesList identities={identities} />
 }
@@ -77,8 +73,14 @@ export default function Profile(props: AccountProps) {
       <Head>
         <title>{`Also: ${tag}'s Profile`}</title>
       </Head>
-      <div>Hello {tag}</div>
-      {buildIdentityList(identities)}
+      <section>
+        Email: <input type="email" />
+        Tag: <input defaultValue={tag} /> https://also.domain/u/{tag}
+        Password: Old: <input type="password" />
+        New: <input type="password" />
+        New Again: <input type="password" />
+      </section>
+      <section>{buildIdentitiesList(identities)}</section>
     </>
   )
 }
