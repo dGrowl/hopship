@@ -11,7 +11,7 @@ import styles from '../styles/App.module.css'
 export default function App({
   Component,
   pageProps,
-  userTag,
+  userName,
 }: ExtendedAppProps) {
   return (
     <div className={styles.container}>
@@ -25,7 +25,7 @@ export default function App({
         <h1 className={styles.title}>also</h1>
       </header>
       <nav>
-        <UserMenu tag={userTag} />
+        <UserMenu name={userName} />
       </nav>
 
       <main className={styles.main}>
@@ -46,7 +46,7 @@ export default function App({
 }
 
 App.getInitialProps = async ({ ctx }: AppContext) => {
-  let userTag = null
+  let userName = null
   if (ctx.req) {
     const request = ctx.req as ExtendedRequest
     const token = request.cookies.auth
@@ -59,11 +59,11 @@ App.getInitialProps = async ({ ctx }: AppContext) => {
           token,
           process.env.JWT_AUTH_SECRET
         ) as AuthPayload
-        userTag = payload.tag
+        userName = payload.name
       } catch (error) {
         console.log(error)
       }
     }
   }
-  return { userTag }
+  return { userName }
 }

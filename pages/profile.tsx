@@ -20,7 +20,8 @@ const getUserIdentities = async (user_name: string) => {
           platform,
           name,
           description AS desc
-        FROM public.get_user_identities($1);
+        FROM public.get_user_identities($1)
+        ORDER BY platform ASC, name ASC;
       `,
       [user_name]
     )

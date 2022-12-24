@@ -18,23 +18,23 @@ export default async function handler(
   }
   const { body } = req
   const { email, password } = body
-  const passhashQuery = await db.query(
+  const passhashResult = await db.query(
     `
-      SELECT u.tag, u.passhash
+      SELECT u.name, u.passhash
       FROM public.users u
       WHERE u.email = $1;
     `,
     [email]
   )
-  if (passhashQuery.rowCount === 1) {
-    const { tag, passhash } = passhashQuery.rows[0]
+  if (passhashResult.rowCount === 1) {
+    const { name, passhash } = passhashResult.rows[0]
     if (passhash !== null) {
       try {
         if (!process.env.JWT_AUTH_SECRET) {
           throw 'Environment is missing JWT secret'
         }
         if (await argon2.verify(passhash, password)) {
-          const token = jwt.sign({ tag }, process.env.JWT_AUTH_SECRET, {
+          const token = jwt.sign({ name }, process.env.JWT_AUTH_SECRET, {
             expiresIn: WEEK_IN_SECONDS,
           })
           const cookie = [

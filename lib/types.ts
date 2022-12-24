@@ -5,12 +5,12 @@ import { NextIncomingMessage } from 'next/dist/server/request-meta'
 
 export interface Identity {
   platform: string
-  id: string
+  name: string
   desc: string
 }
 
 export interface ExtendedAppProps extends AppProps {
-  userTag: string
+  userName: string
 }
 
 export type ExtendedRequest = NextIncomingMessage & {
@@ -18,5 +18,5 @@ export type ExtendedRequest = NextIncomingMessage & {
 }
 
 export interface AuthPayload extends JwtPayload {
-  tag: string
+  name: string
 }

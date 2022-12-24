@@ -9,7 +9,7 @@ import { jsonHeaders } from '../lib/util'
 interface LoginFormFields extends EventTarget {
   email: HTMLInputElement
   password: HTMLInputElement
-  tag?: HTMLInputElement
+  name?: HTMLInputElement
   repassword?: HTMLInputElement
 }
 
@@ -23,15 +23,15 @@ const processForm = async (
   const email = fields.email.value
   const password = fields.password.value
   if (registerMode) {
-    if (!fields.tag || !fields.repassword) {
+    if (!fields.name || !fields.repassword) {
       return
     }
-    const tag = fields.tag.value
+    const name = fields.name.value
     const repassword = fields.repassword.value
     if (password !== repassword) {
       return
     }
-    const data = { email, tag, password }
+    const data = { email, name, password }
     const response = await fetch('/api/users', {
       method: 'POST',
       headers: jsonHeaders,
@@ -97,8 +97,8 @@ export default function Login() {
           <input name="email" type="email" />
           {registerMode ? (
             <>
-              <label htmlFor="tag">ID</label>
-              <input name="tag" />
+              <label htmlFor="name">ID</label>
+              <input name="name" />
             </>
           ) : null}
           <label htmlFor="password">Password</label>

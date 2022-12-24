@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 interface UserMenuProps {
-  tag: string | null
+  name: string | null
 }
 
 const logout = async () => {
@@ -9,8 +9,8 @@ const logout = async () => {
   document.location.reload()
 }
 
-export default function UserMenu({ tag }: UserMenuProps) {
-  if (tag === null) {
+export default function UserMenu({ name }: UserMenuProps) {
+  if (name === null) {
     return (
       <div>
         <Link href="/login">
@@ -22,7 +22,7 @@ export default function UserMenu({ tag }: UserMenuProps) {
   return (
     <div>
       <Link href="/profile">
-        <div>{tag}</div>
+        <div>{name}</div>
       </Link>
       <div onClick={() => logout()}>Logout</div>
     </div>

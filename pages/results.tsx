@@ -10,64 +10,65 @@ import SearchForm from '../components/SearchForm'
 
 interface ResultsProps {
   platform: string | null
-  id: string | null
+  name: string | null
   identities: Identity[]
 }
 
 const getConnectedIdentities = async (
   platform: string | null,
-  id: string | null
+  name: string | null
 ) => {
-  if (!platform || !id) return []
+  if (!platform || !name) return []
   try {
-    const results = await db.query(
+    const result = await db.query(
       `
         SELECT
-          platform_tag AS platform,
-          tag          AS id,
-          description  AS desc
-        FROM public.get_identities($1, $2);
+          platform,
+          name,
+          description AS desc
+        FROM public.get_connected_identities($1, $2)
+        ORDER BY platform ASC, name ASC;
       `,
-      [platform, id]
+      [platform, name]
     )
-    return results.rows
+    return result.rows
   } catch (error) {
     console.error(error)
-    return []
   }
+  return []
 }
 
 const processQuery = (query: ParsedUrlQuery) => {
   let platform = query.platform || null
-  let id = query.id || null
+  let name = query.id || null
   if (Array.isArray(platform)) {
     platform = platform.join()
   }
-  if (Array.isArray(id)) {
-    id = id.join()
+  if (Array.isArray(name)) {
+    name = name.join()
   }
-  return { platform, id }
+  return { platform, name }
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { query } = context
-  const { platform, id } = processQuery(query)
-  const identities = await getConnectedIdentities(platform, id)
+  const { platform, name } = processQuery(query)
+  const identities = await getConnectedIdentities(platform, name)
   return {
-    props: { platform, id, identities },
+    props: { platform, name, identities },
   }
 }
 
 export default function Results(props: ResultsProps) {
-  const { platform, id, identities } = props
+  const { platform, name, identities } = props
   let title = 'Also'
-  if (platform && id) {
-    title += `: ${props.platform}/${props.id}`
+  if (platform && name) {
+    title += `: ${props.platform}/${props.name}`
   }
   useEffect(() => {
-    if (platform && id) {
+    if (platform && name) {
       localStorage.setItem('platform', platform)
-      localStorage.setItem('id', id)
+      localStorage.setItem('name', name)
     }
   })
   return (
@@ -75,7 +76,7 @@ export default function Results(props: ResultsProps) {
       <Head>
         <title>{title}</title>
       </Head>
-      <SearchForm platform={platform} id={id} />
+      <SearchForm platform={platform} name={name} />
       <IdentitiesList identities={identities} />
     </>
   )
