@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import jwt from 'jsonwebtoken'
+import Link from 'next/link'
 import type { AppContext } from 'next/app'
 
 import { AuthPayload, ExtendedAppProps, ExtendedRequest } from '../lib/types'
@@ -22,7 +23,9 @@ export default function App({
       </Head>
 
       <header>
-        <h1 className={styles.title}>also</h1>
+        <Link href="/">
+          <h1 className={styles.title}>also</h1>
+        </Link>
       </header>
       <nav>
         <UserMenu name={userName} />
