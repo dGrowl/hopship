@@ -8,12 +8,12 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     const { body } = req
-    const { user_tag, platform, tag, desc } = body
+    const { user_name, platform, platform_name, desc } = body
     try {
       await db.query('CALL add_identity($1, $2, $3, $4);', [
-        user_tag,
+        user_name,
         platform,
-        tag,
+        platform_name,
         desc,
       ])
     } catch (error) {

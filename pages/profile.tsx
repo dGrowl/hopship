@@ -3,25 +3,26 @@ import Head from 'next/head'
 import jwt from 'jsonwebtoken'
 
 import { AuthPayload, Identity } from '../lib/types'
+import AddIdentityForm from '../components/AddIdentityForm'
 import db from '../lib/db'
 import IdentitiesList from '../components/IdentitiesList'
 
-interface AccountProps {
-  tag: string
+interface ProfileProps {
+  name: string
   identities: Identity[]
 }
 
-const getUserIdentities = async (user_tag: string) => {
+const getUserIdentities = async (user_name: string) => {
   try {
     const result = await db.query(
       `
         SELECT
-          platform_tag AS platform,
-          tag          AS id,
-          description  AS desc
-        FROM public.get_identities($1);
+          platform,
+          name,
+          description AS desc
+        FROM public.get_user_identities($1);
       `,
-      [user_tag]
+      [user_name]
     )
     return result.rows
   } catch (error) {
@@ -42,10 +43,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         token,
         process.env.JWT_AUTH_SECRET
       ) as AuthPayload
-      const { tag } = payload
-      const identities = await getUserIdentities(tag)
+      const { name } = payload
+      const identities = await getUserIdentities(name)
       return {
-        props: { tag, identities },
+        props: { name, identities },
       }
     }
   } catch (error) {
@@ -66,21 +67,24 @@ const buildIdentitiesList = (identities: Identity[]) => {
   return <IdentitiesList identities={identities} editable />
 }
 
-export default function Profile(props: AccountProps) {
-  const { tag, identities } = props
+export default function Profile(props: ProfileProps) {
+  const { name, identities } = props
   return (
     <>
       <Head>
-        <title>{`Also: ${tag}'s Profile`}</title>
+        <title>{`Also: ${name}'s Profile`}</title>
       </Head>
       <section>
         Email: <input type="email" />
-        Tag: <input defaultValue={tag} /> https://also.domain/u/{tag}
+        Name: <input defaultValue={name} /> https://also.domain/u/{name}
         Password: Old: <input type="password" />
         New: <input type="password" />
         New Again: <input type="password" />
       </section>
-      <section>{buildIdentitiesList(identities)}</section>
+      <section>
+        {buildIdentitiesList(identities)}
+        <AddIdentityForm user_name={name} />
+      </section>
     </>
   )
 }
