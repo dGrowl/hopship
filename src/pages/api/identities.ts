@@ -42,10 +42,10 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       await db.query(
         `
-          UPDATE public.identities i
-          SET i.description = $1
-          WHERE i.platform = $2
-            AND i.name = $3;
+          UPDATE public.identities
+          SET description = $1
+          WHERE platform = $2
+            AND name = $3;
         `,
         [desc, platform, name]
       )
@@ -63,9 +63,9 @@ const remove = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await db.query(
       `
-        DELETE FROM public.identities i
-        WHERE i.platform = $1
-          AND i.name = $2;
+        DELETE FROM public.identities
+        WHERE platform = $1
+          AND name = $2;
       `,
       [platform, name]
     )

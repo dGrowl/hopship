@@ -77,15 +77,21 @@ export default function Profile(props: ProfileProps) {
         <title>{`Also: ${name}'s Profile`}</title>
       </Head>
       <section>
-        Email: <input type="email" defaultValue={email} />
-        Name: <input defaultValue={name} /> https://also.domain/u/{name}
+        <h2>User</h2>
+        <label htmlFor="email">Email</label>
+        <input name="email" type="email" defaultValue={email} />
+        <label htmlFor="name">Name</label>
+        <input name="name" defaultValue={name} /> https://also.domain/u/{name}
         Password: Old: <input type="password" />
         New: <input type="password" />
         New Again: <input type="password" />
       </section>
       <section>
-        {buildIdentitiesList(identities)}
+        <h2>Identities</h2>
+        <h3>Add</h3>
         <AddIdentityForm />
+        <h3>Modify</h3>
+        {buildIdentitiesList(identities)}
       </section>
     </>
   )
