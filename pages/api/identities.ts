@@ -51,12 +51,9 @@ export default async function handler(
 ) {
   switch (req.method) {
     case 'POST':
-      create(req, res)
-      break
+      return create(req, res)
     case 'PATCH':
-      update(req, res)
-      break
-    default:
-      res.status(405).json({})
+      return update(req, res)
   }
+  res.status(405).json({})
 }
