@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent, MouseEvent, useState } from 'react'
 
 import { Identity } from '../lib/types'
 import { jsonHeaders } from '../lib/util'
@@ -10,6 +10,21 @@ type IdentitiesListFormFields = EventTarget & {
 interface IdentitiesListProps {
   editable?: boolean
   identities: Identity[]
+}
+
+const removeIdentity = async (
+  e: MouseEvent,
+  platform: string,
+  name: string
+) => {
+  e.preventDefault()
+  const data = { platform, name }
+  await fetch('/api/identities', {
+    method: 'DELETE',
+    headers: jsonHeaders,
+    body: JSON.stringify(data),
+  })
+  window.location.reload()
 }
 
 const buildRows = (identities: Identity[], editable: boolean) => {
@@ -26,7 +41,7 @@ const buildRows = (identities: Identity[], editable: boolean) => {
       </td>
       {editable ? (
         <td>
-          <button>X</button>
+          <button onClick={(e) => removeIdentity(e, platform, name)}>X</button>
         </td>
       ) : null}
     </tr>
