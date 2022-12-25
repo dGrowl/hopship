@@ -34,7 +34,7 @@ export default async function handler(
           throw 'Environment is missing JWT secret'
         }
         if (await argon2.verify(passhash, password)) {
-          const token = jwt.sign({ name }, process.env.JWT_AUTH_SECRET, {
+          const token = jwt.sign({ name, email }, process.env.JWT_AUTH_SECRET, {
             expiresIn: WEEK_IN_SECONDS,
           })
           const cookie = [

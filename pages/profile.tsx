@@ -9,6 +9,7 @@ import IdentitiesList from '../components/IdentitiesList'
 
 interface ProfileProps {
   name: string
+  email: string
   identities: Identity[]
 }
 
@@ -44,10 +45,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         token,
         process.env.JWT_AUTH_SECRET
       ) as AuthPayload
-      const { name } = payload
+      const { name, email } = payload
       const identities = await getUserIdentities(name)
       return {
-        props: { name, identities },
+        props: { name, email, identities },
       }
     }
   } catch (error) {
@@ -69,14 +70,14 @@ const buildIdentitiesList = (identities: Identity[]) => {
 }
 
 export default function Profile(props: ProfileProps) {
-  const { name, identities } = props
+  const { name, email, identities } = props
   return (
     <>
       <Head>
         <title>{`Also: ${name}'s Profile`}</title>
       </Head>
       <section>
-        Email: <input type="email" />
+        Email: <input type="email" defaultValue={email} />
         Name: <input defaultValue={name} /> https://also.domain/u/{name}
         Password: Old: <input type="password" />
         New: <input type="password" />

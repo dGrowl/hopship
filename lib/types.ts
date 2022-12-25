@@ -19,4 +19,5 @@ export type ExtendedRequest = NextIncomingMessage & {
 
 export interface AuthPayload extends JwtPayload {
   name: string
+  email: string
 }
