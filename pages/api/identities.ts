@@ -1,12 +1,26 @@
+import jwt from 'jsonwebtoken'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import db from '../../lib/db'
+import { AuthPayload } from '../../lib/types'
 import { hasKey } from '../../lib/util'
 
 const create = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { body } = req
-  const { user_name, platform, platform_name, desc } = body
+  const { body, cookies } = req
+  const { auth: token } = cookies
+  if (!process.env.JWT_AUTH_SECRET) {
+    return res.status(500).json({})
+  }
+  if (!token) {
+    return res.status(401).json({})
+  }
   try {
+    const payload = jwt.verify(
+      token,
+      process.env.JWT_AUTH_SECRET
+    ) as AuthPayload
+    const { name: user_name } = payload
+    const { platform, name: platform_name, desc } = body
     await db.query('CALL add_identity($1, $2, $3, $4);', [
       user_name,
       platform,

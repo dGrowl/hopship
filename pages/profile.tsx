@@ -85,7 +85,7 @@ export default function Profile(props: ProfileProps) {
       </section>
       <section>
         {buildIdentitiesList(identities)}
-        <AddIdentityForm user_name={name} />
+        <AddIdentityForm />
       </section>
     </>
   )
