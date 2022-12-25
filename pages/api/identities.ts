@@ -15,8 +15,7 @@ const create = async (req: NextApiRequest, res: NextApiResponse) => {
     ])
   } catch (error) {
     console.log(error)
-    res.status(500).json({})
-    return
+    return res.status(500).json({})
   }
   res.status(200).json({})
 }
@@ -30,17 +29,35 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
       await db.query(
         `
           UPDATE public.identities i
-          SET description = $1
-          WHERE platform = $2
-            AND name = $3;
+          SET i.description = $1
+          WHERE i.platform = $2
+            AND i.name = $3;
         `,
         [desc, platform, name]
       )
     } catch (error) {
       console.log(error)
-      res.status(500).json({})
-      return
+      return res.status(500).json({})
     }
+  }
+  res.status(200).json({})
+}
+
+const remove = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { body } = req
+  const { platform, name } = body
+  try {
+    await db.query(
+      `
+        DELETE FROM public.identities i
+        WHERE i.platform = $1
+          AND i.name = $2;
+      `,
+      [platform, name]
+    )
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({})
   }
   res.status(200).json({})
 }
@@ -54,6 +71,8 @@ export default async function handler(
       return create(req, res)
     case 'PATCH':
       return update(req, res)
+    case 'DELETE':
+      return remove(req, res)
   }
   res.status(405).json({})
 }
