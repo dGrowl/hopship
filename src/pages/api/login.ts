@@ -2,9 +2,36 @@ import argon2 from 'argon2'
 import jwt from 'jsonwebtoken'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+import { clamp } from '../../lib/util'
 import db from '../../lib/db'
 
 const WEEK_IN_SECONDS = 60 * 60 * 24 * 7
+
+export const genAuthCookie = (
+  name: string,
+  email: string,
+  expirationSecs: number = WEEK_IN_SECONDS
+) => {
+  if (!process.env.JWT_AUTH_SECRET) {
+    throw {
+      message:
+        'Failed to generate auth cookie (server environment missing auth secret)',
+    }
+  }
+  expirationSecs = Math.floor(expirationSecs)
+  expirationSecs = clamp(expirationSecs, 0, WEEK_IN_SECONDS)
+  const token = jwt.sign({ name, email }, process.env.JWT_AUTH_SECRET, {
+    expiresIn: expirationSecs,
+  })
+  const cookie = [
+    `auth=${token}`,
+    `Max-Age=${expirationSecs}`,
+    'HttpOnly',
+    'Path=/',
+    'SameSite=Lax',
+  ]
+  return cookie.join('; ')
+}
 
 export default async function handler(
   req: NextApiRequest,
@@ -34,25 +61,15 @@ export default async function handler(
           throw 'Environment is missing JWT secret'
         }
         if (await argon2.verify(passhash, password)) {
-          const token = jwt.sign({ name, email }, process.env.JWT_AUTH_SECRET, {
-            expiresIn: WEEK_IN_SECONDS,
-          })
-          const cookie = [
-            `auth=${token}`,
-            `Max-Age=${WEEK_IN_SECONDS}`,
-            'HttpOnly',
-            'Path=/',
-            'SameSite=Lax',
-          ]
-          res.status(200).setHeader('Set-Cookie', cookie.join('; ')).json({})
-          return
+          const cookie = genAuthCookie(name, email)
+          return res.status(200).setHeader('Set-Cookie', cookie).json({})
         }
       } catch (error) {
         console.log(error)
       }
     }
   }
-  res.status(401).json({
+  return res.status(401).json({
     message: "Provided account credentials don't match any known users",
   })
 }
