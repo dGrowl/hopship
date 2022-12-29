@@ -1,0 +1,9 @@
+.form {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.passwordFields {
+  display: grid;
+  grid-template-columns: auto auto;
+}

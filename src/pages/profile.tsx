@@ -6,6 +6,7 @@ import { AuthPayload, Identity } from '../lib/types'
 import AddIdentityForm from '../components/AddIdentityForm'
 import db from '../lib/db'
 import IdentitiesList from '../components/IdentitiesList'
+import UpdateUserForm from '../components/UpdateUserForm'
 
 interface ProfileProps {
   name: string
@@ -62,13 +63,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 
-const buildIdentitiesList = (identities: Identity[]) => {
-  if (identities.length === 0) {
-    return <div>You haven&apos;t added any identities yet!</div>
-  }
-  return <IdentitiesList identities={identities} editable />
-}
-
 export default function Profile(props: ProfileProps) {
   const { name, email, identities } = props
   return (
@@ -78,20 +72,18 @@ export default function Profile(props: ProfileProps) {
       </Head>
       <section>
         <h2>User</h2>
-        <label htmlFor="email">Email</label>
-        <input name="email" type="email" defaultValue={email} />
-        <label htmlFor="name">Name</label>
-        <input name="name" defaultValue={name} /> https://also.domain/u/{name}
-        Password: Old: <input type="password" />
-        New: <input type="password" />
-        New Again: <input type="password" />
+        <UpdateUserForm name={name} email={email} />
       </section>
       <section>
         <h2>Identities</h2>
         <h3>Add</h3>
         <AddIdentityForm />
         <h3>Modify</h3>
-        {buildIdentitiesList(identities)}
+        {identities.length === 0 ? (
+          <div>You haven&apos;t added any identities yet!</div>
+        ) : (
+          <IdentitiesList identities={identities} editable />
+        )}
       </section>
     </>
   )
