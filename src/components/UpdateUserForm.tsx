@@ -9,6 +9,13 @@ interface Props {
   email: string
 }
 
+interface Data {
+  name?: string
+  email?: string
+  oldPassword?: string
+  newPassword?: string
+}
+
 interface Fields extends EventTarget {
   name: HTMLInputElement
   email: HTMLInputElement
@@ -19,16 +26,28 @@ interface Fields extends EventTarget {
 
 const submit = async (e: FormEvent) => {
   e.preventDefault()
-  const { name } = e.target as Fields
+  const { name, email, oldPassword, newPassword, reNewPassword } =
+    e.target as Fields
+  const data: Data = {}
   if (name.defaultValue !== name.value) {
-    const data = { name: name.value }
-    await fetch('/api/users', {
-      method: 'PATCH',
-      headers: jsonHeaders,
-      body: JSON.stringify(data),
-    })
-    window.location.reload()
+    data.name = name.value
   }
+  if (email.defaultValue !== email.value) {
+    data.email = email.value
+  }
+  if (oldPassword.defaultValue !== oldPassword.value) {
+    if (newPassword.value !== reNewPassword.value) {
+      return
+    }
+    data.oldPassword = oldPassword.value
+    data.newPassword = newPassword.value
+  }
+  await fetch('/api/users', {
+    method: 'PATCH',
+    headers: jsonHeaders,
+    body: JSON.stringify(data),
+  })
+  window.location.reload()
 }
 
 const UpdateUserForm = ({ name, email }: Props) => {
