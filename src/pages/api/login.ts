@@ -33,19 +33,8 @@ export const genAuthCookie = (
   return cookie.join('; ')
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method != 'POST') {
-    res
-      .status(405)
-      .json({ message: 'Route /api/login only accepts POST requests' })
-    return
-  }
-  const { body } = req
-  const { email, password } = body
-  const passhashResult = await db.query(
+export const getUserData = async (email: string, password: string) => {
+  const result = await db.query(
     `
       SELECT u.name, u.passhash
       FROM public.users u
@@ -53,23 +42,43 @@ export default async function handler(
     `,
     [email]
   )
-  if (passhashResult.rowCount === 1) {
-    const { name, passhash } = passhashResult.rows[0]
-    if (passhash !== null) {
+  if (result.rowCount === 1) {
+    const data = result.rows[0]
+    if (data.passhash !== null) {
       try {
         if (!process.env.JWT_AUTH_SECRET) {
           throw 'Environment is missing JWT secret'
         }
-        if (await argon2.verify(passhash, password)) {
-          const cookie = genAuthCookie(name, email)
-          return res.status(200).setHeader('Set-Cookie', cookie).json({})
+        if (await argon2.verify(data.passhash, password)) {
+          return data
         }
       } catch (error) {
         console.log(error)
       }
     }
   }
+  return null
+}
+
+const authenticate = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { body } = req
+  const { email, password } = body
+  const user = await getUserData(email, password)
+  if (user) {
+    const cookie = genAuthCookie(user.name, email)
+    return res.status(200).setHeader('Set-Cookie', cookie).json({})
+  }
   return res.status(401).json({
     message: "Provided account credentials don't match any known users",
   })
 }
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  switch (req.method) {
+    case 'POST':
+      return authenticate(req, res)
+  }
+  return res.status(405).json({})
+}
+
+export default handler
