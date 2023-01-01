@@ -3,11 +3,13 @@ import { FormEvent, MouseEvent, useState } from 'react'
 import { Identity } from '../lib/types'
 import { jsonHeaders } from '../lib/util'
 
-type IdentitiesListFormFields = EventTarget & {
+import styles from '../styles/IdentitiesList.module.css'
+
+type FormFields = EventTarget & {
   [key: string]: HTMLFormElement
 }
 
-interface IdentitiesListProps {
+interface Props {
   editable?: boolean
   identities: Identity[]
 }
@@ -27,37 +29,17 @@ const removeIdentity = async (
   window.location.reload()
 }
 
-const buildRows = (identities: Identity[], editable: boolean) => {
-  return identities.map(({ platform, name, desc }) => (
-    <tr key={platform + name}>
-      <td>{platform}</td>
-      <td>{name}</td>
-      <td>
-        {editable ? (
-          <textarea defaultValue={desc} name={`${platform}/${name}`} />
-        ) : (
-          <>{desc}</>
-        )}
-      </td>
-      {editable ? (
-        <td>
-          <button onClick={(e) => removeIdentity(e, platform, name)}>X</button>
-        </td>
-      ) : null}
-    </tr>
-  ))
-}
-
-const saveDescriptions = async (e: FormEvent, changedDescs: string[]) => {
+const saveDescriptions = async (e: FormEvent) => {
   e.preventDefault()
+  const form = e.target as FormFields
+  const descs = Array.from(form.elements).filter(
+    (e: Element) => e.tagName === 'TEXTAREA'
+  ) as HTMLTextAreaElement[]
   const responses = []
-  for (const name of changedDescs) {
-    const form = e.target as IdentitiesListFormFields
-    const textarea = form[name]
-    if (textarea) {
-      const desc = textarea.value
-      const [platform, name] = textarea.name.split('/')
-      const data = { platform, name, desc }
+  for (const desc of descs) {
+    if (desc.defaultValue !== desc.value) {
+      const [platform, name] = desc.name.split('/')
+      const data = { platform, name, desc: desc.value }
       responses.push(
         fetch('/api/identities', {
           method: 'PATCH',
@@ -71,49 +53,57 @@ const saveDescriptions = async (e: FormEvent, changedDescs: string[]) => {
   window.location.reload()
 }
 
-export default function IdentitiesList(props: IdentitiesListProps) {
-  const [changedDescs, setChangedDescs] = useState<string[]>([])
-  const { identities } = props
-  const editable = props.editable || false
-  const updateChangedDescs = (e: FormEvent) => {
-    const descField = e.target as HTMLTextAreaElement
-    if (descField.value === descField.defaultValue) {
-      setChangedDescs((descs) =>
-        descs.filter((name) => name !== descField.name)
-      )
-    } else {
-      setChangedDescs((descs) =>
-        descs.includes(descField.name) ? descs : [...descs, descField.name]
-      )
-    }
-  }
+const buildRows = (identities: Identity[], editable: boolean) => {
+  return identities.map(({ platform, name, desc }) => (
+    <div key={platform + name} className={`${styles.row} ${styles[platform]}`}>
+      <div>{platform}</div>
+      <div>{name}</div>
+      <div>
+        {editable ? (
+          <textarea
+            className={styles.desc}
+            defaultValue={desc}
+            name={`${platform}/${name}`}
+          />
+        ) : (
+          <>{desc}</>
+        )}
+      </div>
+      {editable ? (
+        <div>
+          <button onClick={(e) => removeIdentity(e, platform, name)}>X</button>
+        </div>
+      ) : null}
+    </div>
+  ))
+}
+
+export default function IdentitiesList({ identities, editable }: Props) {
+  editable = editable || false
   return (
-    <form
-      onSubmit={(e) => saveDescriptions(e, changedDescs)}
-      onChange={updateChangedDescs}
-    >
-      <table>
-        <thead>
-          <tr>
-            <td>Platform</td>
-            <td>ID</td>
-            <td>Description</td>
-            {editable ? <td>Delete?</td> : null}
-          </tr>
-        </thead>
-        <tbody>
-          {buildRows(identities, editable)}
-          {editable ? (
-            <tr>
-              <td></td>
-              <td></td>
-              <td>
-                <button>Save Changes</button>
-              </td>
-            </tr>
-          ) : null}
-        </tbody>
-      </table>
+    <form onSubmit={saveDescriptions}>
+      <div
+        id={styles.identities}
+        style={editable ? { gridTemplateColumns: 'repeat(4, auto)' } : {}}
+      >
+        <div className={`${styles.row} ${styles.headerRow}`}>
+          <div>Platform</div>
+          <div>ID</div>
+          <div>Description</div>
+          {editable ? <div>Delete?</div> : null}
+        </div>
+        {buildRows(identities, editable)}
+        {editable ? (
+          <div className={styles.row}>
+            <div></div>
+            <div></div>
+            <div>
+              <button>Save Descriptions</button>
+            </div>
+            <div></div>
+          </div>
+        ) : null}
+      </div>
     </form>
   )
 }
