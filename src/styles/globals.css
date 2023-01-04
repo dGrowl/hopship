@@ -21,6 +21,10 @@ a {
   }
   body {
     color: white;
-    background: black;
+    background: #161616;
   }
+}
+
+form {
+  display: contents;
 }

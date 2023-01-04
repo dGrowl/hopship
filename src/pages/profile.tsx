@@ -3,7 +3,6 @@ import Head from 'next/head'
 import jwt from 'jsonwebtoken'
 
 import { AuthPayload, Identity } from '../lib/types'
-import AddIdentityForm from '../components/AddIdentityForm'
 import db from '../lib/db'
 import IdentitiesList from '../components/IdentitiesList'
 import UpdateUserForm from '../components/UpdateUserForm'
@@ -21,9 +20,10 @@ const getUserIdentities = async (user_name: string) => {
         SELECT
           platform,
           name,
-          description AS desc
+          description AS desc,
+          verified
         FROM public.get_user_identities($1)
-        ORDER BY platform ASC, name ASC;
+        ORDER BY verified DESC, platform ASC, name ASC;
       `,
       [user_name]
     )
@@ -76,9 +76,6 @@ export default function Profile(props: ProfileProps) {
       </section>
       <section>
         <h2>Identities</h2>
-        <h3>Add</h3>
-        <AddIdentityForm />
-        <h3>Modify</h3>
         {identities.length === 0 ? (
           <div>You haven&apos;t added any identities yet!</div>
         ) : (

@@ -4,6 +4,7 @@ import { NextApiRequestCookies } from 'next/dist/server/api-utils'
 import { NextIncomingMessage } from 'next/dist/server/request-meta'
 
 export interface Identity {
+  verified?: boolean
   platform: string
   name: string
   desc: string
