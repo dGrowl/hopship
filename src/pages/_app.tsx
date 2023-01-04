@@ -6,6 +6,7 @@ import type { AppContext } from 'next/app'
 import { AuthPayload, ExtendedAppProps, ExtendedRequest } from '../lib/types'
 import UserMenu from '../components/UserMenu'
 
+import '../styles/reset.css'
 import '../styles/globals.css'
 import styles from '../styles/App.module.css'
 
