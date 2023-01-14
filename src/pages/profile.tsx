@@ -6,6 +6,7 @@ import { AuthPayload, Identity } from '../lib/types'
 import db from '../lib/db'
 import IdentitiesList from '../components/IdentitiesList'
 import UpdateUserForm from '../components/UpdateUserForm'
+import UserContext from '../components/UserContext'
 
 interface ProfileProps {
   name: string
@@ -79,7 +80,9 @@ export default function Profile(props: ProfileProps) {
         {identities.length === 0 ? (
           <div>You haven&apos;t added any identities yet!</div>
         ) : (
-          <IdentitiesList identities={identities} editable />
+          <UserContext.Provider value={name}>
+            <IdentitiesList identities={identities} editable />
+          </UserContext.Provider>
         )}
       </section>
     </>

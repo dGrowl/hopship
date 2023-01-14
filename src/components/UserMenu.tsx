@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-interface UserMenuProps {
+interface Props {
   name: string | null
 }
 
@@ -9,7 +9,7 @@ const logout = async () => {
   document.location.reload()
 }
 
-export default function UserMenu({ name }: UserMenuProps) {
+export default function UserMenu({ name }: Props) {
   if (name === null) {
     return (
       <div>

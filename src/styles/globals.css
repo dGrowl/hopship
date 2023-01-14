@@ -1,5 +1,6 @@
 html,
 body {
+  line-height: 1.2rem;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
@@ -22,8 +23,23 @@ select,
 input,
 textarea {
   padding: 3px;
+  margin: 1px;
 }
 
 button {
   margin: 2px;
+}
+
+ol {
+  padding-left: 12px;
+  list-style-type: decimal;
+  margin: 0 24px;
+}
+
+li {
+  margin: 12px 0;
+}
+
+p {
+  margin: 6px 0;
 }

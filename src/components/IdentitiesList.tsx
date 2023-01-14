@@ -1,24 +1,23 @@
-import { FormEvent, MouseEvent } from 'react'
+import { FormEvent, MouseEvent, useContext, useState } from 'react'
+import Link from 'next/link'
 
 import { Identity } from '../lib/types'
 import { jsonHeaders } from '../lib/util'
 import PlatformSelector from './PlatformSelector'
+import UserContext from './UserContext'
 
 import styles from '../styles/IdentitiesList.module.css'
+
+enum Mode {
+  NONE,
+  VERIFY,
+  DELETE,
+}
 
 type AddFormFields = EventTarget & {
   platform: HTMLSelectElement
   name: HTMLInputElement
   desc: HTMLTextAreaElement
-}
-
-type EditFormFields = EventTarget & {
-  desc: HTMLTextAreaElement
-}
-
-interface Props {
-  editable?: boolean
-  identities: Identity[]
 }
 
 const add = async (e: FormEvent) => {
@@ -36,22 +35,11 @@ const add = async (e: FormEvent) => {
   window.location.reload()
 }
 
-const removeIdentity = async (
-  e: MouseEvent,
-  platform: string,
-  name: string
-) => {
-  e.preventDefault()
-  const data = { platform, name }
-  await fetch('/api/identities', {
-    method: 'DELETE',
-    headers: jsonHeaders,
-    body: JSON.stringify(data),
-  })
-  window.location.reload()
+type EditFormFields = EventTarget & {
+  desc: HTMLTextAreaElement
 }
 
-const saveDescription = async (
+const updateDescription = async (
   e: FormEvent,
   platform: string,
   name: string
@@ -70,34 +58,195 @@ const saveDescription = async (
   window.location.reload()
 }
 
-const buildRows = (identities: Identity[], editable: boolean) => {
-  return identities.map(({ platform, name, desc, verified }) => (
-    <form
-      key={platform + name}
-      onSubmit={(e) => saveDescription(e, platform, name)}
-    >
-      <div className={`${styles.row} ${styles[platform]}`}>
-        {editable ? <div>{verified ? 'yes' : 'no'}</div> : null}
-        <div>{platform}</div>
-        <div>{name}</div>
+const remove = async (e: MouseEvent, platform: string, name: string) => {
+  e.preventDefault()
+  const data = { platform, name }
+  await fetch('/api/identities', {
+    method: 'DELETE',
+    headers: jsonHeaders,
+    body: JSON.stringify(data),
+  })
+  window.location.reload()
+}
+
+type VerifyFormFields = EventTarget & {
+  name: HTMLInputElement
+  tweetID?: HTMLInputElement
+}
+
+interface VerifyBody {
+  platform: string
+  name: string
+  tweetID?: string
+}
+
+const verify = async (e: FormEvent, platform: string) => {
+  e.preventDefault()
+  const fields = e.target as VerifyFormFields
+  const name = fields.name.value
+  const data: VerifyBody = { platform, name }
+  if (platform === 'Twitter') {
+    data.tweetID = fields.tweetID?.value
+  }
+  await fetch('/api/verify', {
+    method: 'POST',
+    headers: jsonHeaders,
+    body: JSON.stringify(data),
+  })
+  window.location.reload()
+}
+
+interface InstructionsProps {
+  platform: string
+  url: string
+  name: string
+}
+
+const Instructions = ({ platform, url, name }: InstructionsProps) => {
+  let copyStep = null
+  let extraSteps = null
+  let example = null
+  if (platform === 'Twitch') {
+    const aboutURL = `https://twitch.tv/${name}/about`
+    copyStep =
+      'Add this URL (which redirects to your user page) to your About page. Note that if you wish, it can be invisible (like an image link).'
+    example = (
+      <>
         <div>
-          {editable ? (
-            <textarea name="desc" className={styles.desc} defaultValue={desc} />
-          ) : (
-            <>{desc}</>
-          )}
+          Example (<Link href={aboutURL}>{aboutURL}</Link>):
         </div>
-        {editable ? (
-          <div>
-            {verified ? null : <button>Verify</button>}
-            <button>Update</button>
-            <button onClick={(e) => removeIdentity(e, platform, name)}>
-              Delete
-            </button>
-          </div>
-        ) : null}
-      </div>
+        <div className={`${styles.TwitterSnippet} ${styles.snippet}`}>
+          Hey everyone, I&apos;m connecting my social accounts using Also!
+          Follow my others at <Link href={url}>{url}</Link>!
+        </div>
+      </>
+    )
+  } else if (platform === 'Twitter') {
+    copyStep = 'Post a tweet that includes this URL.'
+    extraSteps = (
+      <li>
+        <p>Copy and paste the ID of that tweet here.</p>
+        <p>
+          https://twitter.com/{name}/status/
+          <input name="tweetID" placeholder="123456789" />
+        </p>
+      </li>
+    )
+    example = (
+      <>
+        <div>Example:</div>
+        <div className={`${styles.TwitterSnippet} ${styles.snippet}`}>
+          Hey everyone, I&apos;m connecting my social accounts using Also!
+          Follow my others at <Link href={url}>{url}</Link>!
+        </div>
+      </>
+    )
+  }
+  return (
+    <form onSubmit={(e) => verify(e, platform)}>
+      <input name="name" type="hidden" value={name} readOnly />
+      <ol>
+        <li>
+          <p>{copyStep}</p>
+          <p>
+            <input value={url} readOnly />
+          </p>
+        </li>
+        {extraSteps}
+        <li>
+          Press <button>Submit</button>!
+        </li>
+      </ol>
+      {example}
     </form>
+  )
+}
+
+interface VerificationPanelProps {
+  platform: string
+  platformName: string
+}
+
+const VerificationPanel = ({
+  platform,
+  platformName,
+}: VerificationPanelProps) => {
+  const userName = useContext(UserContext)
+  return (
+    <div className={styles.extension}>
+      In order to verify this identity, follow these steps:
+      <Instructions
+        url={`https://also.domain/u/${userName}`}
+        platform={platform}
+        name={platformName}
+      />
+    </div>
+  )
+}
+
+const toggle = (mode: Mode) => {
+  return (prevMode: Mode) => (prevMode === mode ? Mode.NONE : mode)
+}
+
+interface RowProps {
+  desc: string
+  editable: boolean
+  platform: string
+  name: string
+  verified?: boolean
+}
+
+const Row = ({ editable, platform, name, desc, verified }: RowProps) => {
+  const [mode, setMode] = useState(Mode.NONE)
+  let extension = null
+  if (mode === Mode.VERIFY) {
+    extension = <VerificationPanel platform={platform} platformName={name} />
+  }
+  return (
+    <>
+      <form onSubmit={(e) => updateDescription(e, platform, name)}>
+        <div className={`${styles.row} ${styles[platform]}`}>
+          {editable ? <div>{verified ? 'yes' : 'no'}</div> : null}
+          <div>{platform}</div>
+          <div>{name}</div>
+          <div>
+            {editable ? (
+              <textarea
+                name="desc"
+                className={styles.desc}
+                defaultValue={desc}
+              />
+            ) : (
+              <>{desc}</>
+            )}
+          </div>
+          {editable ? (
+            <div>
+              {verified ? null : (
+                <input
+                  type="button"
+                  onClick={() => setMode(toggle(Mode.VERIFY))}
+                  value="Verify"
+                />
+              )}
+              <input type="submit" value="Update" />
+              <input
+                type="button"
+                onClick={(e) => remove(e, platform, name)}
+                value="Delete"
+              />
+            </div>
+          ) : null}
+        </div>
+      </form>
+      {extension}
+    </>
+  )
+}
+
+const buildRows = (identities: Identity[], editable: boolean) => {
+  return identities.map((i) => (
+    <Row key={i.platform + i.name} editable={editable} {...i} />
   ))
 }
 
@@ -120,6 +269,11 @@ const AddRow = () => (
     </div>
   </form>
 )
+
+interface Props {
+  editable?: boolean
+  identities: Identity[]
+}
 
 const IdentitiesList = ({ identities, editable }: Props) => {
   editable = editable || false

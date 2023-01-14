@@ -23,14 +23,12 @@ export default function App({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header>
+      <header id={styles.header}>
         <Link href="/">
           <h1 className={styles.title}>also</h1>
         </Link>
-      </header>
-      <nav>
         <UserMenu name={userName} />
-      </nav>
+      </header>
 
       <main className={styles.main}>
         <Component {...pageProps} />

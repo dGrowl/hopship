@@ -4,6 +4,27 @@
   max-width: 800px;
 }
 
+.extension {
+  background-color: rgba(255, 255, 255, 0.05);
+  grid-column: 1 / 6;
+  padding: 12px;
+}
+
+.snippet {
+  margin: 1rem;
+  padding: 12px;
+}
+
+.TwitterSnippet {
+  border-left: 4px solid #1da1f2;
+  background-color: rgba(29, 160, 242, 0.1);
+}
+
+.TwitchSnippet {
+  border-left: 4px solid #6441a5;
+  background-color: rgba(100, 65, 165, 0.1);
+}
+
 .row {
   display: contents;
 }
