@@ -115,7 +115,7 @@ const Instructions = ({ platform, url, name }: InstructionsProps) => {
         <div>
           Example (<Link href={aboutURL}>{aboutURL}</Link>):
         </div>
-        <div className={`${styles.TwitterSnippet} ${styles.snippet}`}>
+        <div className={`${styles.TwitchSnippet} ${styles.snippet}`}>
           Hey everyone, I&apos;m connecting my social accounts using Also!
           Follow my others at <Link href={url}>{url}</Link>!
         </div>
@@ -172,8 +172,9 @@ const VerificationPanel = ({
   platformName,
 }: VerificationPanelProps) => {
   const userName = useContext(UserContext)
+  const platformClass = `${platform}Extension`
   return (
-    <div className={styles.extension}>
+    <div className={`${styles.extension} ${styles[platformClass]}`}>
       In order to verify this identity, follow these steps:
       <Instructions
         url={`https://also.domain/u/${userName}`}
@@ -206,7 +207,7 @@ const Row = ({ editable, platform, name, desc, verified }: RowProps) => {
     <>
       <form onSubmit={(e) => updateDescription(e, platform, name)}>
         <div className={`${styles.row} ${styles[platform]}`}>
-          {editable ? <div>{verified ? 'yes' : 'no'}</div> : null}
+          {editable ? <div>{verified ? 'Yes' : 'No'}</div> : null}
           <div>{platform}</div>
           <div>{name}</div>
           <div>
@@ -221,7 +222,7 @@ const Row = ({ editable, platform, name, desc, verified }: RowProps) => {
             )}
           </div>
           {editable ? (
-            <div>
+            <div className={styles.editControls}>
               {verified ? null : (
                 <input
                   type="button"
@@ -244,16 +245,15 @@ const Row = ({ editable, platform, name, desc, verified }: RowProps) => {
   )
 }
 
-const buildRows = (identities: Identity[], editable: boolean) => {
-  return identities.map((i) => (
+const buildRows = (identities: Identity[], editable: boolean) =>
+  identities.map((i) => (
     <Row key={i.platform + i.name} editable={editable} {...i} />
   ))
-}
 
-const AddRow = () => (
+const addRow = (
   <form onSubmit={add}>
     <div className={`${styles.row} ${styles.footerRow}`}>
-      <div>no</div>
+      <div>—</div>
       <div>
         <PlatformSelector initial={null} />
       </div>
@@ -280,17 +280,17 @@ const IdentitiesList = ({ identities, editable }: Props) => {
   return (
     <div
       id={styles.identities}
-      style={editable ? { gridTemplateColumns: 'repeat(5, auto)' } : {}}
+      style={editable ? { gridTemplateColumns: 'auto auto auto 1fr auto' } : {}}
     >
       <div className={`${styles.row} ${styles.headerRow}`}>
-        {editable ? <div>Verified</div> : null}
-        <div>Platform</div>
-        <div>ID</div>
-        <div>Description</div>
-        {editable ? <div>Edit</div> : null}
+        {editable ? <div>verified</div> : null}
+        <div>platform</div>
+        <div>id</div>
+        <div>description</div>
+        {editable ? <div>edit</div> : null}
       </div>
       {buildRows(identities, editable)}
-      {editable ? <AddRow /> : null}
+      {editable ? addRow : null}
     </div>
   )
 }

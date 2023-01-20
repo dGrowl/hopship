@@ -1,4 +1,4 @@
-.form {
-  display: grid;
-  grid-template-columns: auto;
+.fields {
+  display: flex;
+  flex-direction: column;
 }

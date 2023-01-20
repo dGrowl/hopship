@@ -1,3 +1,4 @@
+import Field from './Field'
 import PlatformSelector from './PlatformSelector'
 
 import styles from '../styles/SearchForm.module.css'
@@ -10,12 +11,18 @@ interface SearchFormProps {
 export default function SearchForm(props: SearchFormProps) {
   const { platform, name } = props
   return (
-    <form action="/results" className={styles.form}>
-      <label>Platform</label>
-      <PlatformSelector initial={platform} />
-      <label>ID</label>
-      <input name="id" defaultValue={name || ''} />
-      <input type="submit" value="Search" />
-    </form>
+    <section>
+      <form action="/results" className={styles.form}>
+        <div className={styles.fields}>
+          <Field name="platform">
+            <PlatformSelector initial={platform} />
+          </Field>
+          <Field name="id">
+            <input name="id" defaultValue={name || ''} />
+          </Field>
+        </div>
+        <button>search</button>
+      </form>
+    </section>
   )
 }

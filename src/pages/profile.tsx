@@ -5,10 +5,15 @@ import jwt from 'jsonwebtoken'
 import { AuthPayload, Identity } from '../lib/types'
 import db from '../lib/db'
 import IdentitiesList from '../components/IdentitiesList'
-import UpdateUserForm from '../components/UpdateUserForm'
+import {
+  UpdateUserForm,
+  UpdatePasswordForm,
+} from '../components/UpdateUserForm'
 import UserContext from '../components/UserContext'
 
-interface ProfileProps {
+import styles from '../styles/Profile.module.css'
+
+interface Props {
   name: string
   email: string
   identities: Identity[]
@@ -56,6 +61,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   } catch (error) {
     console.log(error)
   }
+
   return {
     redirect: {
       destination: '/login',
@@ -64,27 +70,29 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 
-export default function Profile(props: ProfileProps) {
+export default function Profile(props: Props) {
   const { name, email, identities } = props
   return (
     <>
       <Head>
         <title>{`Also: ${name}'s Profile`}</title>
       </Head>
-      <section>
-        <h2>User</h2>
-        <UpdateUserForm name={name} email={email} />
-      </section>
-      <section>
-        <h2>Identities</h2>
-        {identities.length === 0 ? (
-          <div>You haven&apos;t added any identities yet!</div>
-        ) : (
+      <div id={styles.container}>
+        <section>
+          <h2>User</h2>
+          <UpdateUserForm name={name} email={email} />
+        </section>
+        <section>
+          <h2>Password</h2>
+          <UpdatePasswordForm />
+        </section>
+        <section style={{ gridColumn: '1 / 3' }}>
+          <h2>Identities</h2>
           <UserContext.Provider value={name}>
             <IdentitiesList identities={identities} editable />
           </UserContext.Provider>
-        )}
-      </section>
+        </section>
+      </div>
     </>
   )
 }

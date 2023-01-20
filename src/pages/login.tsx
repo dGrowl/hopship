@@ -5,6 +5,7 @@ import Head from 'next/head'
 import jwt from 'jsonwebtoken'
 
 import { jsonHeaders } from '../lib/util'
+import Field from '../components/Field'
 
 interface LoginFormFields extends EventTarget {
   email: HTMLInputElement
@@ -87,31 +88,35 @@ export default function Login() {
       <Head>
         <title>Also: Login/Register</title>
       </Head>
-      <div>
+      <section>
         <div>
           <button onClick={() => setRegisterMode(false)}>Login</button>
           <button onClick={() => setRegisterMode(true)}>Register</button>
         </div>
         <form onSubmit={(e) => processForm(e, registerMode, router)}>
-          <label htmlFor="email">Email</label>
-          <input name="email" type="email" />
+          <Field name="email">
+            <input name="email" type="email" />
+          </Field>
           {registerMode ? (
             <>
-              <label htmlFor="name">ID</label>
-              <input name="name" />
+              <Field name="name">
+                <input name="name" />
+              </Field>
             </>
           ) : null}
-          <label htmlFor="password">Password</label>
-          <input name="password" type="password" />
+          <Field name="password">
+            <input name="password" type="password" />
+          </Field>
           {registerMode ? (
             <>
-              <label htmlFor="repassword">Password (Again)</label>
-              <input name="repassword" type="password" />
+              <Field name="repassword" label="password (again)">
+                <input name="repassword" type="password" />
+              </Field>
             </>
           ) : null}
           <button>Submit</button>
         </form>
-      </div>
+      </section>
     </>
   )
 }

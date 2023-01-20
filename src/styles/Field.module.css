@@ -1,0 +1,27 @@
+.in {
+  margin-top: 1px;
+  margin-bottom: 12px;
+}
+
+.field {
+  flex-grow: 1;
+}
+
+.field label {
+  font-size: 1.05rem;
+  margin-bottom: 4px;
+}
+
+.field input {
+  font-size: 1.2rem;
+  min-width: 32px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.field select {
+  font-size: 1.2rem;
+  min-width: 32px;
+  width: 100%;
+  box-sizing: border-box;
+}

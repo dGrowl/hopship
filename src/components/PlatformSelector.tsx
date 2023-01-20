@@ -8,6 +8,7 @@ const PlatformSelector = ({ initial }: Props) => {
   return (
     <select
       name="platform"
+      key={initial ? 'default' : 'stored'}
       defaultValue={initial || platforms[0]}
     >
       {platforms.map((p) => (

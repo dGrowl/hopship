@@ -1,0 +1,11 @@
+#container {
+  align-items: start;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: auto auto;
+  width: 100%;
+}
+
+#identitiesRow {
+  grid-column: 1 / 3;
+}

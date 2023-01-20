@@ -10,9 +10,21 @@ body {
     color-scheme: dark;
   }
   body {
-    color: white;
+    color: #fefefe;
     background: #161616;
   }
+}
+
+h2 {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+section {
+  background-color: rgba(128, 128, 128, 0.1);
+  border-radius: 10px;
+  padding: 12px 18px;
 }
 
 form {
@@ -22,18 +34,43 @@ form {
 select,
 input,
 textarea {
+  border: 2px solid rgba(128, 128, 128, 0.8);
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 1.2rem;
+  mix-blend-mode: color-dodge;
   padding: 3px;
-  margin: 1px;
 }
 
-button {
-  margin: 2px;
+button,
+input[type='button'],
+input[type='submit'] {
+  background-color: rgba(128, 128, 128, 0.4);
+  border-radius: 2px;
+  border: 2px solid rgba(128, 128, 128, 0.4);
+  box-sizing: border-box;
+  color: #eee;
+  font-size: 1.1rem;
+  mix-blend-mode: color-dodge;
+  padding: 2px 12px;
+}
+
+button:active,
+input[type='button']:active,
+input[type='submit']:active {
+  background-color: rgba(128, 128, 128, 0.8);
+}
+
+button:focus,
+input[type='button']:focus,
+input[type='submit']:focus {
+  border: 2px solid rgba(128, 128, 128, 1);
 }
 
 ol {
-  padding-left: 12px;
   list-style-type: decimal;
   margin: 0 24px;
+  padding-left: 12px;
 }
 
 li {
@@ -42,4 +79,8 @@ li {
 
 p {
   margin: 6px 0;
+}
+
+.fullWidth {
+  width: 100%;
 }

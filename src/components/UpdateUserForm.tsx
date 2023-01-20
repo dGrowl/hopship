@@ -1,8 +1,9 @@
-import { FormEvent } from 'react'
+import { FormEvent, useState } from 'react'
 
 import { jsonHeaders } from '../lib/util'
 
 import styles from '../styles/UpdateUserForm.module.css'
+import Field from './Field'
 
 interface Props {
   name: string
@@ -24,23 +25,15 @@ interface Fields extends EventTarget {
   reNewPassword: HTMLInputElement
 }
 
-const submit = async (e: FormEvent) => {
+const updateUser = async (e: FormEvent) => {
   e.preventDefault()
-  const { name, email, oldPassword, newPassword, reNewPassword } =
-    e.target as Fields
+  const { name, email } = e.target as Fields
   const data: Data = {}
   if (name.defaultValue !== name.value) {
     data.name = name.value
   }
   if (email.defaultValue !== email.value) {
     data.email = email.value
-  }
-  if (oldPassword.defaultValue !== oldPassword.value) {
-    if (newPassword.value !== reNewPassword.value) {
-      return
-    }
-    data.oldPassword = oldPassword.value
-    data.newPassword = newPassword.value
   }
   await fetch('/api/users', {
     method: 'PATCH',
@@ -50,28 +43,75 @@ const submit = async (e: FormEvent) => {
   window.location.reload()
 }
 
-const UpdateUserForm = ({ name, email }: Props) => {
+const updatePassword = async (e: FormEvent) => {
+  e.preventDefault()
+  const { oldPassword, newPassword, reNewPassword } = e.target as Fields
+  if (oldPassword.defaultValue !== oldPassword.value) {
+    if (newPassword.value !== reNewPassword.value) {
+      return
+    }
+  }
+  const data = {
+    oldPassword: oldPassword.value,
+    newPassword: newPassword.value,
+  }
+  await fetch('/api/users', {
+    method: 'PATCH',
+    headers: jsonHeaders,
+    body: JSON.stringify(data),
+  })
+  window.location.reload()
+}
+
+interface NameInputProps {
+  initial: string
+}
+
+const NameInput = ({ initial }: NameInputProps) => {
+  const [name, setName] = useState(initial)
   return (
-    <form className={styles.form} onSubmit={submit}>
-      <label htmlFor="name">Name</label>
-      <div>
-        <input name="name" defaultValue={name} />
-        <div>https://also.domain/u/{name}</div>
+    <>
+      <input
+        name="name"
+        onChange={(e) => setName(e.target.value)}
+        value={name}
+      />
+      <div className={styles.nameResult}>⮩ also.domain/u/{name}</div>
+    </>
+  )
+}
+
+export const UpdateUserForm = ({ name, email }: Props) => {
+  return (
+    <form className={styles.userForm} onSubmit={updateUser}>
+      <Field name="name">
+        <NameInput initial={name} />
+      </Field>
+      <Field name="email">
+        <input name="email" type="email" defaultValue={email} />
+      </Field>
+      <div className={styles.submitRow}>
+        <button className={styles.submitButton}>save</button>
       </div>
-      <label htmlFor="email">Email</label>
-      <input name="email" type="email" defaultValue={email} />
-      <label htmlFor="oldPassword">Password</label>
-      <div className={styles.passwordFields}>
-        <label htmlFor="oldPassword">Old</label>
-        <input name="oldPassword" type="password" />
-        <label htmlFor="newPassword">New</label>
-        <input name="newPassword" type="password" />
-        <label htmlFor="reNewPassword">New (again)</label>
-        <input name="reNewPassword" type="password" />
-      </div>
-      <button>Update</button>
     </form>
   )
 }
 
-export default UpdateUserForm
+export const UpdatePasswordForm = () => {
+  return (
+    <form className={styles.passForm} onSubmit={updatePassword}>
+      <Field name="old">
+        <input name="old" type="password" />
+      </Field>
+      <Field name="new">
+        <input name="new" type="password" />
+      </Field>
+      <Field name="reNew" label="new (again)">
+        <input name="reNew" type="password" />
+      </Field>
+      <div className={styles.submitRow}>
+        <button className={styles.submitButton}>save</button>
+      </div>
+    </form>
+  )
+}

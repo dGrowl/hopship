@@ -1,9 +1,22 @@
-.form {
-  display: grid;
-  grid-template-columns: auto auto;
+.nameResult {
+  margin-top: 2px;
+  font-size: 1.05rem;
 }
 
-.passwordFields {
-  display: grid;
-  grid-template-columns: auto auto;
+.userFields {
+  column-gap: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.submitRow {
+  grid-column: 1 / 3;
+}
+
+.passForm {
+  column-gap: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }

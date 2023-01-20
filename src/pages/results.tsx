@@ -8,6 +8,8 @@ import db from '../lib/db'
 import IdentitiesList from '../components/IdentitiesList'
 import SearchForm from '../components/SearchForm'
 
+import styles from '../styles/Results.module.css'
+
 interface ResultsProps {
   platform: string | null
   name: string | null
@@ -76,8 +78,12 @@ export default function Results(props: ResultsProps) {
       <Head>
         <title>{title}</title>
       </Head>
-      <SearchForm platform={platform} name={name} />
-      <IdentitiesList identities={identities} />
+      <div id={styles.container}>
+        <SearchForm platform={platform} name={name} />
+        <section>
+          <IdentitiesList identities={identities} />
+        </section>
+      </div>
     </>
   )
 }
