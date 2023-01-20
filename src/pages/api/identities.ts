@@ -47,17 +47,18 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const remove = async (req: NextApiRequest, res: NextApiResponse) => {
+  const payload = processAuth(req, res)
+  if (!payload) return
+  const { name: userName } = payload
   const { body } = req
-  const { platform, name } = body
+  const { platform, name: platformName, verified } = body
   try {
-    await db.query(
-      `
-        DELETE FROM public.identities
-        WHERE platform = $1
-          AND name = $2;
-      `,
-      [platform, name]
-    )
+    await db.query('CALL delete_identity($1, $2, $3, $4);', [
+      userName,
+      platform,
+      platformName,
+      verified,
+    ])
   } catch (error) {
     console.log(error)
     return res.status(500).json({})

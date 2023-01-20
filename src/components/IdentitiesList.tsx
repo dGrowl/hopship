@@ -58,9 +58,17 @@ const updateDescription = async (
   window.location.reload()
 }
 
-const remove = async (e: MouseEvent, platform: string, name: string) => {
+const remove = async (
+  e: MouseEvent,
+  platform: string,
+  name: string,
+  verified: boolean | undefined
+) => {
   e.preventDefault()
-  const data = { platform, name }
+  if (verified === undefined) {
+    return
+  }
+  const data = { platform, name, verified }
   await fetch('/api/identities', {
     method: 'DELETE',
     headers: jsonHeaders,
@@ -233,7 +241,7 @@ const Row = ({ editable, platform, name, desc, verified }: RowProps) => {
               <input type="submit" value="Update" />
               <input
                 type="button"
-                onClick={(e) => remove(e, platform, name)}
+                onClick={(e) => remove(e, platform, name, verified)}
                 value="Delete"
               />
             </div>
