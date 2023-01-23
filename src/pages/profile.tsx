@@ -5,10 +5,8 @@ import jwt from 'jsonwebtoken'
 import { AuthPayload, Identity } from '../lib/types'
 import db from '../lib/db'
 import IdentitiesList from '../components/IdentitiesList'
-import {
-  UpdateUserForm,
-  UpdatePasswordForm,
-} from '../components/UpdateUserForm'
+import UpdatePasswordForm from '../components/UpdatePasswordForm'
+import UpdateUserForm from '../components/UpdateUserForm'
 import UserContext from '../components/UserContext'
 
 import styles from '../styles/Profile.module.css'
@@ -70,8 +68,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 
-export default function Profile(props: Props) {
-  const { name, email, identities } = props
+const Profile = ({ name, email, identities }: Props) => {
   return (
     <>
       <Head>
@@ -96,3 +93,5 @@ export default function Profile(props: Props) {
     </>
   )
 }
+
+export default Profile

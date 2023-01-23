@@ -22,3 +22,11 @@ export interface AuthPayload extends JwtPayload {
   name: string
   email: string
 }
+
+export interface CSRFPayload extends JwtPayload {
+  code: string
+}
+
+export interface CSRFFormFields {
+  csrf: HTMLInputElement
+}

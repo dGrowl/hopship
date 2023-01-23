@@ -1,66 +1,41 @@
 import { FormEvent, useState } from 'react'
 
-import { jsonHeaders } from '../lib/util'
-
-import styles from '../styles/UpdateUserForm.module.css'
+import { CSRFFormFields } from '../lib/types'
+import { csrfHeaders } from '../lib/util'
+import { useCSRFCode } from '../lib/safety'
 import Field from './Field'
 
-interface Props {
-  name: string
-  email: string
-}
+import styles from '../styles/UpdateUserForm.module.css'
 
 interface Data {
   name?: string
   email?: string
-  oldPassword?: string
-  newPassword?: string
 }
 
-interface Fields extends EventTarget {
-  name: HTMLInputElement
-  email: HTMLInputElement
-  oldPassword: HTMLInputElement
-  newPassword: HTMLInputElement
-  reNewPassword: HTMLInputElement
-}
+type Fields = EventTarget &
+  CSRFFormFields & {
+    name: HTMLInputElement
+    email: HTMLInputElement
+  }
 
-const updateUser = async (e: FormEvent) => {
+const update = async (e: FormEvent, currentName: string) => {
   e.preventDefault()
-  const { name, email } = e.target as Fields
+  const { csrf, name, email } = e.target as Fields
   const data: Data = {}
-  if (name.defaultValue !== name.value) {
+  if (currentName !== name.value) {
     data.name = name.value
   }
   if (email.defaultValue !== email.value) {
     data.email = email.value
   }
-  await fetch('/api/users', {
-    method: 'PATCH',
-    headers: jsonHeaders,
-    body: JSON.stringify(data),
-  })
-  window.location.reload()
-}
-
-const updatePassword = async (e: FormEvent) => {
-  e.preventDefault()
-  const { oldPassword, newPassword, reNewPassword } = e.target as Fields
-  if (oldPassword.defaultValue !== oldPassword.value) {
-    if (newPassword.value !== reNewPassword.value) {
-      return
-    }
+  if (data.name || data.email) {
+    await fetch('/api/users', {
+      method: 'PATCH',
+      headers: csrfHeaders(csrf.value),
+      body: JSON.stringify(data),
+    })
+    window.location.reload()
   }
-  const data = {
-    oldPassword: oldPassword.value,
-    newPassword: newPassword.value,
-  }
-  await fetch('/api/users', {
-    method: 'PATCH',
-    headers: jsonHeaders,
-    body: JSON.stringify(data),
-  })
-  window.location.reload()
 }
 
 interface NameInputProps {
@@ -81,37 +56,25 @@ const NameInput = ({ initial }: NameInputProps) => {
   )
 }
 
-export const UpdateUserForm = ({ name, email }: Props) => {
+interface Props {
+  name: string
+  email: string
+}
+
+const UpdateUserForm = ({ name, email }: Props) => {
+  const csrfCode = useCSRFCode()
   return (
-    <form className={styles.userForm} onSubmit={updateUser}>
+    <form onSubmit={(e) => update(e, name)}>
+      <input name="csrf" type="hidden" value={csrfCode} readOnly />
       <Field name="name">
         <NameInput initial={name} />
       </Field>
       <Field name="email">
         <input name="email" type="email" defaultValue={email} />
       </Field>
-      <div className={styles.submitRow}>
-        <button className={styles.submitButton}>save</button>
-      </div>
+      <button>save</button>
     </form>
   )
 }
 
-export const UpdatePasswordForm = () => {
-  return (
-    <form className={styles.passForm} onSubmit={updatePassword}>
-      <Field name="old">
-        <input name="old" type="password" />
-      </Field>
-      <Field name="new">
-        <input name="new" type="password" />
-      </Field>
-      <Field name="reNew" label="new (again)">
-        <input name="reNew" type="password" />
-      </Field>
-      <div className={styles.submitRow}>
-        <button className={styles.submitButton}>save</button>
-      </div>
-    </form>
-  )
-}
+export default UpdateUserForm

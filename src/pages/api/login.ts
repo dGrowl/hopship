@@ -2,6 +2,7 @@ import argon2 from 'argon2'
 import jwt from 'jsonwebtoken'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+import { checkCSRF } from '../../lib/safety'
 import { clamp } from '../../lib/util'
 import db from '../../lib/db'
 
@@ -74,6 +75,7 @@ const authenticate = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (!checkCSRF(req, res)) return
   switch (req.method) {
     case 'POST':
       return authenticate(req, res)

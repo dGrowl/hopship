@@ -4,23 +4,26 @@ import { NextRouter, useRouter } from 'next/router'
 import Head from 'next/head'
 import jwt from 'jsonwebtoken'
 
-import { jsonHeaders } from '../lib/util'
+import { csrfHeaders } from '../lib/util'
+import { useCSRFCode } from '../lib/safety'
 import Field from '../components/Field'
 
 interface LoginFormFields extends EventTarget {
+  csrf: HTMLInputElement
   email: HTMLInputElement
   password: HTMLInputElement
   name?: HTMLInputElement
   repassword?: HTMLInputElement
 }
 
-const processForm = async (
+const submit = async (
   e: FormEvent,
   registerMode: boolean,
   router: NextRouter
 ) => {
   e.preventDefault()
   const fields = e.target as LoginFormFields
+  const csrf = fields.csrf.value
   const email = fields.email.value
   const password = fields.password.value
   if (registerMode) {
@@ -35,7 +38,7 @@ const processForm = async (
     const data = { email, name, password }
     const response = await fetch('/api/users', {
       method: 'POST',
-      headers: jsonHeaders,
+      headers: csrfHeaders(csrf),
       body: JSON.stringify(data),
     })
     if (response.status !== 200) {
@@ -45,7 +48,7 @@ const processForm = async (
   const data = { email, password }
   const response = await fetch('/api/login', {
     method: 'POST',
-    headers: jsonHeaders,
+    headers: csrfHeaders(csrf),
     body: JSON.stringify(data),
   })
   if (response.status === 200) {
@@ -83,6 +86,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 export default function Login() {
   const [registerMode, setRegisterMode] = useState(false)
   const router = useRouter()
+  const csrfCode = useCSRFCode()
   return (
     <>
       <Head>
@@ -93,7 +97,8 @@ export default function Login() {
           <button onClick={() => setRegisterMode(false)}>Login</button>
           <button onClick={() => setRegisterMode(true)}>Register</button>
         </div>
-        <form onSubmit={(e) => processForm(e, registerMode, router)}>
+        <form onSubmit={(e) => submit(e, registerMode, router)}>
+          <input name="csrf" type="hidden" value={csrfCode} readOnly />
           <Field name="email">
             <input name="email" type="email" />
           </Field>

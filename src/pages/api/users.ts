@@ -1,9 +1,9 @@
 import argon2 from 'argon2'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+import { checkCSRF, processAuth } from '../../lib/safety'
 import { getUserData, genAuthCookie } from './login'
 import { hasKey } from '../../lib/util'
-import { processAuth } from '../../lib/safety'
 import db from '../../lib/db'
 
 interface Data {
@@ -49,10 +49,10 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
   if (hasKey(body, 'email')) {
     data.email = body.email
   }
-  if (hasKey(body, 'oldPassword')) {
-    const user = await getUserData(currentEmail, body.oldPassword)
+  if (hasKey(body, 'currentPassword')) {
+    const user = await getUserData(currentEmail, body.currentPassword)
     if (user) {
-      data.passhash = await argon2.hash(body.newPassword, ARGON_OPTIONS)
+      data.passhash = await argon2.hash(body.futurePassword, ARGON_OPTIONS)
     } else {
       return res
         .status(400)
@@ -66,7 +66,7 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   const updates = Object.keys(data).map((column, i) => `${column} = $${i + 1}`)
   try {
-    await db.query(
+    const result = await db.query(
       `
         UPDATE public.users
         SET ${updates.join(',')}
@@ -74,6 +74,9 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
       `,
       [...Object.values(data), currentName]
     )
+    if (result.rowCount === 0) {
+      return res.status(400).json({ message: 'Invalid authenticated user' })
+    }
   } catch (error) {
     console.log(error)
     return res.status(500).json({ message: 'Database update query failed' })
@@ -92,6 +95,7 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (!checkCSRF(req, res)) return
   switch (req.method) {
     case 'POST':
       return create(req, res)

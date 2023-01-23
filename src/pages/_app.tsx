@@ -9,6 +9,9 @@ import UserMenu from '../components/UserMenu'
 import '../styles/reset.css'
 import '../styles/globals.css'
 import styles from '../styles/App.module.css'
+import { genHexString } from '../lib/util'
+
+const HALF_HOUR_IN_SECONDS = 60 * 30
 
 export default function App({
   Component,
@@ -51,17 +54,38 @@ App.getInitialProps = async ({ ctx }: AppContext) => {
   let userName = null
   if (ctx.req) {
     const request = ctx.req as ExtendedRequest
-    const token = request.cookies.auth
-    if (token) {
+    const authToken = request.cookies.auth
+    if (authToken) {
       try {
         if (!process.env.JWT_AUTH_SECRET) {
           throw 'Environment is missing JWT secret'
         }
         const payload = jwt.verify(
-          token,
+          authToken,
           process.env.JWT_AUTH_SECRET
         ) as AuthPayload
         userName = payload.name
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    if (!request.cookies.csrf && ctx.res) {
+      try {
+        if (!process.env.JWT_AUTH_SECRET) {
+          throw 'Environment is missing JWT secret'
+        }
+        const code = genHexString(32)
+        const csrfToken = jwt.sign({ code }, process.env.JWT_AUTH_SECRET, {
+          expiresIn: HALF_HOUR_IN_SECONDS,
+        })
+        const cookie = [
+          `csrf=${csrfToken}`,
+          `Max-Age=${HALF_HOUR_IN_SECONDS}`,
+          'Path=/',
+          'SameSite=Lax',
+          'Secure',
+        ]
+        ctx.res.setHeader('Set-Cookie', cookie.join('; '))
       } catch (error) {
         console.log(error)
       }

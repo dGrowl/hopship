@@ -1,8 +1,9 @@
-import { FormEvent, MouseEvent, useContext, useState } from 'react'
+import { FormEvent, useContext, useState } from 'react'
 import Link from 'next/link'
 
-import { Identity } from '../lib/types'
-import { jsonHeaders } from '../lib/util'
+import { CSRFFormFields, Identity } from '../lib/types'
+import { csrfHeaders, jsonHeaders } from '../lib/util'
+import { useCSRFCode } from '../lib/safety'
 import PlatformSelector from './PlatformSelector'
 import UserContext from './UserContext'
 
@@ -14,94 +15,106 @@ enum Mode {
   DELETE,
 }
 
-type AddFormFields = EventTarget & {
-  platform: HTMLSelectElement
-  name: HTMLInputElement
-  desc: HTMLTextAreaElement
-}
+type AddFormFields = EventTarget &
+  CSRFFormFields & {
+    desc: HTMLTextAreaElement
+    name: HTMLInputElement
+    platform: HTMLSelectElement
+  }
 
 const add = async (e: FormEvent) => {
   e.preventDefault()
   const form = e.target as AddFormFields
-  const platform = form.platform.value
-  const name = form.name.value
+  const csrf = form.csrf.value
   const desc = form.desc.value
+  const name = form.name.value
+  const platform = form.platform.value
   const data = { platform, name, desc }
   await fetch('/api/identities', {
     method: 'POST',
-    headers: jsonHeaders,
+    headers: csrfHeaders(csrf),
     body: JSON.stringify(data),
   })
   window.location.reload()
 }
 
-type EditFormFields = EventTarget & {
-  desc: HTMLTextAreaElement
-}
-
-const updateDescription = async (
-  e: FormEvent,
+const update = async (
+  csrf: string,
+  verified: boolean,
   platform: string,
-  name: string
+  name: string,
+  descElement: HTMLTextAreaElement
 ) => {
-  e.preventDefault()
-  const form = e.target as EditFormFields
-  const { desc } = form
-  if (desc.defaultValue !== desc.value) {
-    const data = { platform, name, desc: desc.value }
+  if (descElement.defaultValue !== descElement.value) {
+    const data = { platform, name, desc: descElement.value, verified }
     await fetch('/api/identities', {
       method: 'PATCH',
-      headers: jsonHeaders,
+      headers: csrfHeaders(csrf),
       body: JSON.stringify(data),
     })
+    window.location.reload()
   }
-  window.location.reload()
 }
 
 const remove = async (
-  e: MouseEvent,
+  csrf: string,
+  verified: boolean,
   platform: string,
-  name: string,
-  verified: boolean | undefined
+  name: string
 ) => {
-  e.preventDefault()
-  if (verified === undefined) {
-    return
-  }
   const data = { platform, name, verified }
   await fetch('/api/identities', {
     method: 'DELETE',
-    headers: jsonHeaders,
+    headers: csrfHeaders(csrf),
     body: JSON.stringify(data),
   })
   window.location.reload()
 }
 
-type VerifyFormFields = EventTarget & {
-  name: HTMLInputElement
-  tweetID?: HTMLInputElement
-}
-
-interface VerifyBody {
-  platform: string
-  name: string
-  tweetID?: string
-}
-
-const verify = async (e: FormEvent, platform: string) => {
-  e.preventDefault()
-  const fields = e.target as VerifyFormFields
-  const name = fields.name.value
-  const data: VerifyBody = { platform, name }
-  if (platform === 'Twitter') {
-    data.tweetID = fields.tweetID?.value
-  }
+const verify = async (
+  csrf: string,
+  platform: string,
+  name: string,
+  messageID: string
+) => {
+  const data = { platform, name, messageID }
   await fetch('/api/verify', {
     method: 'POST',
-    headers: jsonHeaders,
+    headers: csrfHeaders(csrf),
     body: JSON.stringify(data),
   })
   window.location.reload()
+}
+
+type RowFields = EventTarget &
+  CSRFFormFields & {
+    desc: HTMLTextAreaElement
+    name: HTMLInputElement
+    platform: HTMLInputElement
+    verified: HTMLInputElement
+    messageID?: HTMLInputElement
+  }
+
+const rowSubmit = (e: FormEvent) => {
+  e.preventDefault()
+  const fields = e.target as RowFields
+  const { csrf, desc, name, platform, verified, messageID } = fields
+  const submit = e.nativeEvent as SubmitEvent
+  const submitter = submit.submitter as HTMLInputElement | null
+  const isVerified = verified.value === 't'
+  switch (submitter?.value) {
+    case 'Update':
+      return update(csrf.value, isVerified, platform.value, name.value, desc)
+    case 'Delete':
+      return remove(csrf.value, isVerified, platform.value, name.value)
+    case 'Verify':
+      return verify(
+        csrf.value,
+        platform.value,
+        name.value,
+        messageID?.value || ''
+      )
+  }
 }
 
 interface InstructionsProps {
@@ -151,8 +164,7 @@ const Instructions = ({ platform, url, name }: InstructionsProps) => {
     )
   }
   return (
-    <form onSubmit={(e) => verify(e, platform)}>
-      <input name="name" type="hidden" value={name} readOnly />
+    <>
       <ol>
         <li>
           <p>{copyStep}</p>
@@ -162,11 +174,11 @@ const Instructions = ({ platform, url, name }: InstructionsProps) => {
         </li>
         {extraSteps}
         <li>
-          Press <button>Submit</button>!
+          Press <input type="submit" value="Verify" />!
         </li>
       </ol>
       {example}
-    </form>
+    </>
   )
 }
 
@@ -207,49 +219,49 @@ interface RowProps {
 
 const Row = ({ editable, platform, name, desc, verified }: RowProps) => {
   const [mode, setMode] = useState(Mode.NONE)
+  const csrfCode = useCSRFCode()
   let extension = null
   if (mode === Mode.VERIFY) {
     extension = <VerificationPanel platform={platform} platformName={name} />
   }
   return (
-    <>
-      <form onSubmit={(e) => updateDescription(e, platform, name)}>
-        <div className={`${styles.row} ${styles[platform]}`}>
-          {editable ? <div>{verified ? 'Yes' : 'No'}</div> : null}
-          <div>{platform}</div>
-          <div>{name}</div>
-          <div>
-            {editable ? (
-              <textarea
-                name="desc"
-                className={styles.desc}
-                defaultValue={desc}
-              />
-            ) : (
-              <>{desc}</>
-            )}
-          </div>
+    <form onSubmit={rowSubmit}>
+      <input name="csrf" type="hidden" value={csrfCode} readOnly />
+      <input
+        name="verified"
+        type="hidden"
+        value={verified ? 't' : 'f'}
+        readOnly
+      />
+      <input name="platform" type="hidden" value={platform} readOnly />
+      <input name="name" type="hidden" value={name} readOnly />
+      <div className={`${styles.row} ${styles[platform]}`}>
+        {editable ? <div>{verified ? 'Yes' : 'No'}</div> : null}
+        <div>{platform}</div>
+        <div>{name}</div>
+        <div>
           {editable ? (
-            <div className={styles.editControls}>
-              {verified ? null : (
-                <input
-                  type="button"
-                  onClick={() => setMode(toggle(Mode.VERIFY))}
-                  value="Verify"
-                />
-              )}
-              <input type="submit" value="Update" />
+            <textarea name="desc" className={styles.desc} defaultValue={desc} />
+          ) : (
+            <>{desc}</>
+          )}
+        </div>
+        {editable ? (
+          <div className={styles.editControls}>
+            {verified ? null : (
               <input
                 type="button"
-                onClick={(e) => remove(e, platform, name, verified)}
-                value="Delete"
+                onClick={() => setMode(toggle(Mode.VERIFY))}
+                value="Verify"
               />
-            </div>
-          ) : null}
-        </div>
-      </form>
+            )}
+            <input type="submit" value="Update" />
+            <input type="submit" value="Delete" />
+          </div>
+        ) : null}
+      </div>
       {extension}
-    </>
+    </form>
   )
 }
 
@@ -258,25 +270,29 @@ const buildRows = (identities: Identity[], editable: boolean) =>
     <Row key={i.platform + i.name} editable={editable} {...i} />
   ))
 
-const addRow = (
-  <form onSubmit={add}>
-    <div className={`${styles.row} ${styles.footerRow}`}>
-      <div>—</div>
-      <div>
-        <PlatformSelector initial={null} />
+const AddRow = () => {
+  const csrfCode = useCSRFCode()
+  return (
+    <form onSubmit={add}>
+      <input name="csrf" type="hidden" value={csrfCode} readOnly />
+      <div className={`${styles.row} ${styles.footerRow}`}>
+        <div>—</div>
+        <div>
+          <PlatformSelector initial={null} />
+        </div>
+        <div>
+          <input name="name" />
+        </div>
+        <div>
+          <textarea name="desc" className={styles.desc} />
+        </div>
+        <div>
+          <button>Add</button>
+        </div>
       </div>
-      <div>
-        <input name="name" />
-      </div>
-      <div>
-        <textarea name="desc" className={styles.desc} />
-      </div>
-      <div>
-        <button>Add</button>
-      </div>
-    </div>
-  </form>
-)
+    </form>
+  )
+}
 
 interface Props {
   editable?: boolean
@@ -298,7 +314,7 @@ const IdentitiesList = ({ identities, editable }: Props) => {
         {editable ? <div>edit</div> : null}
       </div>
       {buildRows(identities, editable)}
-      {editable ? addRow : null}
+      {editable ? <AddRow /> : null}
     </div>
   )
 }
