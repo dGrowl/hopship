@@ -81,7 +81,17 @@ export default function Results(props: ResultsProps) {
       <div id={styles.container}>
         <SearchForm platform={platform} name={name} />
         <section>
-          <IdentitiesList identities={identities} />
+          {identities.length !== 0 ? (
+            <IdentitiesList identities={identities} />
+          ) : (
+            <>
+              <h2>:(</h2>
+              <p>
+                {name} on {platform} isn&apos;t registered here. If you know
+                them, ask them to sign up!
+              </p>
+            </>
+          )}
         </section>
       </div>
     </>
