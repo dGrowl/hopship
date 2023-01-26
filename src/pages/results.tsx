@@ -52,6 +52,19 @@ const processQuery = (query: ParsedUrlQuery) => {
   return { platform, name }
 }
 
+const errorMessage = (platform: string | null, name: string | null) => {
+  if (!platform) {
+    if (!name) {
+      return `The platform you gave isn't supported by our system and the name you gave isn't valid. Try again!`
+    }
+    return `The platform you gave isn't supported by our system. Try again!`
+  } else if (!name) {
+    return `The name you gave isn't valid. Try again!`
+  }
+  return `
+  ${name} on ${platform} isn't registered here. If you know them, ask them to sign up!`
+}
+
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { query } = context
   const { platform, name } = processQuery(query)
@@ -86,10 +99,7 @@ export default function Results(props: ResultsProps) {
           ) : (
             <>
               <h2>:(</h2>
-              <p>
-                {name} on {platform} isn&apos;t registered here. If you know
-                them, ask them to sign up!
-              </p>
+              <p>{errorMessage(platform, name)}</p>
             </>
           )}
         </section>
