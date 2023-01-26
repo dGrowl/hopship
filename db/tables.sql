@@ -11,6 +11,7 @@ CREATE TABLE public.users (
 	name     TEXT UNIQUE NOT NULL,
 	email    TEXT UNIQUE NOT NULL,
 	passhash TEXT NOT NULL,
+	CONSTRAINT user_name_is_lower CHECK (name = LOWER(name))
 );
 
 CREATE TABLE public.platforms (
