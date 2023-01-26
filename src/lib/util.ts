@@ -8,7 +8,7 @@ export const csrfHeaders = (code: string) =>
     'X-CSRF-TOKEN': code,
   })
 
-export const platforms = ['Twitch', 'Twitter'] as const
+export const platforms: readonly string[] = ['Twitch', 'Twitter']
 
 export const hasKey = (o: object, key: string) =>
   Object.prototype.hasOwnProperty.call(o, key)
@@ -23,3 +23,6 @@ export const genHexString = (nBytes: number) => {
   )
   return bytestrings.join('')
 }
+
+export const arrayToFirstString = (a: string | string[] | null) =>
+  Array.isArray(a) ? a.slice(0, 1).join() : a

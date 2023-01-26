@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import jwt from 'jsonwebtoken'
 
 import { AuthPayload, CSRFPayload } from './types'
+import { platforms } from './util'
 
 export const processAuth = (req: NextApiRequest, res: NextApiResponse) => {
   if (!process.env.JWT_AUTH_SECRET) {
@@ -87,3 +88,10 @@ export const checkCSRF = (req: NextApiRequest, res: NextApiResponse) => {
   }
   return true
 }
+
+export const MAX_PLATFORM_LENGTH = platforms.reduce(
+  (len, p) => (p.length > len ? p.length : len),
+  0
+)
+
+export const MAX_NAME_LENGTH = 64

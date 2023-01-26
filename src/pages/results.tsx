@@ -4,11 +4,13 @@ import { useEffect } from 'react'
 import Head from 'next/head'
 
 import { Identity } from '../lib/types'
+import { arrayToFirstString, platforms } from '../lib/util'
 import db from '../lib/db'
 import IdentitiesList from '../components/IdentitiesList'
 import SearchForm from '../components/SearchForm'
 
 import styles from '../styles/Results.module.css'
+import { MAX_NAME_LENGTH, MAX_PLATFORM_LENGTH } from '../lib/safety'
 
 interface ResultsProps {
   platform: string | null
@@ -41,13 +43,17 @@ const getConnectedIdentities = async (
 }
 
 const processQuery = (query: ParsedUrlQuery) => {
-  let platform = query.platform || null
-  let name = query.id || null
-  if (Array.isArray(platform)) {
-    platform = platform.join()
+  let platform = arrayToFirstString(query.platform || null)
+  let name = arrayToFirstString(query.id || null)
+  if (platform) {
+    platform = platform.slice(0, MAX_PLATFORM_LENGTH)
+    if (!platforms.includes(platform)) {
+      platform = null
+    }
   }
-  if (Array.isArray(name)) {
-    name = name.join()
+  if (name) {
+    name = name.slice(0, MAX_NAME_LENGTH)
+    name = name.replace(/[^\w]/g, '')
   }
   return { platform, name }
 }
@@ -81,8 +87,10 @@ export default function Results(props: ResultsProps) {
     title += `: ${props.platform}/${props.name}`
   }
   useEffect(() => {
-    if (platform && name) {
+    if (platform) {
       localStorage.setItem('platform', platform)
+    }
+    if (name) {
       localStorage.setItem('name', name)
     }
   })
