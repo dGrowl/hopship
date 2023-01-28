@@ -28,6 +28,7 @@ export const genAuthCookie = (
     `auth=${token}`,
     `Max-Age=${expirationSecs}`,
     'HttpOnly',
+    'Secure',
     'Path=/',
     'SameSite=Lax',
   ]
