@@ -4,11 +4,6 @@ interface Props {
   name: string | null
 }
 
-const logout = async () => {
-  await fetch('/api/logout')
-  document.location.reload()
-}
-
 export default function UserMenu({ name }: Props) {
   if (name === null) {
     return (
@@ -24,7 +19,7 @@ export default function UserMenu({ name }: Props) {
       <Link href="/profile">
         <div>{name}</div>
       </Link>
-      <div onClick={() => logout()}>Logout</div>
+      <Link href="/logout">Logout</Link>
     </div>
   )
 }
