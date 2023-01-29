@@ -243,7 +243,7 @@ const Row = ({ editable, platform, name, desc, verified }: RowProps) => {
           {editable ? (
             <textarea name="desc" className={styles.desc} defaultValue={desc} />
           ) : (
-            <>{desc}</>
+            <>{desc.length > 0 ? desc : '—'}</>
           )}
         </div>
         {editable ? (
