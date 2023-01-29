@@ -2,8 +2,6 @@ import { MAX_PLATFORM_NAME_LENGTH } from '../lib/safety'
 import Field from './Field'
 import PlatformSelector from './PlatformSelector'
 
-import styles from '../styles/SearchForm.module.css'
-
 interface Props {
   platform: string | null
   name: string | null
@@ -12,25 +10,23 @@ interface Props {
 const SearchForm = ({ platform, name }: Props) => {
   return (
     <section>
-      <form action="/results" className={styles.form}>
+      <form action="/results">
         <fieldset>
-          <div className={styles.fields}>
-            <Field name="platform">
-              <PlatformSelector initial={platform} />
-            </Field>
-            <Field name="platform_name" label="id">
-              <input
-                id="platform_name"
-                name="id"
-                defaultValue={name || ''}
-                pattern="\w+"
-                minLength={1}
-                maxLength={MAX_PLATFORM_NAME_LENGTH}
-                title="Platform IDs can only contain letters, numbers, and underscores."
-                required
-              />
-            </Field>
-          </div>
+          <Field name="platform">
+            <PlatformSelector initial={platform} />
+          </Field>
+          <Field name="platform_name" label="id">
+            <input
+              id="platform_name"
+              name="id"
+              defaultValue={name || ''}
+              pattern="\w+"
+              minLength={1}
+              maxLength={MAX_PLATFORM_NAME_LENGTH}
+              title="Platform IDs can only contain letters, numbers, and underscores."
+              required
+            />
+          </Field>
           <button>search</button>
         </fieldset>
       </form>

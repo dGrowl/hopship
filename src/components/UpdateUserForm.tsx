@@ -64,16 +64,21 @@ interface Props {
 const UpdateUserForm = ({ name, email }: Props) => {
   const csrfCode = useCSRFCode()
   return (
-    <form onSubmit={(e) => update(e, name)}>
-      <input name="csrf" type="hidden" value={csrfCode} readOnly />
-      <Field name="name">
-        <NameInput initial={name} />
-      </Field>
-      <Field name="email">
-        <input name="email" type="email" defaultValue={email} />
-      </Field>
-      <button>save</button>
-    </form>
+    <section>
+      <form onSubmit={(e) => update(e, name)}>
+        <fieldset>
+          <legend>User</legend>
+          <input name="csrf" type="hidden" value={csrfCode} readOnly />
+          <Field name="name">
+            <NameInput initial={name} />
+          </Field>
+          <Field name="email">
+            <input name="email" type="email" defaultValue={email} />
+          </Field>
+          <button>update</button>
+        </fieldset>
+      </form>
+    </section>
   )
 }
 

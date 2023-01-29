@@ -35,19 +35,24 @@ const update = async (e: FormEvent) => {
 const UpdatePasswordForm = () => {
   const csrfCode = useCSRFCode()
   return (
-    <form onSubmit={update}>
-      <input name="csrf" type="hidden" value={csrfCode} readOnly />
-      <Field name="current">
-        <input name="current" type="password" />
-      </Field>
-      <Field name="future" label="new">
-        <input name="future" type="password" />
-      </Field>
-      <Field name="reFuture" label="new (again)">
-        <input name="reFuture" type="password" />
-      </Field>
-      <button>save</button>
-    </form>
+    <section>
+      <form onSubmit={update}>
+        <fieldset>
+          <legend>Password</legend>
+          <input name="csrf" type="hidden" value={csrfCode} readOnly />
+          <Field name="current">
+            <input name="current" type="password" />
+          </Field>
+          <Field name="future" label="new">
+            <input name="future" type="password" />
+          </Field>
+          <Field name="reFuture" label="new (again)">
+            <input name="reFuture" type="password" />
+          </Field>
+          <button>change</button>
+        </fieldset>
+      </form>
+    </section>
   )
 }
 

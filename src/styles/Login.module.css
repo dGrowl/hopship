@@ -1,0 +1,16 @@
+#switcher {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+}
+
+#switcher button {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+#switcher button.activeMode {
+  background-color: #fefefe;
+  color: #222;
+}

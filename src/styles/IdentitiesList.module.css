@@ -1,6 +1,7 @@
-#identities {
+#container {
   display: grid;
   grid-template-columns: auto auto 1fr;
+  width: 100%;
 }
 
 .editControls {

@@ -84,14 +84,8 @@ const Profile = ({ name, email, identities }: Props) => {
         <title>{`Also: ${name}'s Profile`}</title>
       </Head>
       <div id={styles.container}>
-        <section>
-          <h2>User</h2>
-          <UpdateUserForm name={name} email={email} />
-        </section>
-        <section>
-          <h2>Password</h2>
-          <UpdatePasswordForm />
-        </section>
+        <UpdateUserForm name={name} email={email} />
+        <UpdatePasswordForm />
         <section style={{ gridColumn: '1 / 3' }}>
           <h2>Identities</h2>
           <UserContext.Provider value={name}>

@@ -303,7 +303,7 @@ const IdentitiesList = ({ identities, editable }: Props) => {
   editable = editable || false
   return (
     <div
-      id={styles.identities}
+      id={styles.container}
       style={editable ? { gridTemplateColumns: 'auto auto auto 1fr auto' } : {}}
     >
       <div className={`${styles.row} ${styles.headerRow}`}>

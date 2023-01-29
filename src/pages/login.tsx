@@ -8,6 +8,8 @@ import { csrfHeaders } from '../lib/util'
 import { useCSRFCode } from '../lib/safety'
 import Field from '../components/Field'
 
+import styles from '../styles/Login.module.css'
+
 interface LoginFormFields extends EventTarget {
   csrf: HTMLInputElement
   email: HTMLInputElement
@@ -93,33 +95,43 @@ export default function Login() {
         <title>Also: Login/Register</title>
       </Head>
       <section>
-        <div>
-          <button onClick={() => setRegisterMode(false)}>Login</button>
-          <button onClick={() => setRegisterMode(true)}>Register</button>
+        <div id={styles.switcher}>
+          <button
+            className={registerMode ? '' : styles.activeMode}
+            onClick={() => setRegisterMode(false)}
+          >
+            Login
+          </button>
+          <button
+            className={registerMode ? styles.activeMode : ''}
+            onClick={() => setRegisterMode(true)}
+          >
+            Register
+          </button>
         </div>
         <form onSubmit={(e) => submit(e, registerMode, router)}>
           <input name="csrf" type="hidden" value={csrfCode} readOnly />
           <Field name="email">
-            <input name="email" type="email" />
+            <input id="email" name="email" type="email" />
           </Field>
           {registerMode ? (
             <>
               <Field name="name">
-                <input name="name" />
+                <input id="name" name="name" />
               </Field>
             </>
           ) : null}
           <Field name="password">
-            <input name="password" type="password" />
+            <input id="password" name="password" type="password" />
           </Field>
           {registerMode ? (
             <>
               <Field name="repassword" label="password (again)">
-                <input name="repassword" type="password" />
+                <input id="repassword" name="repassword" type="password" />
               </Field>
             </>
           ) : null}
-          <button>Submit</button>
+          <button>{registerMode ? 'create' : 'verify'}</button>
         </form>
       </section>
     </>
