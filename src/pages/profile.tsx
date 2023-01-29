@@ -3,7 +3,7 @@ import Head from 'next/head'
 import jwt from 'jsonwebtoken'
 
 import { AuthPayload, Identity } from '../lib/types'
-import db from '../lib/db'
+import db from '../server/db'
 import IdentitiesList from '../components/IdentitiesList'
 import UpdatePasswordForm from '../components/UpdatePasswordForm'
 import UpdateUserForm from '../components/UpdateUserForm'
@@ -17,7 +17,7 @@ interface Props {
   identities: Identity[]
 }
 
-const getUserIdentities = async (user_name: string) => {
+const getUserIdentities = async (userName: string) => {
   try {
     const result = await db.query(
       `
@@ -29,7 +29,7 @@ const getUserIdentities = async (user_name: string) => {
         FROM public.get_user_identities($1)
         ORDER BY verified DESC, platform ASC, name ASC;
       `,
-      [user_name]
+      [userName]
     )
     return result.rows
   } catch (error) {

@@ -2,9 +2,9 @@ import argon2 from 'argon2'
 import jwt from 'jsonwebtoken'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { checkCSRF } from '../../lib/safety'
+import { checkCSRF } from '../../server/helpers'
 import { clamp } from '../../lib/util'
-import db from '../../lib/db'
+import db from '../../server/db'
 
 const WEEK_IN_SECONDS = 60 * 60 * 24 * 7
 

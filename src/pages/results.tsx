@@ -3,20 +3,14 @@ import { ParsedUrlQuery } from 'querystring'
 import { useEffect } from 'react'
 import Head from 'next/head'
 
-import { Identity } from '../lib/types'
 import { arrayToFirstString, platforms } from '../lib/util'
-import db from '../lib/db'
+import { Identity } from '../lib/types'
+import { MAX_PLATFORM_NAME_LENGTH, MAX_PLATFORM_LENGTH } from '../lib/safety'
+import db from '../server/db'
 import IdentitiesList from '../components/IdentitiesList'
 import SearchForm from '../components/SearchForm'
 
 import styles from '../styles/Results.module.css'
-import { MAX_NAME_LENGTH, MAX_PLATFORM_LENGTH } from '../lib/safety'
-
-interface ResultsProps {
-  platform: string | null
-  name: string | null
-  identities: Identity[]
-}
 
 const getConnectedIdentities = async (
   platform: string | null,
@@ -52,7 +46,7 @@ const processQuery = (query: ParsedUrlQuery) => {
     }
   }
   if (name) {
-    name = name.slice(0, MAX_NAME_LENGTH)
+    name = name.slice(0, MAX_PLATFORM_NAME_LENGTH)
     name = name.replace(/[^\w]/g, '')
   }
   return { platform, name }
@@ -80,11 +74,16 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 
-export default function Results(props: ResultsProps) {
-  const { platform, name, identities } = props
+interface Props {
+  platform: string | null
+  name: string | null
+  identities: Identity[]
+}
+
+const Results = ({ platform, name, identities }: Props) => {
   let title = 'Also'
   if (platform && name) {
-    title += `: ${props.platform}/${props.name}`
+    title += `: ${platform}/${name}`
   }
   useEffect(() => {
     if (platform) {
@@ -115,3 +114,5 @@ export default function Results(props: ResultsProps) {
     </>
   )
 }
+
+export default Results

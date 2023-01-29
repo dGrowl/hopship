@@ -4,12 +4,12 @@ import Link from 'next/link'
 import type { AppContext } from 'next/app'
 
 import { AuthPayload, ExtendedAppProps, ExtendedRequest } from '../lib/types'
+import { genHexString } from '../lib/util'
 import UserMenu from '../components/UserMenu'
 
-import '../styles/reset.css'
 import '../styles/globals.css'
+import '../styles/reset.css'
 import styles from '../styles/App.module.css'
-import { genHexString } from '../lib/util'
 
 const HALF_HOUR_IN_SECONDS = 60 * 30
 

@@ -1,19 +1,19 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { checkCSRF, processAuth } from '../../lib/safety'
+import { checkCSRF, processAuth } from '../../server/helpers'
 import { hasKey } from '../../lib/util'
-import db from '../../lib/db'
+import db from '../../server/db'
 
 const create = async (req: NextApiRequest, res: NextApiResponse) => {
   const payload = processAuth(req, res)
   if (!payload) return
-  const { name: user_name } = payload
-  const { platform, name: platform_name, desc } = req.body
+  const { name: userName } = payload
+  const { platform, name: platformName, desc } = req.body
   try {
     await db.query('CALL add_identity($1, $2, $3, $4);', [
-      user_name,
+      userName,
       platform,
-      platform_name,
+      platformName,
       desc,
     ])
   } catch (error) {
