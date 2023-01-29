@@ -38,7 +38,7 @@ const create = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const update = async (req: NextApiRequest, res: NextApiResponse) => {
-  const payload = processAuth(req, res)
+  const payload = await processAuth(req, res)
   if (!payload) return
   const { body } = req
   const { name: currentName, email: currentEmail } = payload

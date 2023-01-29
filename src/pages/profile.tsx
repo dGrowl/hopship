@@ -3,6 +3,7 @@ import Head from 'next/head'
 import jwt from 'jsonwebtoken'
 
 import { AuthPayload, Identity } from '../lib/types'
+import { validateUserData } from '../server/helpers'
 import db from '../server/db'
 import IdentitiesList from '../components/IdentitiesList'
 import UpdatePasswordForm from '../components/UpdatePasswordForm'
@@ -50,6 +51,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         token,
         process.env.JWT_AUTH_SECRET
       ) as AuthPayload
+      if (!(await validateUserData(payload))) {
+        return {
+          redirect: {
+            destination: '/logout',
+            permanent: false,
+          },
+        }
+      }
       const { name, email } = payload
       const identities = await getUserIdentities(name)
       return {

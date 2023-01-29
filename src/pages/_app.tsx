@@ -7,8 +7,8 @@ import { AuthPayload, ExtendedAppProps, ExtendedRequest } from '../lib/types'
 import { genHexString } from '../lib/util'
 import UserMenu from '../components/UserMenu'
 
-import '../styles/globals.css'
 import '../styles/reset.css'
+import '../styles/globals.css'
 import styles from '../styles/App.module.css'
 
 const HALF_HOUR_IN_SECONDS = 60 * 30

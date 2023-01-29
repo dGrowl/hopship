@@ -2,6 +2,21 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import jwt from 'jsonwebtoken'
 
 import { AuthPayload, CSRFPayload } from '../lib/types'
+import db from './db'
+
+export const validateUserData = async (payload: AuthPayload) => {
+  const { name, email } = payload
+  const result = await db.query(
+    `
+      SELECT true
+      FROM public.users
+      WHERE name = $1
+        AND email = $2;
+    `,
+    [name, email]
+  )
+  return result.rowCount === 1
+}
 
 export const processAuth = async (
   req: NextApiRequest,
@@ -23,6 +38,9 @@ export const processAuth = async (
       token,
       process.env.JWT_AUTH_SECRET
     ) as AuthPayload
+    if (!(await validateUserData(payload))) {
+      throw 'Auth cookie contained inaccurate user data'
+    }
     return payload
   } catch (error) {
     console.log(error)

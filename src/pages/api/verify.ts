@@ -4,7 +4,7 @@ import { checkCSRF, processAuth } from '../../server/helpers'
 import db from '../../server/db'
 
 const verify = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (!processAuth(req, res)) return
+  if (!(await processAuth(req, res))) return
   const { platform, name } = req.body
   try {
     await db.query(

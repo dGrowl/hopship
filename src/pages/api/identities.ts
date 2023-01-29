@@ -5,7 +5,7 @@ import { hasKey } from '../../lib/util'
 import db from '../../server/db'
 
 const create = async (req: NextApiRequest, res: NextApiResponse) => {
-  const payload = processAuth(req, res)
+  const payload = await processAuth(req, res)
   if (!payload) return
   const { name: userName } = payload
   const { platform, name: platformName, desc } = req.body
@@ -24,7 +24,7 @@ const create = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const update = async (req: NextApiRequest, res: NextApiResponse) => {
-  const payload = processAuth(req, res)
+  const payload = await processAuth(req, res)
   if (!payload) return
   const { name: userName } = payload
   const { body } = req
@@ -48,7 +48,7 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const remove = async (req: NextApiRequest, res: NextApiResponse) => {
-  const payload = processAuth(req, res)
+  const payload = await processAuth(req, res)
   if (!payload) return
   const { name: userName } = payload
   const { body } = req
