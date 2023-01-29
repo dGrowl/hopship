@@ -7,6 +7,7 @@ interface Props {
 const PlatformSelector = ({ initial }: Props) => {
   return (
     <select
+      id="platform"
       name="platform"
       key={initial ? 'default' : 'stored'}
       defaultValue={initial || platforms[0]}

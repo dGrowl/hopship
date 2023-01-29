@@ -1,28 +1,41 @@
+import { MAX_PLATFORM_NAME_LENGTH } from '../lib/safety'
 import Field from './Field'
 import PlatformSelector from './PlatformSelector'
 
 import styles from '../styles/SearchForm.module.css'
 
-interface SearchFormProps {
+interface Props {
   platform: string | null
   name: string | null
 }
 
-export default function SearchForm(props: SearchFormProps) {
-  const { platform, name } = props
+const SearchForm = ({ platform, name }: Props) => {
   return (
     <section>
       <form action="/results" className={styles.form}>
-        <div className={styles.fields}>
-          <Field name="platform">
-            <PlatformSelector initial={platform} />
-          </Field>
-          <Field name="id">
-            <input name="id" defaultValue={name || ''} />
-          </Field>
-        </div>
-        <button>search</button>
+        <fieldset>
+          <div className={styles.fields}>
+            <Field name="platform">
+              <PlatformSelector initial={platform} />
+            </Field>
+            <Field name="platform_name" label="id">
+              <input
+                id="platform_name"
+                name="id"
+                defaultValue={name || ''}
+                pattern="\w+"
+                minLength={1}
+                maxLength={MAX_PLATFORM_NAME_LENGTH}
+                title="Platform IDs can only contain letters, numbers, and underscores."
+                required
+              />
+            </Field>
+          </div>
+          <button>search</button>
+        </fieldset>
       </form>
     </section>
   )
 }
+
+export default SearchForm
