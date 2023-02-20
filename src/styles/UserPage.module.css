@@ -1,0 +1,25 @@
+#container {
+  align-items: start;
+  column-gap: 16px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  width: 100%;
+}
+
+#details {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+}
+
+#identitiesContainer {
+  padding: 0;
+  background-color: transparent;
+}
+
+#identities {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+  min-width: 430px;
+}

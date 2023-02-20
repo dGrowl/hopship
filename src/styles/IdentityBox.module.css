@@ -1,0 +1,42 @@
+.container {
+  background-color: rgba(128, 128, 128, 0.1);
+  border-radius: 8px;
+  border: 3px solid #fefefe;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  width: 100%;
+}
+
+.platform {
+  align-items: center;
+  display: flex;
+  font-weight: bold;
+  justify-content: center;
+  padding: 16px 8px;
+  width: 80px;
+}
+
+.Twitter {
+  background-color: #206bc0;
+}
+
+.Twitch {
+  background-color: #5d1fb9;
+}
+
+.TwitterBorder {
+  border-color: #206bc0;
+}
+
+.TwitchBorder {
+  border-color: #5d1fb9;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px;
+  row-gap: 8px;
+}
