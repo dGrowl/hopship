@@ -4,37 +4,11 @@ import { useEffect } from 'react'
 import Head from 'next/head'
 
 import { arrayToFirstString, platforms } from '../lib/util'
-import { Identity } from '../lib/types'
 import { MAX_PLATFORM_NAME_LENGTH, MAX_PLATFORM_LENGTH } from '../lib/safety'
 import db from '../server/db'
-import IdentitiesList from '../components/IdentitiesList'
 import SearchForm from '../components/SearchForm'
 
 import styles from '../styles/Results.module.css'
-
-const getConnectedIdentities = async (
-  platform: string | null,
-  name: string | null
-) => {
-  if (!platform || !name) return []
-  try {
-    const result = await db.query(
-      `
-        SELECT
-          platform,
-          name,
-          description AS desc
-        FROM public.get_connected_identities($1, $2)
-        ORDER BY platform ASC, name ASC;
-      `,
-      [platform, name]
-    )
-    return result.rows
-  } catch (error) {
-    console.error(error)
-  }
-  return []
-}
 
 const processQuery = (query: ParsedUrlQuery) => {
   let platform = arrayToFirstString(query.platform || null)
@@ -68,19 +42,30 @@ const errorMessage = (platform: string | null, name: string | null) => {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { query } = context
   const { platform, name } = processQuery(query)
-  const identities = await getConnectedIdentities(platform, name)
+  const result = await db.query(
+    "SELECT get_user_name_from_identity($1, $2) AS user_name;",
+    [platform, name]
+  )
+  const userName = result.rows[0]['user_name']
+  if (userName) {
+    return {
+      redirect: {
+        destination: `/u/${userName}`,
+        permanent: false,
+      },
+    }
+  }
   return {
-    props: { platform, name, identities },
+    props: { platform, name },
   }
 }
 
 interface Props {
   platform: string | null
   name: string | null
-  identities: Identity[]
 }
 
-const Results = ({ platform, name, identities }: Props) => {
+const Results = ({ platform, name }: Props) => {
   let title = 'Also'
   if (platform && name) {
     title += `: ${platform}/${name}`
@@ -101,14 +86,8 @@ const Results = ({ platform, name, identities }: Props) => {
       <div id={styles.container}>
         <SearchForm platform={platform} name={name} />
         <section>
-          {identities.length !== 0 ? (
-            <IdentitiesList identities={identities} />
-          ) : (
-            <>
-              <h2>:(</h2>
-              <p>{errorMessage(platform, name)}</p>
-            </>
-          )}
+          <h2>:(</h2>
+          <p>{errorMessage(platform, name)}</p>
         </section>
       </div>
     </>
