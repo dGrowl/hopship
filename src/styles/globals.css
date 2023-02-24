@@ -20,6 +20,14 @@ a {
   color: inherit;
 }
 
+b {
+  font-weight: bold;
+}
+
+p {
+  margin: 6px 0;
+}
+
 h1 {
   font-size: 3rem;
   font-weight: bold;
@@ -43,10 +51,6 @@ ol {
 
 li {
   margin: 12px 0;
-}
-
-p {
-  margin: 6px 0;
 }
 
 section {
@@ -98,8 +102,4 @@ button:focus,
 input[type='button']:focus,
 input[type='submit']:focus {
   border: 2px solid rgba(128, 128, 128, 1);
-}
-
-.fullWidth {
-  width: 100%;
 }

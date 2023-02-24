@@ -35,8 +35,7 @@ const errorMessage = (platform: string | null, name: string | null) => {
   } else if (!name) {
     return `The name you gave isn't valid. Try again!`
   }
-  return `
-  ${name} on ${platform} isn't registered here. If you know them, ask them to sign up!`
+  return <><b>{name}</b> on <b>{platform}</b> isn&apos;t registered here. If you know them, ask them to sign up!</>
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
