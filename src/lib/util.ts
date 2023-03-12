@@ -26,3 +26,6 @@ export const genHexString = (nBytes: number) => {
 
 export const arrayToFirstString = (a: string | string[] | null) =>
   Array.isArray(a) ? a.slice(0, 1).join() : a
+
+export const randomElement = <T>(a: T[]) =>
+  a[Math.floor(Math.random() * a.length)]
