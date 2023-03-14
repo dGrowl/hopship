@@ -26,8 +26,8 @@ const Home = () => {
   }, [])
   return (
     <div id={styles.container}>
-      <OrbitAnimation width={300} height={300} />
-      <SearchForm platform={platform} name={name} />
+      <OrbitAnimation width={300} height={300} platform={platform} />
+      <SearchForm platform={platform} name={name} setPlatform={setPlatform} />
     </div>
   )
 }

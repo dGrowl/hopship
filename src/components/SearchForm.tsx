@@ -1,3 +1,5 @@
+import { Dispatch } from 'react'
+
 import { MAX_PLATFORM_NAME_LENGTH } from '../lib/safety'
 import Field from './Field'
 import PlatformSelector from './PlatformSelector'
@@ -5,15 +7,16 @@ import PlatformSelector from './PlatformSelector'
 interface Props {
   platform: string | null
   name: string | null
+  setPlatform?: Dispatch<string>
 }
 
-const SearchForm = ({ platform, name }: Props) => {
+const SearchForm = ({ platform, name, setPlatform }: Props) => {
   return (
     <section>
       <form action="/results">
         <fieldset>
           <Field name="platform">
-            <PlatformSelector initial={platform} />
+            <PlatformSelector initial={platform} setter={setPlatform} />
           </Field>
           <Field name="platform_name" label="id">
             <input

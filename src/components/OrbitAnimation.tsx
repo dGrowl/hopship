@@ -1,11 +1,15 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 
-import { randomElement } from '../lib/util'
+import { hasKey } from '../lib/util'
 
 const TWO_PI = 2 * Math.PI
 
+const PLATFORM_COLORS: { [platform: string]: string } = {
+  Twitter: '#3494ff',
+  Twitch: '#822fff',
+}
+
 class Particle {
-  static COLORS = ['#3494ff', '#822fff']
   static RADIUS = 128
   static SPEED_VARIANCE = Math.PI / 8
   static MIN_SPEED = Math.PI / 32
@@ -13,16 +17,17 @@ class Particle {
 
   x = 0
   y = 0
-  color = randomElement(Particle.COLORS)
+  color: string
   squash = Math.random() * Particle.RADIUS
   spin = Math.random() * TWO_PI
   theta = Math.random() * TWO_PI
   speed = Particle.MIN_SPEED + Math.random() * Particle.SPEED_VARIANCE
   length = 0.005 + 0.05 * (this.speed / Particle.MAX_SPEED)
 
-  constructor(x: number, y: number) {
+  constructor(x: number, y: number, color: typeof PLATFORM_COLORS[string]) {
     this.x = x
     this.y = y
+    this.color = color
   }
 
   update = (dtUs: number) => {
@@ -50,7 +55,7 @@ class Particle {
 }
 
 class Animation {
-  static N_PARTICLES = 160
+  static N_PARTICLES = 80
   static FRAME_RATE_LIMIT = 40
   static FRAME_TIME_MS = 1000 / Animation.FRAME_RATE_LIMIT
 
@@ -59,7 +64,8 @@ class Animation {
   h = 0
   playing = true
   lastFrameTimeMs = 0
-  particles: Particle[] = []
+  activeColor: string | null = null
+  particles: { [color: string]: Particle[] } = {}
 
   setCanvas = (canvas: HTMLCanvasElement) => {
     this.ctx = canvas.getContext('2d')
@@ -67,8 +73,23 @@ class Animation {
     this.w = canvas.width
     this.h = canvas.height
     this.ctx.lineWidth = 3
-    for (let i = 0; i < Animation.N_PARTICLES; ++i) {
-      this.particles.push(new Particle(this.w / 2, this.h / 2))
+    const x = this.w / 2, y = this.h / 2
+    for (const c of Object.values(PLATFORM_COLORS)) {
+      this.particles[c] = Array.from(
+        { length: Animation.N_PARTICLES },
+        () => new Particle(x, y, c)
+      )
+    }
+  }
+
+  setPlatform = (platform: string | null) => {
+    if (platform && hasKey(PLATFORM_COLORS, platform)) {
+      this.activeColor = PLATFORM_COLORS[platform]
+    } else {
+      this.activeColor = null
+    }
+    if (!this.playing || platform !== null) {
+      this.start()
     }
   }
 
@@ -89,9 +110,19 @@ class Animation {
     const timeSinceLastFrameMs = Date.now() - this.lastFrameTimeMs
     const dtUs = timeSinceLastFrameMs / 1000
     this.ctx.clearRect(0, 0, this.w, this.h)
-    for (const p of this.particles) {
-      p.update(dtUs)
-      p.render(this.ctx)
+    if (this.activeColor) {
+      const activeParticles = this.particles[this.activeColor]
+      for (const p of activeParticles) {
+        p.update(dtUs)
+        p.render(this.ctx)
+      }
+    } else {
+      for (const particles of Object.values(this.particles)) {
+        for (const p of particles) {
+          p.update(dtUs)
+          p.render(this.ctx)
+        }
+      }
     }
     this.lastFrameTimeMs = Date.now()
     if (this.playing) {
@@ -110,15 +141,16 @@ const animation = new Animation()
 interface Props {
   width: number
   height: number
+  platform: string | null
 }
 
-const OrbitAnimation = ({ width, height }: Props) => {
+const OrbitAnimation = ({ width, height, platform }: Props) => {
   const canvasRef = useCallback((canvas: HTMLCanvasElement | null) => {
     if (canvas) {
       animation.setCanvas(canvas)
-      animation.start()
     }
   }, [])
+  useEffect(() => animation.setPlatform(platform), [platform])
   return (
     <canvas
       id="surface"

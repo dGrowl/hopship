@@ -29,3 +29,5 @@ export const arrayToFirstString = (a: string | string[] | null) =>
 
 export const randomElement = <T>(a: T[]) =>
   a[Math.floor(Math.random() * a.length)]
+
+export const doNothing = () => {}
