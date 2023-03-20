@@ -41,7 +41,6 @@ class Particle {
   }
 
   render = (ctx: CanvasRenderingContext2D) => {
-    ctx.strokeStyle = this.color
     ctx.beginPath()
     ctx.ellipse(
       this.x,
@@ -76,7 +75,8 @@ class Animation {
     this.w = canvas.width
     this.h = canvas.height
     this.ctx.lineWidth = 3
-    const x = this.w / 2, y = this.h / 2
+    const x = this.w / 2
+    const y = this.h / 2
     for (const c of Object.values(PLATFORM_COLORS)) {
       this.particles[c] = Array.from(
         { length: Animation.N_PARTICLES },
@@ -113,18 +113,16 @@ class Animation {
     const timeSinceLastFrameMs = Date.now() - this.lastFrameTimeMs
     const dtUs = timeSinceLastFrameMs / 1000
     this.ctx.clearRect(0, 0, this.w, this.h)
-    if (this.activeColor) {
-      const activeParticles = this.particles[this.activeColor]
-      for (const p of activeParticles) {
+    for (const [color, particles] of Object.entries(this.particles)) {
+      if (this.activeColor && color !== this.activeColor) {
+        this.ctx.strokeStyle = color + '44'
+      }
+      else {
+        this.ctx.strokeStyle = color
+      }
+      for (const p of particles) {
         p.update(dtUs)
         p.render(this.ctx)
-      }
-    } else {
-      for (const particles of Object.values(this.particles)) {
-        for (const p of particles) {
-          p.update(dtUs)
-          p.render(this.ctx)
-        }
       }
     }
     this.lastFrameTimeMs = Date.now()
