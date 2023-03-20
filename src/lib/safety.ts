@@ -22,6 +22,10 @@ export const useCSRFCode = () => {
   return code
 }
 
+export const MIN_PASSWORD_LENGTH = 8
+
+export const MAX_PASSWORD_LENGTH = 4096
+
 export const MAX_PLATFORM_LENGTH = platforms.reduce(
   (len, p) => (p.length > len ? p.length : len),
   0

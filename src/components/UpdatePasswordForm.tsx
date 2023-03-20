@@ -2,7 +2,11 @@ import { FormEvent } from 'react'
 
 import { CSRFFormFields } from '../lib/types'
 import { csrfHeaders } from '../lib/util'
-import { useCSRFCode } from '../lib/safety'
+import {
+  MAX_PASSWORD_LENGTH,
+  MIN_PASSWORD_LENGTH,
+  useCSRFCode,
+} from '../lib/safety'
 import Field from './Field'
 
 type Fields = EventTarget &
@@ -15,10 +19,8 @@ type Fields = EventTarget &
 const update = async (e: FormEvent) => {
   e.preventDefault()
   const { csrf, current, future, reFuture } = e.target as Fields
-  if (current.defaultValue !== current.value) {
-    if (future.value !== reFuture.value) {
-      return
-    }
+  if (future.value !== reFuture.value) {
+    return
   }
   const data = {
     currentPassword: current.value,
@@ -38,16 +40,33 @@ const UpdatePasswordForm = () => {
     <section>
       <form onSubmit={update}>
         <fieldset>
-          <legend>Password</legend>
           <input name="csrf" type="hidden" value={csrfCode} readOnly />
           <Field name="current">
-            <input name="current" type="password" />
+            <input
+              name="current"
+              type="password"
+              minLength={MIN_PASSWORD_LENGTH}
+              maxLength={MAX_PASSWORD_LENGTH}
+              required
+            />
           </Field>
           <Field name="future" label="new">
-            <input name="future" type="password" />
+            <input
+              name="future"
+              type="password"
+              minLength={MIN_PASSWORD_LENGTH}
+              maxLength={MAX_PASSWORD_LENGTH}
+              required
+            />
           </Field>
           <Field name="reFuture" label="new (again)">
-            <input name="reFuture" type="password" />
+            <input
+              name="reFuture"
+              type="password"
+              minLength={MIN_PASSWORD_LENGTH}
+              maxLength={MAX_PASSWORD_LENGTH}
+              required
+            />
           </Field>
           <button>change</button>
         </fieldset>
