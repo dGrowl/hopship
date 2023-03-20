@@ -94,6 +94,22 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(200).json({})
 }
 
+const remove = async (req: NextApiRequest, res: NextApiResponse) => {
+  const payload = await processAuth(req, res)
+  if (!payload) return
+  const result = await db.query(
+    `
+      DELETE FROM public.users
+      WHERE name = $1;
+    `,
+    [payload.name]
+  )
+  if (result.rowCount === 0) {
+    return res.status(400).json({ message: 'Invalid authenticated user' })
+  }
+  return res.status(200).json({})
+}
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!checkCSRF(req, res)) return
   switch (req.method) {
@@ -101,6 +117,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return create(req, res)
     case 'PATCH':
       return update(req, res)
+    case 'DELETE':
+      return remove(req, res)
   }
   return res.status(405).json({})
 }
