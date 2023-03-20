@@ -28,6 +28,9 @@ class Particle {
     this.x = x
     this.y = y
     this.color = color
+    if (Math.random() >= 0.5) {
+      this.speed *= -1
+    }
   }
 
   update = (dtUs: number) => {
