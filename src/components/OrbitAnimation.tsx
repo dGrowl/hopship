@@ -17,17 +17,15 @@ class Particle {
 
   x = 0
   y = 0
-  color: string
   squash = Math.random() * Particle.RADIUS
   spin = Math.random() * TWO_PI
   theta = Math.random() * TWO_PI
   speed = Particle.MIN_SPEED + Math.random() * Particle.SPEED_VARIANCE
   length = 0.005 + 0.05 * (this.speed / Particle.MAX_SPEED)
 
-  constructor(x: number, y: number, color: typeof PLATFORM_COLORS[string]) {
+  constructor(x: number, y: number) {
     this.x = x
     this.y = y
-    this.color = color
     if (Math.random() >= 0.5) {
       this.speed *= -1
     }
@@ -80,7 +78,7 @@ class Animation {
     for (const c of Object.values(PLATFORM_COLORS)) {
       this.particles[c] = Array.from(
         { length: Animation.N_PARTICLES },
-        () => new Particle(x, y, c)
+        () => new Particle(x, y)
       )
     }
   }
@@ -116,8 +114,7 @@ class Animation {
     for (const [color, particles] of Object.entries(this.particles)) {
       if (this.activeColor && color !== this.activeColor) {
         this.ctx.strokeStyle = color + '44'
-      }
-      else {
+      } else {
         this.ctx.strokeStyle = color
       }
       for (const p of particles) {
