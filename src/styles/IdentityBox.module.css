@@ -4,17 +4,18 @@
   border: 3px solid #fefefe;
   box-sizing: border-box;
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto 1fr auto;
   width: 100%;
 }
 
 .platform {
   align-items: center;
   display: flex;
+  flex-direction: column;
   font-weight: bold;
   justify-content: center;
   padding: 16px 8px;
-  width: 80px;
+  width: 100px;
 }
 
 .Twitter {
@@ -39,4 +40,27 @@
   justify-content: center;
   padding: 16px;
   row-gap: 8px;
+  align-items: flex-start;
+}
+
+.nameRow {
+  column-gap: 8px;
+  display: flex;
+  flex-direction: row;
+}
+
+.unverified {
+  background-color: #c33;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 2px 8px;
+}
+
+.buttonColumn {
+  padding: 4px 3px;
+}
+
+.buttonColumn button {
+  cursor: pointer;
 }
