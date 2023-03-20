@@ -3,28 +3,29 @@ import { ParsedUrlQuery } from 'querystring'
 import Head from 'next/head'
 
 import { arrayToFirstString, platforms } from '../../lib/util'
-import db from '../../server/db'
-import IdentityBox from '../../components/IdentityBox'
+import { Identity } from '../../lib/types'
 import {
   MAX_PLATFORM_LENGTH,
   MAX_PLATFORM_NAME_LENGTH,
   MAX_USER_NAME_LENGTH,
 } from '../../lib/safety'
-import { Identity } from '../../lib/types'
+import db from '../../server/db'
+import IdentityBox from '../../components/IdentityBox'
 
 import styles from '../../styles/UserPage.module.css'
 
-const getUserIdentities = async (userName: string) => {
+const getVerifiedIdentities = async (userName: string) => {
   try {
     const result = await db.query(
       `
         SELECT
-          platform,
-          name,
-          description AS desc,
-          verified
-        FROM public.get_user_identities($1)
-        ORDER BY verified DESC, platform ASC, name ASC;
+          i.platform,
+          i.name,
+          i.description AS desc
+        FROM public.identities i INNER JOIN public.users u
+          ON u.name = $1
+            AND u.id = i.user_id
+        ORDER BY platform ASC, name ASC;
       `,
       [userName]
     )
@@ -71,7 +72,7 @@ export const getServerSideProps = async (
       },
     }
   }
-  const identities = await getUserIdentities(userName)
+  const identities = await getVerifiedIdentities(userName)
   return {
     props: { userName, platform, platformName, identities },
   }
@@ -113,9 +114,7 @@ const UserPage = ({ userName, platform, platformName, identities }: Props) => {
       <div id={styles.container}>
         <section id={styles.details}>
           <h2>{userName}</h2>
-          <p>
-            In the future, a biography will be here.
-          </p>
+          <p>In the future, a biography will be here.</p>
         </section>
         <section id={styles.identitiesContainer}>
           <div id={styles.identities}>
