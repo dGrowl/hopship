@@ -64,3 +64,9 @@
 .buttonColumn button {
   cursor: pointer;
 }
+
+#addSelector {
+  background-color: transparent;
+  font-size: inherit;
+  font-weight: bold;
+}
