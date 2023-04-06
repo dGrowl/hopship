@@ -5,7 +5,7 @@ import SearchForm from '../components/SearchForm'
 
 import styles from '../styles/Home.module.css'
 
-export async function getServerSideProps() {
+export const getServerSideProps = async () => {
   return {
     props: {},
   }
@@ -15,14 +15,8 @@ const Home = () => {
   const [platform, setPlatform] = useState<string | null>(null)
   const [name, setName] = useState<string | null>(null)
   useEffect(() => {
-    const storedPlatform = localStorage.getItem('platform')
-    if (storedPlatform) {
-      setPlatform(storedPlatform)
-    }
-    const storedName = localStorage.getItem('name')
-    if (storedName) {
-      setName(storedName)
-    }
+    setPlatform(localStorage.getItem('platform') || '')
+    setName(localStorage.getItem('name') || '')
   }, [])
   return (
     <div id={styles.container}>

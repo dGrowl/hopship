@@ -35,23 +35,35 @@ const errorMessage = (platform: string | null, name: string | null) => {
   } else if (!name) {
     return `The name you gave isn't valid. Try again!`
   }
-  return <><b>{name}</b> on <b>{platform}</b> isn&apos;t registered here. If you know them, ask them to sign up!</>
+  return (
+    <>
+      <b>{name}</b> on <b>{platform}</b> isn&apos;t registered here. If you know
+      them, ask them to sign up!
+    </>
+  )
 }
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { query } = context
-  const { platform, name } = processQuery(query)
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const { platform, name } = processQuery(ctx.query)
   const result = await db.query(
-    "SELECT get_user_name_from_identity($1, $2) AS user_name;",
+    `
+      SELECT u.name AS user_name
+      FROM public.users u INNER JOIN public.identities i
+        ON u.id = i.user_id
+          AND i.platform = $1
+          AND i.name = $2;
+    `,
     [platform, name]
   )
-  const userName = result.rows[0]['user_name']
-  if (userName) {
-    return {
-      redirect: {
-        destination: `/u/${userName}`,
-        permanent: false,
-      },
+  if (result.rowCount === 1) {
+    const userName = result.rows[0]['user_name']
+    if (userName) {
+      return {
+        redirect: {
+          destination: `/u/${userName}`,
+          permanent: false,
+        },
+      }
     }
   }
   return {

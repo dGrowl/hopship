@@ -1,0 +1,15 @@
+#container {
+  align-items: start;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 212px 1fr;
+  width: 100%;
+}
+
+#identities {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  width: 100%;
+}

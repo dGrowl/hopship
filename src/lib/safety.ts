@@ -26,9 +26,13 @@ export const MIN_PASSWORD_LENGTH = 8
 
 export const MAX_PASSWORD_LENGTH = 4096
 
+export const MAX_USER_NAME_LENGTH = 24
+
 export const MAX_PLATFORM_LENGTH = platforms.reduce(
   (len, p) => (p.length > len ? p.length : len),
   0
 )
 
 export const MAX_PLATFORM_NAME_LENGTH = 64
+
+export const MAX_DESCRIPTION_LENGTH = 48

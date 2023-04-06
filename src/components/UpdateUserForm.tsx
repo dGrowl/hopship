@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react'
+import { Dispatch, FormEvent, useState } from 'react'
 
 import { CSRFFormFields } from '../lib/types'
 import { csrfHeaders } from '../lib/util'
@@ -56,18 +56,34 @@ const NameInput = ({ initial }: NameInputProps) => {
   )
 }
 
+const checkUnchanged = (
+  e: FormEvent<HTMLFormElement>,
+  name: string,
+  setUnchanged: Dispatch<boolean>
+) => {
+  const target = e.target as HTMLFormElement
+  const fields = target.form as Fields
+  setUnchanged(
+    name === fields.name.value &&
+      fields.email.value === fields.email.defaultValue
+  )
+}
+
 interface Props {
   name: string
   email: string
 }
 
 const UpdateUserForm = ({ name, email }: Props) => {
+  const [unchanged, setUnchanged] = useState(true)
   const csrfCode = useCSRFCode()
   return (
     <section>
-      <form onSubmit={(e) => update(e, name)}>
+      <form
+        onChange={(e) => checkUnchanged(e, name, setUnchanged)}
+        onSubmit={(e) => update(e, name)}
+      >
         <fieldset>
-          <legend>User</legend>
           <input name="csrf" type="hidden" value={csrfCode} readOnly />
           <Field name="name">
             <NameInput initial={name} />
@@ -75,7 +91,7 @@ const UpdateUserForm = ({ name, email }: Props) => {
           <Field name="email">
             <input name="email" type="email" defaultValue={email} />
           </Field>
-          <button>update</button>
+          <button disabled={unchanged}>update</button>
         </fieldset>
       </form>
     </section>

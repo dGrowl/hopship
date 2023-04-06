@@ -1,0 +1,61 @@
+#sidebar {
+  font-size: 1.1rem;
+  position: sticky;
+  top: 16px;
+}
+
+#sidebar li {
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+.current {
+  background-color: rgba(128, 128, 128, 0.1);
+}
+
+#container {
+  align-items: start;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 212px 1fr;
+  width: 100%;
+}
+
+#content {
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+}
+
+.platformIcon {
+  background-color: #eee;
+  border-radius: 4px;
+  display: inline-block;
+  height: 16px;
+  margin: 0 6px 0 0;
+  width: 16px;
+}
+
+.identity {
+  align-items: center;
+  background-color: rgba(128, 128, 128, 0.1);
+  display: flex;
+  padding-left: 32px;
+}
+
+.identityDetails {
+  border-left: 4px solid #eee;
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px;
+  padding: 4px 8px;
+}
+
+.Twitter {
+  border-color: #3494ff !important;
+}
+
+.Twitch {
+  border-color: #822fff !important;
+}

@@ -54,7 +54,7 @@ const submit = async (
     body: JSON.stringify(data),
   })
   if (response.status === 200) {
-    router.push('/profile')
+    router.push('/settings')
   } else {
     router.push('/login')
   }
@@ -71,7 +71,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       jwt.verify(token, process.env.JWT_AUTH_SECRET)
       return {
         redirect: {
-          destination: '/profile',
+          destination: '/settings',
           permanent: false,
         },
       }

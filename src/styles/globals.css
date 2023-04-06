@@ -116,3 +116,9 @@ input[type='button']:focus,
 input[type='submit']:focus {
   border: 2px solid rgba(128, 128, 128, 1);
 }
+
+button:disabled {
+  color: gray;
+  pointer-events: none;
+  user-select: none;
+}

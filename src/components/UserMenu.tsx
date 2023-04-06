@@ -16,7 +16,7 @@ export default function UserMenu({ name }: Props) {
   }
   return (
     <div>
-      <Link href="/profile">
+      <Link href="/settings">
         <div>{name}</div>
       </Link>
       <Link href="/logout">Logout</Link>

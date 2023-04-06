@@ -12,7 +12,7 @@ const verify = async (req: NextApiRequest, res: NextApiResponse) => {
         WITH identity AS (
           DELETE FROM public.unverified_identities
           WHERE platform = $1
-          AND name = $2
+            AND name = $2
           RETURNING *
         )
         INSERT INTO public.identities

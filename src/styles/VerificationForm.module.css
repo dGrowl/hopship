@@ -1,0 +1,25 @@
+.example {
+  border-left: 4px solid #eee;
+  padding: 12px;
+  border-radius: 4px;
+}
+
+.example a {
+  text-decoration: underline;
+}
+
+.TwitterExample {
+  background-color: #3494ff44;
+  border-color: #3494ff;
+}
+
+.TwitchExample {
+  background-color: #822fff44;
+  border-color: #822fff;
+}
+
+.TwitterMessageRow {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
