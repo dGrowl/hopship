@@ -5,7 +5,11 @@ import Head from 'next/head'
 import jwt from 'jsonwebtoken'
 
 import { csrfHeaders } from '../lib/util'
-import { useCSRFCode } from '../lib/safety'
+import {
+  MAX_PASSWORD_LENGTH,
+  MIN_PASSWORD_LENGTH,
+  useCSRFCode,
+} from '../lib/safety'
 import Field from '../components/Field'
 
 import styles from '../styles/Login.module.css'
@@ -122,12 +126,24 @@ export default function Login() {
             </>
           ) : null}
           <Field name="password">
-            <input id="password" name="password" type="password" />
+            <input
+              id="password"
+              name="password"
+              type="password"
+              minLength={MIN_PASSWORD_LENGTH}
+              maxLength={MAX_PASSWORD_LENGTH}
+            />
           </Field>
           {registerMode ? (
             <>
               <Field name="repassword" label="password (again)">
-                <input id="repassword" name="repassword" type="password" />
+                <input
+                  id="repassword"
+                  name="repassword"
+                  type="password"
+                  minLength={MIN_PASSWORD_LENGTH}
+                  maxLength={MAX_PASSWORD_LENGTH}
+                />
               </Field>
             </>
           ) : null}
