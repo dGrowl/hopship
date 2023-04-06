@@ -10,22 +10,29 @@ const PLATFORM_COLORS: { [platform: string]: string } = {
 }
 
 class Particle {
-  static RADIUS = 128
-  static SPEED_VARIANCE = Math.PI / 8
-  static MIN_SPEED = Math.PI / 32
-  static MAX_SPEED = Particle.MIN_SPEED + Particle.SPEED_VARIANCE
+  static readonly SPEED_VARIANCE = Math.PI / 4
+  static readonly MIN_SPEED = Math.PI / 24
+  static readonly MAX_SPEED = Particle.MIN_SPEED + Particle.SPEED_VARIANCE
 
-  x = 0
-  y = 0
-  squash = Math.random() * Particle.RADIUS
+  cx: number
+  cy: number
+  rx: number
+  ry: number
+  size_variance: number
   spin = Math.random() * TWO_PI
   theta = Math.random() * TWO_PI
   speed = Particle.MIN_SPEED + Math.random() * Particle.SPEED_VARIANCE
   length = 0.005 + 0.05 * (this.speed / Particle.MAX_SPEED)
 
-  constructor(x: number, y: number) {
-    this.x = x
-    this.y = y
+  constructor(x: number, y: number, radius: number) {
+    this.cx = x
+    this.cy = y
+    this.rx = Math.random() * radius
+    this.ry = radius
+    this.size_variance = 4 * ((radius - this.rx) / radius)
+    if (Math.random() >= 0.5) {
+      this.size_variance *= -1
+    }
     if (Math.random() >= 0.5) {
       this.speed *= -1
     }
@@ -39,25 +46,26 @@ class Particle {
   }
 
   render = (ctx: CanvasRenderingContext2D) => {
+    const size = 8 + this.size_variance * Math.sin(this.theta)
+    ctx.lineWidth = size / 2.5
     ctx.beginPath()
     ctx.ellipse(
-      this.x,
-      this.y,
-      Particle.RADIUS / 1.25,
-      this.squash,
+      this.cx,
+      this.cy,
+      this.ry,
+      this.rx,
       this.spin,
       this.theta,
-      this.theta + this.length
+      this.theta + size / 170
     )
     ctx.stroke()
-    ctx.closePath()
   }
 }
 
 class Animation {
-  static N_PARTICLES = 80
-  static FRAME_RATE_LIMIT = 40
-  static FRAME_TIME_MS = 1000 / Animation.FRAME_RATE_LIMIT
+  static readonly N_PARTICLES = 64
+  static readonly FRAME_RATE_LIMIT = 40
+  static readonly FRAME_TIME_MS = 1000 / Animation.FRAME_RATE_LIMIT
 
   ctx: CanvasRenderingContext2D | null = null
   w = 0
@@ -75,10 +83,11 @@ class Animation {
     this.ctx.lineWidth = 3
     const x = this.w / 2
     const y = this.h / 2
+    const radius = Math.min(x, y) - 16
     for (const c of Object.values(PLATFORM_COLORS)) {
       this.particles[c] = Array.from(
         { length: Animation.N_PARTICLES },
-        () => new Particle(x, y)
+        () => new Particle(x, y, radius)
       )
     }
   }
