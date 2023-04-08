@@ -1,8 +1,25 @@
-import { Dispatch } from 'react'
+import { Dispatch, FormEvent } from 'react'
 
 import { MAX_PLATFORM_NAME_LENGTH } from '../lib/safety'
 import Field from './Field'
 import PlatformSelector from './PlatformSelector'
+
+type Fields = EventTarget & {
+  platform: HTMLSelectElement
+  id: HTMLInputElement
+}
+
+const storeQuery = (e: FormEvent) => {
+  const form = e.target as Fields
+  const platform = form.platform.value
+  const name = form.id.value
+  if (platform) {
+    localStorage.setItem('platform', platform)
+  }
+  if (name) {
+    localStorage.setItem('name', name)
+  }
+}
 
 interface Props {
   platform: string | null
@@ -13,7 +30,7 @@ interface Props {
 const SearchForm = ({ platform, name, setPlatform }: Props) => {
   return (
     <section>
-      <form action="/results">
+      <form action="/results" onSubmit={storeQuery}>
         <fieldset>
           <Field name="platform">
             <PlatformSelector initial={platform} setter={setPlatform} />

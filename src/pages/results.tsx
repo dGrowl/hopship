@@ -77,22 +77,12 @@ interface Props {
 }
 
 const Results = ({ platform, name }: Props) => {
-  let title = 'Also'
-  if (platform && name) {
-    title += `: ${platform}/${name}`
-  }
-  useEffect(() => {
-    if (platform) {
-      localStorage.setItem('platform', platform)
-    }
-    if (name) {
-      localStorage.setItem('name', name)
-    }
-  })
   return (
     <>
       <Head>
-        <title>{title}</title>
+        <title>
+          {'Also: ' + (platform && name ? `${platform}//${name}` : 'Results')}
+        </title>
       </Head>
       <div id={styles.container}>
         <SearchForm platform={platform} name={name} />
