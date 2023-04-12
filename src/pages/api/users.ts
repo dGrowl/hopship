@@ -9,6 +9,7 @@ import db from '../../server/db'
 interface Data {
   name?: string
   email?: string
+  bio?: string
   passhash?: string
 }
 
@@ -49,6 +50,9 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
   if (hasKey(body, 'email')) {
     data.email = body.email
   }
+  if (hasKey(body, 'bio')) {
+    data.bio = body.bio
+  }
   if (hasKey(body, 'currentPassword')) {
     const user = await getUserData(currentEmail, body.currentPassword)
     if (user) {
@@ -59,7 +63,7 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
         .json({ message: 'Provided existing password is incorrect' })
     }
   }
-  if (!data.name && !data.email && !data.passhash) {
+  if (Object.keys(data).length === 0) {
     return res.status(400).json({
       message: 'No valid updates could be made with the provided data',
     })

@@ -3,9 +3,23 @@ import Head from 'next/head'
 import jwt from 'jsonwebtoken'
 
 import { AuthPayload } from '../../lib/types'
-import { validateUserData } from '../../server/helpers'
+import db from './../../server/db'
 import SettingsContainer from '../../components/SettingsContainer'
 import UpdateUserForm from '../../components/UpdateUserForm'
+
+const getBio = async (payload: AuthPayload) => {
+  const { name, email } = payload
+  const result = await db.query(
+    `
+      SELECT u.bio
+      FROM public.users u
+      WHERE u.name = $1
+        AND u.email = $2;
+    `,
+    [name, email]
+  )
+  return result.rowCount === 1 ? result.rows[0].bio : null
+}
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const { auth: token } = ctx.req.cookies
@@ -19,7 +33,8 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         token,
         process.env.JWT_AUTH_SECRET
       ) as AuthPayload
-      if (!(await validateUserData(payload))) {
+      const bio = await getBio(payload)
+      if (!bio) {
         return {
           redirect: {
             destination: '/logout',
@@ -27,7 +42,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
           },
         }
       }
-      return { props: payload }
+      return { props: { ...payload, bio } }
     }
   } catch (error) {
     console.log(error)
@@ -44,16 +59,17 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 interface Props {
   name: string
   email: string
+  bio: string
 }
 
-const UserSettings = ({ name, email }: Props) => {
+const UserSettings = (props: Props) => {
   return (
     <>
       <Head>
         <title>Also: Update User Data</title>
       </Head>
       <SettingsContainer active="User">
-        <UpdateUserForm name={name} email={email} />
+        <UpdateUserForm {...props} />
       </SettingsContainer>
     </>
   )

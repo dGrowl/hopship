@@ -87,7 +87,6 @@ option {
 }
 
 textarea {
-  font-size: 1rem;
   min-width: 256px;
   min-height: 80px;
 }

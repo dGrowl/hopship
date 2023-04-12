@@ -10,9 +10,34 @@ import {
   MAX_USER_NAME_LENGTH,
 } from '../../lib/safety'
 import db from '../../server/db'
+import Field from '../../components/Field'
 import IdentityBox from '../../components/IdentityBox'
 
 import styles from '../../styles/UserPage.module.css'
+
+const getBio = async (userName: string) => {
+  try {
+    const result = await db.query(
+      `
+        SELECT u.bio
+        FROM public.users u
+        WHERE u.name = $1;
+      `,
+      [userName]
+    )
+    if (result.rowCount !== 1) {
+      throw {
+        message: `Error during biography query, wrong number of rows`,
+        userName,
+        rows: result.rowCount,
+      }
+    }
+    return result.rows[0].bio
+  } catch (error) {
+    console.error(error)
+  }
+  return ''
+}
 
 const getVerifiedIdentities = async (userName: string) => {
   try {
@@ -22,9 +47,10 @@ const getVerifiedIdentities = async (userName: string) => {
           i.platform,
           i.name,
           i.description AS desc
-        FROM public.identities i INNER JOIN public.users u
-          ON u.name = $1
-            AND u.id = i.user_id
+        FROM public.identities i
+          INNER JOIN public.users u
+            ON u.name = $1
+              AND u.id = i.user_id
         ORDER BY platform ASC, name ASC;
       `,
       [userName]
@@ -59,10 +85,8 @@ const processQuery = (query: ParsedUrlQuery) => {
   return { userName, platform, platformName }
 }
 
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const { query } = context
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const { query } = ctx
   const { userName, platform, platformName } = processQuery(query)
   if (!userName) {
     return {
@@ -72,9 +96,12 @@ export const getServerSideProps = async (
       },
     }
   }
-  const identities = await getVerifiedIdentities(userName)
+  const [bio, identities] = await Promise.all([
+    getBio(userName),
+    getVerifiedIdentities(userName),
+  ])
   return {
-    props: { userName, platform, platformName, identities },
+    props: { userName, bio, platform, platformName, identities },
   }
 }
 
@@ -99,24 +126,47 @@ const NoIdentities = ({ userName }: NoIdentitesProps) => {
 
 interface Props {
   userName: string
+  bio: string
   platform: string | null
   platformName: string | null
   identities: Identity[]
 }
 
-const UserPage = ({ userName, platform, platformName, identities }: Props) => {
-  const title = `Also: ${userName}`
+const UserPage = ({
+  userName,
+  bio,
+  platform,
+  platformName,
+  identities,
+}: Props) => {
   return (
     <>
       <Head>
-        <title>{title}</title>
+        <title>{`Also: ${userName}`}</title>
       </Head>
       <div id={styles.container}>
         <section id={styles.details}>
-          <h2>{userName}</h2>
-          <p>In the future, a biography will be here.</p>
+          {platform && platformName ? (
+            <p>
+              We know <b>{platformName}</b>!
+            </p>
+          ) : null}
+          <Field name="name">
+            <p>
+              <b>{userName}</b>
+            </p>
+          </Field>
+          {bio ? (
+            <>
+              <Field name="bio">
+                <p>
+                  <b>{bio}</b>
+                </p>
+              </Field>
+            </>
+          ) : null}
         </section>
-        <section id={styles.identitiesContainer}>
+        <section>
           <div id={styles.identities}>
             {identities.length > 0 ? (
               buildRows(identities)
