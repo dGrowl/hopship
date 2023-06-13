@@ -75,7 +75,7 @@ const DeletionSettings = ({ name }: Props) => {
         <section>
           <p>
             WARNING: Account deletion is forever. We don&apos;t keep backups of
-            your data. Everything will be gone, <b>{name}</b>.
+            your data. <b>Everything will be gone.</b>
           </p>
           <p>
             If you want to delete your account, enter your username below, then
