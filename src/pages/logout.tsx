@@ -1,13 +1,8 @@
 import { GetServerSidePropsContext } from 'next'
 
-const cookie = [
-  `auth=0`,
-  `Expires=${new Date(0)}`,
-  'HttpOnly',
-  'Secure',
-  'Path=/',
-  'SameSite=Lax',
-].join('; ')
+import { buildCookie } from '../lib/util'
+
+const cookie = buildCookie('auth', 'none', 0)
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   context.res.setHeader('Set-Cookie', cookie)

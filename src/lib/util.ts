@@ -8,6 +8,15 @@ export const csrfHeaders = (code: string) =>
     'X-CSRF-TOKEN': code,
   })
 
+export const buildCookie = (k: string, v: string, age: number) =>
+  [
+    `${k}=${v}`,
+    `Max-Age=${age}`,
+    'Path=/',
+    'SameSite=Lax',
+    process.env.NODE_ENV !== 'development' ? 'Secure' : null,
+  ].join('; ')
+
 export const platforms: readonly string[] = ['Twitch', 'Twitter']
 
 export const hasKey = (o: object, key: string) =>

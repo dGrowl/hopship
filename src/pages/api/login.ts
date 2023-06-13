@@ -2,8 +2,8 @@ import argon2 from 'argon2'
 import jwt from 'jsonwebtoken'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+import { buildCookie, clamp } from '../../lib/util'
 import { checkCSRF } from '../../server/helpers'
-import { clamp } from '../../lib/util'
 import db from '../../server/db'
 
 const WEEK_IN_SECONDS = 60 * 60 * 24 * 7
@@ -24,15 +24,7 @@ export const genAuthCookie = (
   const token = jwt.sign({ name, email }, process.env.JWT_AUTH_SECRET, {
     expiresIn: expirationSecs,
   })
-  const cookie = [
-    `auth=${token}`,
-    `Max-Age=${expirationSecs}`,
-    'HttpOnly',
-    'Secure',
-    'Path=/',
-    'SameSite=Lax',
-  ]
-  return cookie.join('; ')
+  return buildCookie('auth', token, expirationSecs)
 }
 
 export const getUserData = async (email: string, password: string) => {

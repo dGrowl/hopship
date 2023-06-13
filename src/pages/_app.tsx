@@ -6,7 +6,7 @@ import Link from 'next/link'
 import type { AppContext, AppProps } from 'next/app'
 
 import { AuthPayload } from '../lib/types'
-import { genHexString } from '../lib/util'
+import { buildCookie, genHexString } from '../lib/util'
 import UserMenu from '../components/UserMenu'
 
 import '../styles/reset.css'
@@ -88,14 +88,10 @@ App.getInitialProps = async ({ ctx }: AppContext) => {
         const csrfToken = jwt.sign({ code }, process.env.JWT_AUTH_SECRET, {
           expiresIn: HALF_HOUR_IN_SECONDS,
         })
-        const cookie = [
-          `csrf=${csrfToken}`,
-          `Max-Age=${HALF_HOUR_IN_SECONDS}`,
-          'Path=/',
-          'SameSite=Lax',
-          'Secure',
-        ]
-        ctx.res.setHeader('Set-Cookie', cookie.join('; '))
+        ctx.res.setHeader(
+          'Set-Cookie',
+          buildCookie('csrf', csrfToken, HALF_HOUR_IN_SECONDS)
+        )
       } catch (error) {
         console.log(error)
       }
