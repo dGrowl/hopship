@@ -1,9 +1,11 @@
+import { NextApiRequestCookies } from 'next/dist/server/api-utils'
+import { NextIncomingMessage } from 'next/dist/server/request-meta'
 import Head from 'next/head'
 import jwt from 'jsonwebtoken'
 import Link from 'next/link'
-import type { AppContext } from 'next/app'
+import type { AppContext, AppProps } from 'next/app'
 
-import { AuthPayload, ExtendedAppProps, ExtendedRequest } from '../lib/types'
+import { AuthPayload } from '../lib/types'
 import { genHexString } from '../lib/util'
 import UserMenu from '../components/UserMenu'
 
@@ -13,11 +15,11 @@ import styles from '../styles/App.module.css'
 
 const HALF_HOUR_IN_SECONDS = 60 * 30
 
-export default function App({
-  Component,
-  pageProps,
-  userName,
-}: ExtendedAppProps) {
+interface Props extends AppProps {
+  userName: string
+}
+
+export default function App({ Component, pageProps, userName }: Props) {
   return (
     <>
       <div className={styles.container}>
@@ -52,6 +54,10 @@ export default function App({
       </footer>
     </>
   )
+}
+
+type ExtendedRequest = NextIncomingMessage & {
+  cookies: NextApiRequestCookies
 }
 
 App.getInitialProps = async ({ ctx }: AppContext) => {
