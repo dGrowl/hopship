@@ -3,6 +3,7 @@ import { Dispatch, FormEvent, useState } from 'react'
 import { CSRFFormFields } from '../lib/types'
 import { csrfHeaders } from '../lib/util'
 import { MAX_DESCRIPTION_LENGTH, useCSRFCode } from '../lib/safety'
+import Field from './Field'
 
 type Fields = EventTarget &
   CSRFFormFields & {
@@ -51,11 +52,13 @@ const UpdateIdentityForm = ({ platform, name, desc, verified }: Props) => {
       >
         <fieldset>
           <input name="csrf" type="hidden" value={csrfCode} readOnly />
-          <textarea
-            name="desc"
-            defaultValue={desc}
-            maxLength={MAX_DESCRIPTION_LENGTH}
-          />
+          <Field name="description">
+            <textarea
+              name="desc"
+              defaultValue={desc}
+              maxLength={MAX_DESCRIPTION_LENGTH}
+            />
+          </Field>
           <button disabled={unchanged}>save</button>
         </fieldset>
       </form>
