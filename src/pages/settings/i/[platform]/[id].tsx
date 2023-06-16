@@ -126,20 +126,13 @@ const IdentitySettings = ({ platform, name, desc, verified }: Props) => {
         <title>{`Also: ${platform} // ${name}`}</title>
       </Head>
       <SettingsContainer active={`${platform}/${name}`}>
-        {verified ? null : (
-          <>
-            <h2>Verify</h2>
-            <VerificationForm platform={platform} name={name} />
-          </>
-        )}
-        <h2>Edit</h2>
+        {verified ? null : <VerificationForm platform={platform} name={name} />}
         <UpdateIdentityForm
           platform={platform}
           name={name}
           verified={verified}
           desc={desc}
         />
-        <h2>Remove</h2>
         <RemoveIdentityForm
           platform={platform}
           name={name}

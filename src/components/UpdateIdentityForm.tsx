@@ -46,6 +46,7 @@ const UpdateIdentityForm = ({ platform, name, desc, verified }: Props) => {
   const csrfCode = useCSRFCode()
   return (
     <section>
+      <b>Edit</b>
       <form
         onChange={(e) => checkUnchanged(e, setUnchanged)}
         onSubmit={(e) => update(e, platform, name, verified)}

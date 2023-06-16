@@ -101,6 +101,7 @@ const VerificationForm = ({ platform, name }: Props) => {
   const url = `https://also.domain/u/name?v=${hash}`
   return (
     <section>
+      <b>Verify</b>
       <form onSubmit={(e) => verify(e, platform, name)}>
         <fieldset>
           <input name="csrf" type="hidden" value={csrfCode} readOnly />
@@ -116,7 +117,7 @@ const VerificationForm = ({ platform, name }: Props) => {
             Hey everyone, I&apos;m linking accounts using Also! Check my other
             pages out at <a href={url}>{url}</a>!
           </div>
-          <button>verify</button>
+          <button>submit</button>
         </fieldset>
       </form>
     </section>

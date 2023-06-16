@@ -48,6 +48,7 @@ const RemoveIdentityForm = ({ platform, name, verified }: Props) => {
   const key = `${platform}//${name}`
   return (
     <section>
+      <b>Remove</b>
       <p>
         If you want to remove this identity from your account, type <b>{key}</b>{' '}
         in the field below, then click the delete button.
