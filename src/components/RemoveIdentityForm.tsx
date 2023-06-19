@@ -17,11 +17,9 @@ const remove = async (
 ) => {
   e.preventDefault()
   const { csrf } = e.target as Fields
-  const data = { platform, name, verified }
-  await fetch('/api/identities', {
+  await fetch(`/api/identities/${platform}/${name}?verified=${verified}`, {
     method: 'DELETE',
     headers: csrfHeaders(csrf.value),
-    body: JSON.stringify(data),
   })
   window.location.reload()
 }

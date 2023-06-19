@@ -16,11 +16,18 @@ export const useCSRFCode = () => {
       const payload = jwt.decode(token) as CSRFPayload | null
       setCode(payload?.code || '')
     } catch (error) {
-      console.log('Error')
+      console.log('Failed to decode CSRF token')
     }
   }, [])
   return code
 }
+
+export const sanitizeName = (name: string) => name.toLowerCase()
+
+export const ARGON_OPTIONS = {
+  memoryCost: 16384, // 2^14
+  timeCost: 64,
+} as const
 
 export const MAX_USER_NAME_LENGTH = 24
 

@@ -19,8 +19,8 @@ const update = async (
   e.preventDefault()
   const form = e.target as Fields
   const { csrf, desc } = form
-  const data = { platform, name, desc: desc.value, verified }
-  await fetch('/api/identities', {
+  const data = { desc: desc.value }
+  await fetch(`/api/identities/${platform}/${name}?verified=${verified}`, {
     method: 'PATCH',
     headers: csrfHeaders(csrf.value),
     body: JSON.stringify(data),

@@ -16,7 +16,7 @@ type Fields = EventTarget &
     reFuture: HTMLInputElement
   }
 
-const update = async (e: FormEvent) => {
+const update = async (e: FormEvent, name: string) => {
   e.preventDefault()
   const { csrf, current, future, reFuture } = e.target as Fields
   if (future.value !== reFuture.value) {
@@ -26,7 +26,7 @@ const update = async (e: FormEvent) => {
     currentPassword: current.value,
     futurePassword: future.value,
   }
-  await fetch('/api/users', {
+  await fetch(`/api/users/${name}`, {
     method: 'PATCH',
     headers: csrfHeaders(csrf.value),
     body: JSON.stringify(data),
@@ -34,38 +34,42 @@ const update = async (e: FormEvent) => {
   window.location.reload()
 }
 
-const UpdatePasswordForm = () => {
+interface Props {
+  name: string
+}
+
+const UpdatePasswordForm = ({ name }: Props) => {
   const csrfCode = useCSRFCode()
   return (
     <section>
-      <form onSubmit={update}>
+      <form onSubmit={(e) => update(e, name)}>
         <fieldset>
           <input name="csrf" type="hidden" value={csrfCode} readOnly />
           <Field name="current">
             <input
-              name="current"
-              type="password"
-              minLength={MIN_PASSWORD_LENGTH}
               maxLength={MAX_PASSWORD_LENGTH}
+              minLength={MIN_PASSWORD_LENGTH}
+              name="current"
               required
+              type="password"
             />
           </Field>
           <Field name="future" label="new">
             <input
-              name="future"
-              type="password"
-              minLength={MIN_PASSWORD_LENGTH}
               maxLength={MAX_PASSWORD_LENGTH}
+              minLength={MIN_PASSWORD_LENGTH}
+              name="future"
               required
+              type="password"
             />
           </Field>
           <Field name="reFuture" label="new (again)">
             <input
-              name="reFuture"
-              type="password"
-              minLength={MIN_PASSWORD_LENGTH}
               maxLength={MAX_PASSWORD_LENGTH}
+              minLength={MIN_PASSWORD_LENGTH}
+              name="reFuture"
               required
+              type="password"
             />
           </Field>
           <button>change</button>

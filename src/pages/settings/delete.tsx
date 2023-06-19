@@ -47,12 +47,15 @@ export const getServerSideProps = async (
   }
 }
 
-type Fields = EventTarget & CSRFFormFields
+type Fields = EventTarget &
+  CSRFFormFields & {
+    name: HTMLInputElement
+  }
 
 const submit = async (e: FormEvent) => {
   e.preventDefault()
-  const { csrf } = e.target as Fields
-  await fetch('/api/users', {
+  const { csrf, name } = e.target as Fields
+  await fetch(`/api/users/${name.value}`, {
     method: 'DELETE',
     headers: csrfHeaders(csrf.value),
   })
@@ -85,6 +88,7 @@ const DeletionSettings = ({ name }: Props) => {
             <fieldset>
               <input name="csrf" type="hidden" value={csrfCode} readOnly />
               <input
+                name="name"
                 placeholder={name}
                 onChange={(e) => setInvalid(e.target.value !== name)}
               />

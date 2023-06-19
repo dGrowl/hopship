@@ -34,7 +34,7 @@ const update = async (e: FormEvent, currentName: string) => {
     data.bio = bio.value
   }
   if (Object.keys(data).length !== 0) {
-    await fetch('/api/users', {
+    await fetch(`/api/users/${currentName}`, {
       method: 'PATCH',
       headers: csrfHeaders(csrf.value),
       body: JSON.stringify(data),
@@ -100,9 +100,9 @@ const UpdateUserForm = ({ name, email, bio }: Props) => {
           </Field>
           <Field name="bio">
             <textarea
-              name="bio"
-              maxLength={MAX_BIO_LENGTH}
               defaultValue={bio}
+              maxLength={MAX_BIO_LENGTH}
+              name="bio"
             />
           </Field>
           <button disabled={unchanged}>update</button>

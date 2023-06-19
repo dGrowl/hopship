@@ -1,10 +1,11 @@
 import argon2 from 'argon2'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { checkCSRF, processAuth } from '../../server/helpers'
-import { getUserData, genAuthCookie } from './login'
-import { hasKey } from '../../lib/util'
-import db from '../../server/db'
+import { ARGON_OPTIONS, sanitizeName } from '../../../lib/safety'
+import { checkCSRF, processAuth } from '../../../server/helpers'
+import { getUserData, genAuthCookie } from '../login'
+import { hasKey } from '../../../lib/util'
+import db from '../../../server/db'
 
 interface Data {
   name?: string
@@ -13,36 +14,17 @@ interface Data {
   passhash?: string
 }
 
-const sanitizeName = (name: string) => name.toLowerCase()
-
-const ARGON_OPTIONS = {
-  memoryCost: 16384, // 2^14
-  timeCost: 64,
-} as const
-
-const create = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { body } = req
-  let { email, name, password } = body
-  name = sanitizeName(name)
-  const passhash = await argon2.hash(password, ARGON_OPTIONS)
-  const result = await db.query(
-    `
-      INSERT INTO public.users (email, name, passhash)
-      VALUES ($1, $2, $3);
-    `,
-    [email, name, passhash]
-  )
-  if (result.rowCount !== 1) {
-    return res.status(500).json({})
-  }
-  return res.status(200).json({})
-}
-
 const update = async (req: NextApiRequest, res: NextApiResponse) => {
   const payload = await processAuth(req, res)
   if (!payload) return
-  const { body } = req
-  const { name: currentName, email: currentEmail } = payload
+  const { body, query } = req
+  const { name: currentName } = query
+  if (currentName !== payload.name) {
+    return res
+      .status(401)
+      .json({ message: 'Mismatch between path and token name' })
+  }
+  const { email: currentEmail } = payload
   const data: Data = {}
   if (hasKey(body, 'name')) {
     data.name = sanitizeName(body.name)
@@ -101,12 +83,18 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
 const remove = async (req: NextApiRequest, res: NextApiResponse) => {
   const payload = await processAuth(req, res)
   if (!payload) return
+  const { name } = req.query
+  if (name !== payload.name) {
+    return res
+      .status(401)
+      .json({ message: 'Mismatch between path and token name' })
+  }
   const result = await db.query(
     `
       DELETE FROM public.users
       WHERE name = $1;
     `,
-    [payload.name]
+    [name]
   )
   if (result.rowCount === 0) {
     return res.status(400).json({ message: 'Invalid authenticated user' })
@@ -117,8 +105,6 @@ const remove = async (req: NextApiRequest, res: NextApiResponse) => {
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!checkCSRF(req, res)) return
   switch (req.method) {
-    case 'POST':
-      return create(req, res)
     case 'PATCH':
       return update(req, res)
     case 'DELETE':

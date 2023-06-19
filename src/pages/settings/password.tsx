@@ -27,7 +27,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
           },
         }
       }
-      return { props: {} }
+      return {
+        props: { name: payload.name },
+      }
     }
   } catch (error) {
     console.log(error)
@@ -41,14 +43,18 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   }
 }
 
-const PasswordSettings = () => {
+interface Props {
+  name: string
+}
+
+const PasswordSettings = ({ name }: Props) => {
   return (
     <>
       <Head>
         <title>Also: Change Password</title>
       </Head>
       <SettingsContainer active="Password">
-        <UpdatePasswordForm />
+        <UpdatePasswordForm name={name} />
       </SettingsContainer>
     </>
   )
