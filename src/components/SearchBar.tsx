@@ -3,24 +3,27 @@ import { NextRouter, useRouter } from 'next/router'
 
 import { MAX_PLATFORM_NAME_LENGTH } from '../lib/safety'
 import { platforms } from '../lib/util'
+import { setAnimationPlatform } from './OrbitAnimation'
 
 import styles from '../styles/SearchBar.module.css'
 
 const PlatformSelect = () => {
-  const [platform, setPlatform] = useState('')
+  const [platform, setPlatform] = useState<string | null>(null)
   useEffect(() => {
-    const storedPlatform = localStorage.getItem('platform')
-    if (storedPlatform && storedPlatform !== platform) {
-      setPlatform(storedPlatform)
-    }
+    setPlatform(localStorage.getItem('platform') || '')
   }, [])
+  useEffect(() => {
+    if (platform !== null) {
+      setAnimationPlatform(platform)
+    }
+  }, [platform])
   return (
     <select
       id="platform"
       name="platform"
       onChange={(e) => setPlatform(e.target.value)}
       required
-      value={platform}
+      value={platform || ''}
     >
       <option value="">Platform</option>
       {platforms.map((p) => (

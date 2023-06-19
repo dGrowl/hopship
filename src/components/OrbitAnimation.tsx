@@ -70,6 +70,7 @@ class Animation {
   ctx: CanvasRenderingContext2D | null = null
   w = 0
   h = 0
+  initialized = false
   playing = true
   lastFrameTimeMs = 0
   activeColor: string | null = null
@@ -93,6 +94,10 @@ class Animation {
   }
 
   setPlatform = (platform: string | null) => {
+    if (!this.initialized && platform !== null) {
+      this.initialized = true
+      this.playing = true
+    }
     if (platform && hasKey(PLATFORM_COLORS, platform)) {
       this.activeColor = PLATFORM_COLORS[platform]
     } else {
@@ -116,7 +121,7 @@ class Animation {
   }
 
   frame = () => {
-    if (!this.ctx) return
+    if (!this.ctx || !this.initialized) return
     const timeSinceLastFrameMs = Date.now() - this.lastFrameTimeMs
     const dtUs = timeSinceLastFrameMs / 1000
     this.ctx.clearRect(0, 0, this.w, this.h)
@@ -145,6 +150,10 @@ class Animation {
 
 const animation = new Animation()
 
+export const setAnimationPlatform = (platform: string | null) => {
+  animation.setPlatform(platform)
+}
+
 interface Props {
   width: number
   height: number
@@ -156,14 +165,21 @@ const OrbitAnimation = ({ width, height }: Props) => {
       animation.setCanvas(canvas)
     }
   }, [])
+  useEffect(() => {
+    animation.playing = animation.initialized
+    animation.start()
+    return () => {
+      animation.playing = false
+    }
+  })
   return (
     <canvas
-      id="surface"
-      width={width}
       height={height}
+      id="surface"
+      onClick={() => animation.plause()}
       ref={canvasRef}
       style={{ cursor: 'pointer' }}
-      onClick={() => animation.plause()}
+      width={width}
     />
   )
 }
