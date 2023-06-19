@@ -5,11 +5,7 @@ import SearchForm from '../components/SearchForm'
 
 import styles from '../styles/Home.module.css'
 
-export const getServerSideProps = async () => {
-  return {
-    props: {},
-  }
-}
+export const getServerSideProps = async () => ({ props: {} })
 
 const Home = () => {
   const [platform, setPlatform] = useState<string | null>(null)
@@ -20,7 +16,7 @@ const Home = () => {
   }, [])
   return (
     <div id={styles.container}>
-      <OrbitAnimation width={300} height={300} platform={platform} />
+      <OrbitAnimation width={300} height={300} />
       <SearchForm platform={platform} name={name} setPlatform={setPlatform} />
     </div>
   )

@@ -148,16 +148,14 @@ const animation = new Animation()
 interface Props {
   width: number
   height: number
-  platform: string | null
 }
 
-const OrbitAnimation = ({ width, height, platform }: Props) => {
+const OrbitAnimation = ({ width, height }: Props) => {
   const canvasRef = useCallback((canvas: HTMLCanvasElement | null) => {
     if (canvas) {
       animation.setCanvas(canvas)
     }
   }, [])
-  useEffect(() => animation.setPlatform(platform), [platform])
   return (
     <canvas
       id="surface"
