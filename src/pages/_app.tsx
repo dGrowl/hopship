@@ -12,6 +12,7 @@ import UserMenu from '../components/UserMenu'
 
 import '../styles/reset.css'
 import '../styles/globals.css'
+import '../styles/variables.css'
 import styles from '../styles/App.module.css'
 
 const HALF_HOUR_IN_SECONDS = 60 * 30
@@ -50,15 +51,6 @@ export default function App({ Component, pageProps, userName }: Props) {
           <Component {...pageProps} />
         </main>
       </div>
-      <footer className={styles.footer}>
-        <a
-          href="https://github.com/dGrowl"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          GitHub // dGrowl
-        </a>
-      </footer>
     </>
   )
 }
