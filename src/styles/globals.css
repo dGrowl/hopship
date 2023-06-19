@@ -26,7 +26,8 @@ a {
   color: inherit;
 }
 
-b {
+b,
+em {
   font-weight: bold;
 }
 
