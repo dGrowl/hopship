@@ -2,7 +2,7 @@ import { Dispatch, FormEvent, useState } from 'react'
 
 import { CSRFFormFields } from '../lib/types'
 import { csrfHeaders } from '../lib/util'
-import { useCSRFCode } from '../lib/safety'
+import AntiCSRFForm from './AntiCSRFForm'
 
 type Fields = EventTarget &
   CSRFFormFields & {
@@ -42,7 +42,6 @@ interface Props {
 
 const RemoveIdentityForm = ({ platform, name, verified }: Props) => {
   const [invalid, setInvalid] = useState(true)
-  const csrfCode = useCSRFCode()
   const key = `${platform}//${name}`
   return (
     <section>
@@ -51,16 +50,13 @@ const RemoveIdentityForm = ({ platform, name, verified }: Props) => {
         If you want to remove this identity from your account, type <b>{key}</b>{' '}
         in the field below, then click the delete button.
       </p>
-      <form
+      <AntiCSRFForm
         onChange={(e) => checkInvalid(e, key, setInvalid)}
         onSubmit={(e) => remove(e, platform, name, verified)}
       >
-        <fieldset>
-          <input name="csrf" type="hidden" value={csrfCode} readOnly />
-          <input name="consent" placeholder={key} />
-          <button disabled={invalid}>delete</button>
-        </fieldset>
-      </form>
+        <input name="consent" placeholder={key} />
+        <button disabled={invalid}>delete</button>
+      </AntiCSRFForm>
     </section>
   )
 }

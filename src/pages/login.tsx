@@ -5,11 +5,8 @@ import Head from 'next/head'
 import jwt from 'jsonwebtoken'
 
 import { csrfHeaders } from '../lib/util'
-import {
-  MAX_PASSWORD_LENGTH,
-  MIN_PASSWORD_LENGTH,
-  useCSRFCode,
-} from '../lib/safety'
+import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from '../lib/safety'
+import AntiCSRFForm from '../components/AntiCSRFForm'
 import Field from '../components/Field'
 
 import styles from '../styles/Login.module.css'
@@ -92,7 +89,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 export default function Login() {
   const [registerMode, setRegisterMode] = useState(false)
   const router = useRouter()
-  const csrfCode = useCSRFCode()
   return (
     <>
       <Head>
@@ -113,8 +109,7 @@ export default function Login() {
             Register
           </button>
         </div>
-        <form onSubmit={(e) => submit(e, registerMode, router)}>
-          <input name="csrf" type="hidden" value={csrfCode} readOnly />
+        <AntiCSRFForm onSubmit={(e) => submit(e, registerMode, router)}>
           <Field name="email">
             <input id="email" name="email" type="email" />
           </Field>
@@ -128,10 +123,10 @@ export default function Login() {
           <Field name="password">
             <input
               id="password"
+              maxLength={MAX_PASSWORD_LENGTH}
+              minLength={MIN_PASSWORD_LENGTH}
               name="password"
               type="password"
-              minLength={MIN_PASSWORD_LENGTH}
-              maxLength={MAX_PASSWORD_LENGTH}
             />
           </Field>
           {registerMode ? (
@@ -139,16 +134,16 @@ export default function Login() {
               <Field name="repassword" label="password (again)">
                 <input
                   id="repassword"
+                  maxLength={MAX_PASSWORD_LENGTH}
+                  minLength={MIN_PASSWORD_LENGTH}
                   name="repassword"
                   type="password"
-                  minLength={MIN_PASSWORD_LENGTH}
-                  maxLength={MAX_PASSWORD_LENGTH}
                 />
               </Field>
             </>
           ) : null}
           <button>{registerMode ? 'create' : 'verify'}</button>
-        </form>
+        </AntiCSRFForm>
       </section>
     </>
   )

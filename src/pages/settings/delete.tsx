@@ -5,8 +5,8 @@ import jwt from 'jsonwebtoken'
 
 import { AuthPayload, CSRFFormFields } from '../../lib/types'
 import { csrfHeaders } from '../../lib/util'
-import { useCSRFCode } from '../../lib/safety'
 import { validateUserData } from '../../server/helpers'
+import AntiCSRFForm from '../../components/AntiCSRFForm'
 import SettingsContainer from '../../components/SettingsContainer'
 
 export const getServerSideProps = async (
@@ -68,7 +68,6 @@ interface Props {
 
 const DeletionSettings = ({ name }: Props) => {
   const [invalid, setInvalid] = useState(true)
-  const csrfCode = useCSRFCode()
   return (
     <>
       <Head>
@@ -84,17 +83,14 @@ const DeletionSettings = ({ name }: Props) => {
             If you want to delete your account, enter your username below, then
             hit delete.
           </p>
-          <form onSubmit={submit}>
-            <fieldset>
-              <input name="csrf" type="hidden" value={csrfCode} readOnly />
-              <input
-                name="name"
-                placeholder={name}
-                onChange={(e) => setInvalid(e.target.value !== name)}
-              />
-              <button disabled={invalid}>delete</button>
-            </fieldset>
-          </form>
+          <AntiCSRFForm onSubmit={submit}>
+            <input
+              name="name"
+              onChange={(e) => setInvalid(e.target.value !== name)}
+              placeholder={name}
+            />
+            <button disabled={invalid}>delete</button>
+          </AntiCSRFForm>
         </section>
       </SettingsContainer>
     </>

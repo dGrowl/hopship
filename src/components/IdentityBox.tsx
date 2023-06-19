@@ -3,11 +3,8 @@ import Link from 'next/link'
 
 import { CSRFFormFields } from '../lib/types'
 import { csrfHeaders, platforms } from '../lib/util'
-import {
-  MAX_DESCRIPTION_LENGTH,
-  MAX_PLATFORM_NAME_LENGTH,
-  useCSRFCode,
-} from '../lib/safety'
+import { MAX_DESCRIPTION_LENGTH, MAX_PLATFORM_NAME_LENGTH } from '../lib/safety'
+import AntiCSRFForm from './AntiCSRFForm'
 
 import styles from '../styles/IdentityBox.module.css'
 
@@ -40,41 +37,37 @@ interface AddProps {
 
 export const AddIdentityBox = ({ close }: AddProps) => {
   const [platform, setPlatform] = useState(platforms[0])
-  const csrfCode = useCSRFCode()
   return (
     <div className={`${styles.container} ${styles[platform + 'Border']}`}>
-      <form onSubmit={add}>
-        <fieldset>
-          <input name="csrf" type="hidden" value={csrfCode} readOnly />
-          <div className={`${styles.platform} ${styles[platform]}`}>
-            <select
-              id={styles.addSelector}
-              name="platform"
-              onChange={(e) => setPlatform(e.target.value)}
-            >
-              <option>Twitch</option>
-              <option>Twitter</option>
-            </select>
-          </div>
-          <div className={styles.details}>
-            <input
-              name="name"
-              placeholder={`${platform} name`}
-              pattern="\w+"
-              minLength={1}
-              maxLength={MAX_PLATFORM_NAME_LENGTH}
-              title="Platform IDs can only contain letters, numbers, and underscores."
-              required
-            />
-            <textarea
-              name="desc"
-              placeholder="(optional) A description of what you use this account for."
-              maxLength={MAX_DESCRIPTION_LENGTH}
-            />
-            <button>add</button>
-          </div>
-        </fieldset>
-      </form>
+      <AntiCSRFForm onSubmit={add}>
+        <div className={`${styles.platform} ${styles[platform]}`}>
+          <select
+            id={styles.addSelector}
+            name="platform"
+            onChange={(e) => setPlatform(e.target.value)}
+          >
+            <option>Twitch</option>
+            <option>Twitter</option>
+          </select>
+        </div>
+        <div className={styles.details}>
+          <input
+            maxLength={MAX_PLATFORM_NAME_LENGTH}
+            minLength={1}
+            name="name"
+            pattern="\w+"
+            placeholder={`${platform} name`}
+            required
+            title="Platform IDs can only contain letters, numbers, and underscores."
+          />
+          <textarea
+            maxLength={MAX_DESCRIPTION_LENGTH}
+            name="desc"
+            placeholder="(optional) A description of what you use this account for."
+          />
+          <button>add</button>
+        </div>
+      </AntiCSRFForm>
       <div className={styles.buttonColumn}>
         <button onClick={close}>X</button>
       </div>

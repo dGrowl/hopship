@@ -2,7 +2,7 @@ import { FormEvent } from 'react'
 
 import { CSRFFormFields } from '../lib/types'
 import { csrfHeaders } from '../lib/util'
-import { useCSRFCode } from '../lib/safety'
+import AntiCSRFForm from './AntiCSRFForm'
 
 import styles from '../styles/VerificationForm.module.css'
 
@@ -48,8 +48,8 @@ const TwitterInstructions = ({ name, url }: PlatformProps) => {
             name="messageID"
             pattern="\d+"
             placeholder="123456789"
-            title="Tweet IDs can only contain digits."
             required
+            title="Tweet IDs can only contain digits."
           />
         </p>
       </li>
@@ -96,30 +96,26 @@ interface Props {
 }
 
 const VerificationForm = ({ platform, name }: Props) => {
-  const csrfCode = useCSRFCode()
   const hash = 'e2a464cf'
   const url = `https://also.domain/u/name?v=${hash}`
   return (
     <section>
       <b>Verify</b>
-      <form onSubmit={(e) => verify(e, platform, name)}>
-        <fieldset>
-          <input name="csrf" type="hidden" value={csrfCode} readOnly />
-          To verify that this {platform} account belongs to you:
-          <ol>
-            <Instructions platform={platform} name={name} url={url} />
-            <li>
-              Hit the <b>verify</b> button below.
-            </li>
-          </ol>
-          <div>Example:</div>
-          <div className={`${styles.example} ${styles[platform + 'Example']}`}>
-            Hey everyone, I&apos;m linking accounts using Also! Check my other
-            pages out at <a href={url}>{url}</a>!
-          </div>
-          <button>submit</button>
-        </fieldset>
-      </form>
+      <AntiCSRFForm onSubmit={(e) => verify(e, platform, name)}>
+        To verify that this {platform} account belongs to you:
+        <ol>
+          <Instructions platform={platform} name={name} url={url} />
+          <li>
+            Hit the <b>verify</b> button below.
+          </li>
+        </ol>
+        <div>Example:</div>
+        <div className={`${styles.example} ${styles[platform + 'Example']}`}>
+          Hey everyone, I&apos;m linking accounts using Also! Check my other
+          pages out at <a href={url}>{url}</a>!
+        </div>
+        <button>submit</button>
+      </AntiCSRFForm>
     </section>
   )
 }

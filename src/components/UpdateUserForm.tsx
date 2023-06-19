@@ -2,7 +2,8 @@ import { Dispatch, FormEvent, useState } from 'react'
 
 import { CSRFFormFields } from '../lib/types'
 import { csrfHeaders } from '../lib/util'
-import { MAX_BIO_LENGTH, useCSRFCode } from '../lib/safety'
+import { MAX_BIO_LENGTH } from '../lib/safety'
+import AntiCSRFForm from './AntiCSRFForm'
 import Field from './Field'
 
 import styles from '../styles/UpdateUserForm.module.css'
@@ -84,32 +85,28 @@ interface Props {
 
 const UpdateUserForm = ({ name, email, bio }: Props) => {
   const [unchanged, setUnchanged] = useState(true)
-  const csrfCode = useCSRFCode()
   return (
     <section>
-      <form
+      <AntiCSRFForm
         onChange={(e) => checkUnchanged(e, name, setUnchanged)}
         onSubmit={(e) => update(e, name)}
       >
-        <fieldset>
-          <input name="csrf" type="hidden" value={csrfCode} readOnly />
-          <Field name="name">
-            <NameInput initial={name} />
-          </Field>
-          <Field name="email">
-            <input defaultValue={email} id="email" name="email" type="email" />
-          </Field>
-          <Field name="bio">
-            <textarea
-              defaultValue={bio}
-              id="bio"
-              maxLength={MAX_BIO_LENGTH}
-              name="bio"
-            />
-          </Field>
-          <button disabled={unchanged}>update</button>
-        </fieldset>
-      </form>
+        <Field name="name">
+          <NameInput initial={name} />
+        </Field>
+        <Field name="email">
+          <input defaultValue={email} id="email" name="email" type="email" />
+        </Field>
+        <Field name="bio">
+          <textarea
+            defaultValue={bio}
+            id="bio"
+            maxLength={MAX_BIO_LENGTH}
+            name="bio"
+          />
+        </Field>
+        <button disabled={unchanged}>update</button>
+      </AntiCSRFForm>
     </section>
   )
 }
