@@ -55,6 +55,7 @@ const UpdateIdentityForm = ({ platform, name, desc, verified }: Props) => {
           <input name="csrf" type="hidden" value={csrfCode} readOnly />
           <Field name="description">
             <textarea
+              id="description"
               name="desc"
               defaultValue={desc}
               maxLength={MAX_DESCRIPTION_LENGTH}

@@ -52,6 +52,7 @@ const NameInput = ({ initial }: NameInputProps) => {
   return (
     <>
       <input
+        id="name"
         name="name"
         onChange={(e) => setName(e.target.value)}
         value={name}
@@ -96,11 +97,12 @@ const UpdateUserForm = ({ name, email, bio }: Props) => {
             <NameInput initial={name} />
           </Field>
           <Field name="email">
-            <input name="email" type="email" defaultValue={email} />
+            <input defaultValue={email} id="email" name="email" type="email" />
           </Field>
           <Field name="bio">
             <textarea
               defaultValue={bio}
+              id="bio"
               maxLength={MAX_BIO_LENGTH}
               name="bio"
             />

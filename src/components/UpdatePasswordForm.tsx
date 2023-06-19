@@ -47,6 +47,7 @@ const UpdatePasswordForm = ({ name }: Props) => {
           <input name="csrf" type="hidden" value={csrfCode} readOnly />
           <Field name="current">
             <input
+              id="current"
               maxLength={MAX_PASSWORD_LENGTH}
               minLength={MIN_PASSWORD_LENGTH}
               name="current"
@@ -56,6 +57,7 @@ const UpdatePasswordForm = ({ name }: Props) => {
           </Field>
           <Field name="future" label="new">
             <input
+              id="future"
               maxLength={MAX_PASSWORD_LENGTH}
               minLength={MIN_PASSWORD_LENGTH}
               name="future"
@@ -65,6 +67,7 @@ const UpdatePasswordForm = ({ name }: Props) => {
           </Field>
           <Field name="reFuture" label="new (again)">
             <input
+              id="reFuture"
               maxLength={MAX_PASSWORD_LENGTH}
               minLength={MIN_PASSWORD_LENGTH}
               name="reFuture"

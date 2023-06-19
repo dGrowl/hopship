@@ -145,28 +145,28 @@ const UserPage = ({
         <title>{`Also: ${userName}`}</title>
       </Head>
       <div id={styles.container}>
-        <section id={styles.details}>
+        <div id={styles.details}>
           {platform && platformName ? (
             <p>
               We know <b>{platformName}</b>!
             </p>
           ) : null}
           <Field name="name">
-            <p>
+            <p id="name">
               <b>{userName}</b>
             </p>
           </Field>
           {bio ? (
             <>
               <Field name="bio">
-                <p>
+                <p id="bio">
                   <b>{bio}</b>
                 </p>
               </Field>
             </>
           ) : null}
-        </section>
-        <section>
+        </div>
+        <section id={styles.identitiesContainer}>
           <div id={styles.identities}>
             {identities.length > 0 ? (
               buildRows(identities)
