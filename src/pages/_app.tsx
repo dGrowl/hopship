@@ -7,6 +7,7 @@ import type { AppContext, AppProps } from 'next/app'
 
 import { AuthPayload } from '../lib/types'
 import { buildCookie, genHexString } from '../lib/util'
+import SearchBar from '../components/SearchBar'
 import UserMenu from '../components/UserMenu'
 
 import '../styles/reset.css'
@@ -29,16 +30,22 @@ export default function App({ Component, pageProps, userName }: Props) {
             name="description"
             content="A searchable index of user accounts across different web platforms. Come find all of your friends!"
           />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
         <header id={styles.header}>
-          <Link href="/">
-            <h1 className={styles.title}>also</h1>
-          </Link>
-          <UserMenu name={userName} />
+          <div id={styles.headerContent}>
+            <Link href="/">
+              <h1 className={styles.title}>also</h1>
+            </Link>
+            <SearchBar />
+            <UserMenu name={userName} />
+          </div>
         </header>
-
         <main className={styles.main}>
           <Component {...pageProps} />
         </main>

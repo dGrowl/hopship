@@ -5,6 +5,12 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
+body {
+  min-height: 100dvh;
+  width: 100%;
+  position: absolute;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
@@ -29,7 +35,7 @@ p {
 }
 
 h1 {
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: bold;
 }
 
@@ -84,11 +90,6 @@ textarea {
 
 option {
   background-color: #161616;
-}
-
-textarea {
-  min-width: 256px;
-  min-height: 80px;
 }
 
 button,

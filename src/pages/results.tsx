@@ -1,12 +1,10 @@
 import { GetServerSidePropsContext } from 'next'
 import { ParsedUrlQuery } from 'querystring'
-import { useEffect } from 'react'
 import Head from 'next/head'
 
 import { arrayToFirstString, platforms } from '../lib/util'
 import { MAX_PLATFORM_NAME_LENGTH, MAX_PLATFORM_LENGTH } from '../lib/safety'
 import db from '../server/db'
-import SearchForm from '../components/SearchForm'
 
 import styles from '../styles/Results.module.css'
 
@@ -37,32 +35,35 @@ const errorMessage = (platform: string | null, name: string | null) => {
   }
   return (
     <>
-      <b>{name}</b> on <b>{platform}</b> isn&apos;t registered here. If you know
-      them, ask them to sign up!
+      We don&apos;t know <b>{name}</b> from <b>{platform}</b>. If you do, ask
+      them to sign up!
     </>
   )
 }
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const { platform, name } = processQuery(ctx.query)
-  const result = await db.query(
-    `
-      SELECT u.name AS user_name
-      FROM public.users u INNER JOIN public.identities i
-        ON u.id = i.user_id
-          AND i.platform = $1
-          AND i.name = $2;
-    `,
-    [platform, name]
-  )
-  if (result.rowCount === 1) {
-    const userName = result.rows[0]['user_name']
-    if (userName) {
-      return {
-        redirect: {
-          destination: `/u/${userName}`,
-          permanent: false,
-        },
+  if (platform && name) {
+    const result = await db.query(
+      `
+        SELECT u.name AS user_name
+        FROM public.users u
+          INNER JOIN public.identities i
+            ON u.id = i.user_id
+              AND i.platform = $1
+              AND i.name = $2;
+      `,
+      [platform, name]
+    )
+    if (result.rowCount === 1) {
+      const userName = result.rows[0]['user_name']
+      if (userName) {
+        return {
+          redirect: {
+            destination: `/u/${userName}?platform=${platform}&id=${name}`,
+            permanent: false,
+          },
+        }
       }
     }
   }
@@ -84,13 +85,10 @@ const Results = ({ platform, name }: Props) => {
           {'Also: ' + (platform && name ? `${platform}//${name}` : 'Results')}
         </title>
       </Head>
-      <div id={styles.container}>
-        <SearchForm platform={platform} name={name} />
-        <section>
-          <h2>:(</h2>
-          <p>{errorMessage(platform, name)}</p>
-        </section>
-      </div>
+      <section id={styles.content}>
+        <h2>:(</h2>
+        <p>{errorMessage(platform, name)}</p>
+      </section>
     </>
   )
 }

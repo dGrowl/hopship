@@ -1,0 +1,17 @@
+#container {
+  background-color: rgba(128, 128, 128, 0.25);
+  border-radius: 4px;
+  column-gap: 6px;
+  display: flex;
+  flex-grow: 100;
+  margin: 8px;
+  padding: 6px;
+}
+
+#container input {
+  flex-grow: 100;
+}
+
+#container select {
+  width: auto;
+}
