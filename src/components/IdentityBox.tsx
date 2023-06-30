@@ -84,7 +84,7 @@ interface Props {
 }
 
 const IdentityBox = ({ platform, name, desc, verified, editable }: Props) => {
-  const settingsURL = `/settings/i/${platform}/${name}`
+  const settingsURL = `/settings/${platform}/${name}`
   return (
     <div className={`${styles.container} ${styles[platform + 'Border']}`}>
       <div className={`${styles.platform} ${styles[platform]}`}>{platform}</div>

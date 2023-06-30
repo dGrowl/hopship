@@ -4,7 +4,7 @@ import { CSRFFormFields } from '../lib/types'
 import { csrfHeaders } from '../lib/util'
 import AntiCSRFForm from './AntiCSRFForm'
 
-import styles from '../styles/VerificationForm.module.css'
+import styles from '../styles/VerifyIdentityForm.module.css'
 
 type Fields = EventTarget &
   CSRFFormFields & {
@@ -95,7 +95,7 @@ interface Props {
   name: string
 }
 
-const VerificationForm = ({ platform, name }: Props) => {
+const VerifyIdentityForm = ({ platform, name }: Props) => {
   const hash = 'e2a464cf'
   const url = `https://also.domain/u/name?v=${hash}`
   return (
@@ -120,4 +120,4 @@ const VerificationForm = ({ platform, name }: Props) => {
   )
 }
 
-export default VerificationForm
+export default VerifyIdentityForm
