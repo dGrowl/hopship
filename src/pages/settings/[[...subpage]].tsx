@@ -311,16 +311,27 @@ const SubPage = ({ subpage, data }: Props) => {
   )
 }
 
-const Settings = (props: Props) => {
+const TITLES: { [key: string]: string } = {
+  identities: 'Manage Identities',
+  user: 'Update User Details',
+  password: 'Change Password',
+  delete: 'Delete Account',
+}
+
+const buildTitle = (subpage: string) => {
+  return TITLES[subpage] || 'Modify ' + subpage.replace('/', ' // ')
+}
+
+const Settings = ({ subpage, data }: Props) => {
   return (
     <>
       <Head>
-        <title>Also: Modify Identities</title>
+        <title>also: {buildTitle(subpage)}</title>
       </Head>
       <div id={styles.container}>
-        <DropNav current={props.subpage} />
-        <SideNav current={props.subpage} />
-        <SubPage {...props} />
+        <DropNav current={subpage} />
+        <SideNav current={subpage} />
+        <SubPage subpage={subpage} data={data} />
       </div>
     </>
   )

@@ -142,7 +142,7 @@ const UserPage = ({
   return (
     <>
       <Head>
-        <title>{`Also: ${userName}`}</title>
+        <title>also: {userName}</title>
       </Head>
       <div id={styles.container}>
         <div id={styles.details}>

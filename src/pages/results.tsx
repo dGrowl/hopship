@@ -82,7 +82,7 @@ const Results = ({ platform, name }: Props) => {
     <>
       <Head>
         <title>
-          {'Also: ' + (platform && name ? `${platform}//${name}` : 'Results')}
+          also: {platform && name ? `${platform}//${name}` : 'Results'}
         </title>
       </Head>
       <section id={styles.content}>

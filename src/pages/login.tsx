@@ -61,8 +61,8 @@ const submit = async (
   }
 }
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { auth: token } = context.req.cookies
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const { auth: token } = ctx.req.cookies
 
   try {
     if (!process.env.JWT_AUTH_SECRET) {
@@ -86,13 +86,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 
-export default function Login() {
+const Login = () => {
   const [registerMode, setRegisterMode] = useState(false)
   const router = useRouter()
   return (
     <>
       <Head>
-        <title>Also: Login/Register</title>
+        <title>also: Login/Register</title>
       </Head>
       <section>
         <div id={styles.switcher}>
@@ -148,3 +148,5 @@ export default function Login() {
     </>
   )
 }
+
+export default Login

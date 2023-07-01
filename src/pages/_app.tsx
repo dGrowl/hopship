@@ -26,7 +26,7 @@ export default function App({ Component, pageProps, userName }: Props) {
     <>
       <div className={styles.container}>
         <Head>
-          <title>Also</title>
+          <title>also</title>
           <meta
             name="description"
             content="A searchable index of user accounts across different web platforms. Come find all of your friends!"

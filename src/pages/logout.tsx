@@ -4,8 +4,8 @@ import { buildCookie } from '../lib/util'
 
 const cookie = buildCookie('auth', 'none', 0)
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  context.res.setHeader('Set-Cookie', cookie)
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  ctx.res.setHeader('Set-Cookie', cookie)
   return {
     redirect: {
       destination: '/',
