@@ -22,7 +22,7 @@ const create = async (req: NextApiRequest, res: NextApiResponse) => {
       [userName, platform, platformName, desc]
     )
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return res.status(500).json({})
   }
   return res.status(200).json({})

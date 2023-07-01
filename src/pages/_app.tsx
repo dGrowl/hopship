@@ -75,7 +75,7 @@ App.getInitialProps = async ({ ctx }: AppContext) => {
         ) as AuthPayload
         userName = payload.name
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     }
     if (!request.cookies.csrf && ctx.res) {
@@ -92,7 +92,7 @@ App.getInitialProps = async ({ ctx }: AppContext) => {
           buildCookie('csrf', csrfToken, HALF_HOUR_IN_SECONDS)
         )
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     }
   }

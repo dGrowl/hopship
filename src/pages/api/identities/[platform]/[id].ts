@@ -25,7 +25,7 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
         [userName, platform, platformName, desc]
       )
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return res.status(500).json({})
     }
   }
@@ -50,7 +50,7 @@ const remove = async (req: NextApiRequest, res: NextApiResponse) => {
       [userName, platform, platformName]
     )
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return res.status(500).json({})
   }
   return res.status(200).json({})

@@ -47,7 +47,7 @@ export const getUserData = async (email: string, password: string) => {
           return data
         }
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     }
   }

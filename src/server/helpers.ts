@@ -43,7 +43,7 @@ export const processAuth = async (
     }
     return payload
   } catch (error) {
-    console.log(error)
+    console.error(error)
     res
       .status(401)
       .json({ message: 'Request contained an invalid auth cookie' })
@@ -84,7 +84,7 @@ export const checkCSRF = (req: NextApiRequest, res: NextApiResponse) => {
       return false
     }
   } catch (error) {
-    console.log(error)
+    console.error(error)
     res.status(400).json({
       message: 'Invalid CSRF protection cookie',
     })

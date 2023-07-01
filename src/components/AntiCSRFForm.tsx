@@ -20,7 +20,7 @@ const useCSRFCode = () => {
       const payload = jwt.decode(token) as CSRFPayload | null
       setCode(payload?.code || '')
     } catch (error) {
-      console.log('Failed to decode CSRF token')
+      console.error('Failed to decode CSRF token')
     }
   }, [])
   return code

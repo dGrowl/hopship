@@ -21,7 +21,7 @@ const verify = async (req: NextApiRequest, res: NextApiResponse) => {
       [platform, name]
     )
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return res.status(400).json({})
   }
   return res.status(200).json({})
