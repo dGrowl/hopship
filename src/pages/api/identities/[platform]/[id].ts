@@ -9,14 +9,13 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!payload) return
   const { name: userName } = payload
   const { body, query } = req
-  const { platform, id: platformName, verified } = query
+  const { platform, id: platformName } = query
   if (hasKey(body, 'desc')) {
     const { desc } = body
-    const table = verified === 'true' ? 'identities' : 'unverified_identities'
     try {
       await db.query(
         `
-          UPDATE public.${table}
+          UPDATE public.identities
           SET description = $4
           WHERE user_id = (SELECT id FROM public.users WHERE name = $1)
             AND platform = $2
@@ -37,16 +36,15 @@ const remove = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!payload) return
   const { name: userName } = payload
   const { query } = req
-  const { platform, id: platformName, verified } = query
-  const table = verified === 'true' ? 'identities' : 'unverified_identities'
+  const { platform, id: platformName } = query
   try {
     await db.query(
       `
-      DELETE FROM public.${table}
-      WHERE user_id = (SELECT id FROM public.users WHERE name = $1)
-        AND platform = $2
-        AND name = $3;
-    `,
+        DELETE FROM public.identities
+        WHERE user_id = (SELECT id FROM public.users WHERE name = $1)
+          AND platform = $2
+          AND name = $3;
+      `,
       [userName, platform, platformName]
     )
   } catch (error) {

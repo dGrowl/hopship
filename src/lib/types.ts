@@ -1,10 +1,10 @@
 import { JwtPayload } from 'jsonwebtoken'
 
 export interface Identity {
-  verified?: boolean
-  platform: string
-  name: string
   desc: string
+  name: string
+  platform: string
+  status: string
 }
 
 export interface AuthPayload extends JwtPayload {

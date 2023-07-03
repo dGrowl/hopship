@@ -9,15 +9,10 @@ type Fields = EventTarget &
     consent: HTMLInputElement
   }
 
-const remove = async (
-  e: FormEvent,
-  platform: string,
-  name: string,
-  verified: boolean
-) => {
+const remove = async (e: FormEvent, platform: string, name: string) => {
   e.preventDefault()
   const { csrf } = e.target as Fields
-  await fetch(`/api/identities/${platform}/${name}?verified=${verified}`, {
+  await fetch(`/api/identities/${platform}/${name}`, {
     method: 'DELETE',
     headers: csrfHeaders(csrf.value),
   })
@@ -37,10 +32,9 @@ const checkInvalid = (
 interface Props {
   platform: string
   name: string
-  verified: boolean
 }
 
-const RemoveIdentityForm = ({ platform, name, verified }: Props) => {
+const RemoveIdentityForm = ({ platform, name }: Props) => {
   const [invalid, setInvalid] = useState(true)
   const key = `${platform}//${name}`
   return (
@@ -52,7 +46,7 @@ const RemoveIdentityForm = ({ platform, name, verified }: Props) => {
       </p>
       <AntiCSRFForm
         onChange={(e) => checkInvalid(e, key, setInvalid)}
-        onSubmit={(e) => remove(e, platform, name, verified)}
+        onSubmit={(e) => remove(e, platform, name)}
       >
         <input name="consent" placeholder={key} />
         <button disabled={invalid}>delete</button>

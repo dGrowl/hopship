@@ -4,21 +4,25 @@ import { checkCSRF, processAuth } from '../../server/helpers'
 import db from '../../server/db'
 
 const verify = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (!(await processAuth(req, res))) return
-  const { platform, name } = req.body
+  const payload = await processAuth(req, res)
+  if (!payload) return
+  const { name: userName } = payload
+  const { platform, name: platformName, proof } = req.body
   try {
     await db.query(
       `
-        WITH identity AS (
-          DELETE FROM public.unverified_identities
-          WHERE platform = $1
-            AND name = $2
-          RETURNING *
-        )
-        INSERT INTO public.identities
-        SELECT * FROM identity;
+        UPDATE public.identities
+        SET status = 'PENDING',
+          proof = $4
+        WHERE user_id = (SELECT id FROM public.users WHERE name = $1)
+          AND platform = $2
+          AND name = $3
+          AND (
+            status = 'UNVERIFIED'
+            OR status = 'REJECTED'
+          );
       `,
-      [platform, name]
+      [userName, platform, platformName, JSON.stringify(proof)]
     )
   } catch (error) {
     console.error(error)
@@ -27,10 +31,7 @@ const verify = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(200).json({})
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!checkCSRF(req, res)) return
   switch (req.method) {
     case 'POST':
@@ -38,3 +39,5 @@ export default async function handler(
   }
   return res.status(405).json({})
 }
+
+export default handler

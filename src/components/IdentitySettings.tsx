@@ -8,20 +8,17 @@ interface Props {
   platform: string
   name: string
   desc: string
-  verified: boolean
+  status: string
 }
 
-const IdentitySettings = ({ platform, name, desc, verified }: Props) => {
+const IdentitySettings = ({ platform, name, desc, status }: Props) => {
   return (
     <article id={styles.container}>
-      {verified ? null : <VerifyIdentityForm platform={platform} name={name} />}
-      <UpdateIdentityForm
-        desc={desc}
-        name={name}
-        platform={platform}
-        verified={verified}
-      />
-      <RemoveIdentityForm platform={platform} name={name} verified={verified} />
+      {status === 'VERIFIED' ? null : (
+        <VerifyIdentityForm platform={platform} name={name} status={status} />
+      )}
+      <UpdateIdentityForm desc={desc} name={name} platform={platform} />
+      <RemoveIdentityForm name={name} platform={platform} />
     </article>
   )
 }

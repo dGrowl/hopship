@@ -50,8 +50,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         FROM public.users u
           INNER JOIN public.identities i
             ON u.id = i.user_id
-              AND i.platform = $1
-              AND i.name = $2;
+        WHERE i.status = 'VERIFIED'
+          AND i.platform = $1
+          AND i.name = $2;
       `,
       [platform, name]
     )
@@ -82,7 +83,7 @@ const Results = ({ platform, name }: Props) => {
     <>
       <Head>
         <title>
-          also: {platform && name ? `${platform}//${name}` : 'Results'}
+          {`also: ${platform && name ? `${platform}//${name}` : 'Results'}`}
         </title>
       </Head>
       <section id={styles.content}>

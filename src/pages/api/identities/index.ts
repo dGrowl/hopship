@@ -11,13 +11,18 @@ const create = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await db.query(
       `
-        INSERT INTO public.unverified_identities (
+        INSERT INTO public.identities (
           user_id,
           platform,
           name,
           description
         )
-        VALUES ((SELECT id FROM public.users WHERE name = $1), $2, $3, $4);
+        VALUES (
+          (SELECT id FROM public.users WHERE name = $1),
+          $2,
+          $3,
+          $4
+        );
       `,
       [userName, platform, platformName, desc]
     )

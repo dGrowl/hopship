@@ -21,9 +21,9 @@ const SUBPAGES: readonly string[] = ['identities', 'user', 'password', 'delete']
 
 const isIdentitySubpage = (subpage: string) => subpage.includes('/')
 
-const buildLink = (page: string, active: string) => (
+const buildLink = (page: string, current: string) => (
   <Link href={page} key={page}>
-    {page === active ? (
+    {page === current ? (
       <li className={styles.current}>
         <b>{page}</b>
       </li>
@@ -69,16 +69,15 @@ const DropNav = ({ current }: NavProps) => {
       {subpage}
     </option>
   ))
+  const currentValue = isIdentitySubpage(current)
+    ? `/settings/${current}`
+    : current
   if (isIdentitySubpage(current)) {
     const [platform, name] = current.split('/')
     links.splice(
       1,
       0,
-      <option
-        className={styles.indent}
-        key={current}
-        value={`/settings/${current}`}
-      >
+      <option className={styles.indent} key={currentValue} value={currentValue}>
         {platform} &#47;&#47; {name}
       </option>
     )
@@ -87,9 +86,8 @@ const DropNav = ({ current }: NavProps) => {
     <nav id={styles.dropNav}>
       <h2>Settings &gt;</h2>
       <select
-        defaultValue={
-          isIdentitySubpage(current) ? `/settings/${current}` : current
-        }
+        defaultValue={currentValue}
+        key={currentValue}
         onChange={(e) => router.push(e.target.value)}
       >
         {links}
@@ -136,21 +134,15 @@ const getUserIdentities = async (userName: string) => {
   try {
     const result = await db.query(
       `
-        WITH i AS (
-          SELECT *, true AS verified
-          FROM public.identities
-          UNION ALL
-          SELECT *, false AS verified
-          FROM public.unverified_identities
-        )
         SELECT
           i.platform,
           i.name,
           i.description AS desc,
-          i.verified
-        FROM i INNER JOIN public.users u
-          ON u.id = i.user_id
-            AND u.name = $1;
+          i.status
+        FROM public.identities i
+          INNER JOIN public.users u
+            ON u.id = i.user_id
+        WHERE u.name = $1;
       `,
       [userName]
     )
@@ -169,19 +161,15 @@ const getIdentityData = async (
   try {
     const result = await db.query(
       `
-        WITH i AS (
-          SELECT *, true AS verified
-          FROM public.identities
-          UNION ALL
-          SELECT *, false AS verified
-          FROM public.unverified_identities
-        )
-        SELECT description AS desc, verified
-        FROM i INNER JOIN public.users u
-          ON u.id = i.user_id
-            AND u.name = $1
-            AND i.platform = $2
-            AND i.name = $3;
+        SELECT
+          i.description AS desc,
+          i.status
+        FROM public.identities i
+          INNER JOIN public.users u
+            ON u.id = i.user_id
+        WHERE u.name = $1
+          AND i.platform = $2
+          AND i.name = $3;
       `,
       [userName, platform, platformName]
     )
@@ -208,7 +196,7 @@ const fetchSettingsData = async (subpage: string, auth: AuthPayload) => {
       desc: '',
       name: '',
       platform: '',
-      verified: false,
+      status: '',
     },
     identities: [],
   }
@@ -302,10 +290,7 @@ const SubPage = ({ subpage, data }: Props) => {
       return <RemoveUserForm {...data} />
   }
   return isIdentitySubpage(subpage) ? (
-    <IdentitySettings
-      {...data.identity}
-      verified={data.identity.verified || false}
-    />
+    <IdentitySettings {...data.identity} />
   ) : (
     <></>
   )
@@ -326,7 +311,7 @@ const Settings = ({ subpage, data }: Props) => {
   return (
     <>
       <Head>
-        <title>also: {buildTitle(subpage)}</title>
+        <title>{`also: ${buildTitle(subpage)}`}</title>
       </Head>
       <div id={styles.container}>
         <DropNav current={subpage} />

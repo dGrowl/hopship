@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS public.unverified_identities;
 DROP TABLE IF EXISTS public.identities;
 DROP TABLE IF EXISTS public.platforms;
 DROP TABLE IF EXISTS public.users;
@@ -6,9 +5,13 @@ DROP TABLE IF EXISTS public.users;
 DROP DOMAIN IF EXISTS IDENTITY_DESCRIPTION_TEXT;
 DROP DOMAIN IF EXISTS IDENTITY_NAME_TEXT;
 
+DROP TYPE IF EXISTS VERIFICATION_STATUS;
+
 DROP EXTENSION IF EXISTS citext;
 
 CREATE EXTENSION citext;
+
+CREATE TYPE VERIFICATION_STATUS AS ENUM ('UNVERIFIED', 'PENDING', 'REJECTED', 'VERIFIED');
 
 CREATE DOMAIN IDENTITY_NAME_TEXT AS CITEXT
 	CONSTRAINT platform_name_proper_chars CHECK (VALUE ~ '^\w+$')
@@ -62,24 +65,11 @@ CREATE TABLE public.identities (
 	platform TEXT
 		REFERENCES public.platforms (name)
 		ON DELETE CASCADE,
-	name IDENTITY_NAME_TEXT
-		NOT NULL,
+	name IDENTITY_NAME_TEXT,
 	description IDENTITY_DESCRIPTION_TEXT
 		NOT NULL,
-	PRIMARY KEY (platform, name)
-);
-
--- Matches public.identities, but primary key includes user_id
-CREATE TABLE public.unverified_identities (
-	user_id INTEGER
-		REFERENCES public.users (id)
-		ON DELETE CASCADE,
-	platform TEXT
-		REFERENCES public.platforms (name)
-		ON DELETE CASCADE,
-	name IDENTITY_NAME_TEXT
-		NOT NULL,
-	description IDENTITY_DESCRIPTION_TEXT
-		NOT NULL,
+	status VERIFICATION_STATUS
+		DEFAULT 'UNVERIFIED',
+	proof JSONB,
 	PRIMARY KEY (user_id, platform, name)
 );

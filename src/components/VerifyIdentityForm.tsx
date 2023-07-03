@@ -12,12 +12,30 @@ type Fields = EventTarget &
     messageID?: HTMLInputElement
   }
 
+interface Proof {
+  url: string
+  messageID?: string
+}
+
+const buildProof = (platform: string, fields: Fields) => {
+  const proof: Proof = {
+    url: fields.url.value,
+  }
+  if (platform === 'Twitter' && fields.messageID) {
+    proof.messageID = fields.messageID.value
+  }
+  return proof
+}
+
 const verify = async (e: FormEvent, platform: string, name: string) => {
   e.preventDefault()
   const fields = e.target as Fields
   const csrf = fields.csrf.value
-  const url = fields.url.value
-  const data = { platform, name, url }
+  const data = {
+    platform,
+    name,
+    proof: buildProof(platform, fields),
+  }
   await fetch('/api/verify', {
     method: 'POST',
     headers: csrfHeaders(csrf),
@@ -90,32 +108,46 @@ const Instructions = ({ platform, name, url }: InstructionsProps) => {
   )
 }
 
+const VerificationPending = () => {
+  return (
+    <p>
+      You've successfully requested verification for this identity. We'll review
+      your request soon!
+    </p>
+  )
+}
+
 interface Props {
   platform: string
   name: string
+  status: string
 }
 
-const VerifyIdentityForm = ({ platform, name }: Props) => {
+const VerifyIdentityForm = ({ platform, name, status }: Props) => {
   const hash = 'e2a464cf'
   const url = `https://also.domain/u/name?v=${hash}`
   return (
     <section>
       <b>Verify</b>
-      <AntiCSRFForm onSubmit={(e) => verify(e, platform, name)}>
-        To verify that this {platform} account belongs to you:
-        <ol>
-          <Instructions platform={platform} name={name} url={url} />
-          <li>
-            Hit the <b>verify</b> button below.
-          </li>
-        </ol>
-        <div>Example:</div>
-        <div className={`${styles.example} ${styles[platform + 'Example']}`}>
-          Hey everyone, I&apos;m linking accounts using Also! Check my other
-          pages out at <a href={url}>{url}</a>!
-        </div>
-        <button>submit</button>
-      </AntiCSRFForm>
+      {status === 'PENDING' ? (
+        <VerificationPending />
+      ) : (
+        <AntiCSRFForm onSubmit={(e) => verify(e, platform, name)}>
+          To verify that this {platform} account belongs to you:
+          <ol>
+            <Instructions platform={platform} name={name} url={url} />
+            <li>
+              Hit the <b>verify</b> button below.
+            </li>
+          </ol>
+          <div>Example:</div>
+          <div className={`${styles.example} ${styles[platform + 'Example']}`}>
+            Hey everyone, I&apos;m linking accounts using Also! Check my other
+            pages out at <a href={url}>{url}</a>!
+          </div>
+          <button>submit</button>
+        </AntiCSRFForm>
+      )}
     </section>
   )
 }

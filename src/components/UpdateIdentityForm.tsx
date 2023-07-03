@@ -14,14 +14,13 @@ type Fields = EventTarget &
 const update = async (
   e: FormEvent<HTMLFormElement>,
   platform: string,
-  name: string,
-  verified: boolean
+  name: string
 ) => {
   e.preventDefault()
   const form = e.target as Fields
   const { csrf, desc } = form
   const data = { desc: desc.value }
-  await fetch(`/api/identities/${platform}/${name}?verified=${verified}`, {
+  await fetch(`/api/identities/${platform}/${name}`, {
     method: 'PATCH',
     headers: csrfHeaders(csrf.value),
     body: JSON.stringify(data),
@@ -39,17 +38,16 @@ interface Props {
   platform: string
   name: string
   desc: string
-  verified: boolean
 }
 
-const UpdateIdentityForm = ({ platform, name, desc, verified }: Props) => {
+const UpdateIdentityForm = ({ platform, name, desc }: Props) => {
   const [unchanged, setUnchanged] = useState(true)
   return (
     <section>
       <b>Edit</b>
       <AntiCSRFForm
         onChange={(e) => checkUnchanged(e, setUnchanged)}
-        onSubmit={(e) => update(e, platform, name, verified)}
+        onSubmit={(e) => update(e, platform, name)}
       >
         <Field name="description">
           <textarea

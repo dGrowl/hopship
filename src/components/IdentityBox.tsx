@@ -79,11 +79,11 @@ interface Props {
   platform: string
   name: string
   desc: string
-  verified?: boolean
+  status: string
   editable?: boolean
 }
 
-const IdentityBox = ({ platform, name, desc, verified, editable }: Props) => {
+const IdentityBox = ({ platform, name, desc, status, editable }: Props) => {
   const settingsURL = `/settings/${platform}/${name}`
   return (
     <div className={`${styles.container} ${styles[platform + 'Border']}`}>
@@ -91,7 +91,7 @@ const IdentityBox = ({ platform, name, desc, verified, editable }: Props) => {
       <div className={styles.details}>
         <div className={styles.nameRow}>
           <h3>{name}</h3>
-          {verified === false ? (
+          {status !== 'VERIFIED' ? (
             <Link href={settingsURL}>
               <div className={styles.unverified}>UNVERIFIED</div>
             </Link>

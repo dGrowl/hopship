@@ -46,11 +46,13 @@ const getVerifiedIdentities = async (userName: string) => {
         SELECT
           i.platform,
           i.name,
-          i.description AS desc
+          i.description AS desc,
+          i.status
         FROM public.identities i
           INNER JOIN public.users u
-            ON u.name = $1
-              AND u.id = i.user_id
+            ON u.id = i.user_id
+        WHERE u.name = $1
+          AND i.status = 'VERIFIED'
         ORDER BY platform ASC, name ASC;
       `,
       [userName]
@@ -142,7 +144,7 @@ const UserPage = ({
   return (
     <>
       <Head>
-        <title>also: {userName}</title>
+        <title>{`also: ${userName}`}</title>
       </Head>
       <div id={styles.container}>
         <div id={styles.details}>
