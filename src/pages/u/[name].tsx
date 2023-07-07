@@ -110,11 +110,11 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 const buildRows = (identities: Identity[]) =>
   identities.map((i) => <IdentityBox key={i.platform + i.name} {...i} />)
 
-interface NoIdentitesProps {
+interface NoIdentitiesProps {
   userName: string
 }
 
-const NoIdentities = ({ userName }: NoIdentitesProps) => {
+const NoIdentities = ({ userName }: NoIdentitiesProps) => {
   return (
     <>
       <h2>:(</h2>
@@ -168,7 +168,7 @@ const UserPage = ({
             </>
           ) : null}
         </div>
-        <section id={styles.identitiesContainer}>
+        <section>
           <div id={styles.identities}>
             {identities.length > 0 ? (
               buildRows(identities)

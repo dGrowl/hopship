@@ -1,5 +1,6 @@
 import { NextApiRequestCookies } from 'next/dist/server/api-utils'
 import { NextIncomingMessage } from 'next/dist/server/request-meta'
+import { useState } from 'react'
 import Head from 'next/head'
 import jwt from 'jsonwebtoken'
 import Link from 'next/link'
@@ -17,9 +18,26 @@ import styles from '../styles/App.module.css'
 
 const HALF_HOUR_IN_SECONDS = 60 * 30
 
-interface Props extends AppProps {
+interface HomeBarProps {
   userName: string
 }
+
+const HomeBar = ({ userName }: HomeBarProps) => {
+  const [searching, setSearching] = useState(false)
+  return (
+    <header id={styles.header}>
+      <div id={styles.headerContent}>
+        <Link href="/" className={searching ? styles.hiddenForMobile : ''}>
+          <h1 className={styles.title}>also</h1>
+        </Link>
+        <SearchBar searching={searching} setSearching={setSearching} />
+        <UserMenu name={userName} searching={searching} />
+      </div>
+    </header>
+  )
+}
+
+type Props = AppProps & HomeBarProps
 
 export default function App({ Component, pageProps, userName }: Props) {
   return (
@@ -38,15 +56,7 @@ export default function App({ Component, pageProps, userName }: Props) {
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
-        <header id={styles.header}>
-          <div id={styles.headerContent}>
-            <Link href="/">
-              <h1 className={styles.title}>also</h1>
-            </Link>
-            <SearchBar />
-            <UserMenu name={userName} />
-          </div>
-        </header>
+        <HomeBar userName={userName} />
         <main className={styles.main}>
           <Component {...pageProps} />
         </main>

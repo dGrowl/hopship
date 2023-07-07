@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react'
+import { Dispatch, FormEvent, useEffect, useRef, useState } from 'react'
 import { NextRouter, useRouter } from 'next/router'
 
 import { MAX_PLATFORM_NAME_LENGTH } from '../lib/safety'
@@ -38,14 +38,20 @@ type Fields = EventTarget & {
   name: HTMLInputElement
 }
 
-const NameInput = () => {
+interface NameInputProps {
+  searching: boolean
+}
+
+const NameInput = ({ searching }: NameInputProps) => {
   const [name, setName] = useState('')
+  const nameRef = useRef<HTMLInputElement>(null)
   useEffect(() => {
     const storedName = localStorage.getItem('name')
     if (storedName && storedName !== name) {
       setName(storedName)
     }
   }, [])
+  useEffect(() => (searching ? nameRef.current?.focus() : void 0), [searching])
   return (
     <input
       maxLength={MAX_PLATFORM_NAME_LENGTH}
@@ -53,6 +59,7 @@ const NameInput = () => {
       name="name"
       onChange={(e) => setName(e.target.value)}
       pattern="\w+"
+      ref={nameRef}
       required
       title="Platform IDs can only contain letters, numbers, and underscores."
       value={name}
@@ -77,18 +84,45 @@ const submit = (e: FormEvent, router: NextRouter) => {
   })
 }
 
-const SearchBar = () => {
+interface Props extends NameInputProps {
+  setSearching: Dispatch<boolean>
+}
+
+const SearchBar = ({ searching, setSearching }: Props) => {
   const router = useRouter()
   return (
-    <form onSubmit={(e) => submit(e, router)}>
-      <fieldset>
-        <nav id={styles.container}>
-          <PlatformSelect />
-          <NameInput />
-          <button>s</button>
-        </nav>
-      </fieldset>
-    </form>
+    <>
+      <form
+        className={searching ? styles.shown : styles.hiddenForMobile}
+        id={styles.searchForm}
+        onSubmit={(e) => {
+          setSearching(false)
+          submit(e, router)
+        }}
+      >
+        <fieldset>
+          <nav id={styles.container}>
+            <button
+              className={searching ? styles.shownForMobile : styles.hidden}
+              onClick={() => setSearching(false)}
+              type="button"
+            >
+              &lt;
+            </button>
+            <PlatformSelect />
+            <NameInput searching={searching} />
+            <button>s</button>
+          </nav>
+        </fieldset>
+      </form>
+      <button
+        className={searching ? styles.hidden : styles.shownForMobile}
+        onClick={() => setSearching(true)}
+        type="button"
+      >
+        s
+      </button>
+    </>
   )
 }
 

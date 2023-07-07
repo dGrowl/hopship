@@ -11,16 +11,11 @@
   background-color: transparent;
   display: flex;
   flex-direction: column;
-  padding: 0 16px;
   row-gap: 10px;
 }
 
 #details p {
   font-size: 1.2rem;
-}
-
-#identitiesContainer {
-  margin: 0 8px;
 }
 
 #identities {

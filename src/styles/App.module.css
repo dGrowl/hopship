@@ -4,7 +4,7 @@
   flex-direction: column;
   flex: 1;
   justify-content: center;
-  margin: 24px 0;
+  margin: 24px 16px;
 }
 
 #header {
@@ -13,6 +13,7 @@
   justify-content: center;
   position: sticky;
   top: 0px;
+  height: 64px;
 }
 
 #headerContent {
@@ -31,7 +32,15 @@
 
 @media screen and (max-width: 720px) {
   .main {
-    margin: 8px 0;
+    margin: 8px 16px;
+  }
+
+  .hiddenForMobile {
+    display: none;
+  }
+
+  #headerContent {
+    margin: 2px 8px;
   }
 }
 

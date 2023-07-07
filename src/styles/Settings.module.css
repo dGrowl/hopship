@@ -67,7 +67,6 @@
   align-items: center;
   display: none;
   grid-template-columns: auto 1fr;
-  margin: 0 16px;
 }
 
 #dropNav select {
