@@ -70,6 +70,7 @@ CREATE TABLE public.identities (
 		NOT NULL,
 	status VERIFICATION_STATUS
 		DEFAULT 'UNVERIFIED',
+	requested_at TIMESTAMP,
 	proof JSONB,
 	PRIMARY KEY (user_id, platform, name)
 );

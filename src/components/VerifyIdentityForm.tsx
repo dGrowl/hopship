@@ -1,6 +1,6 @@
 import { FormEvent } from 'react'
 
-import { CSRFFormFields } from '../lib/types'
+import { CSRFFormFields, Identity, VerificationDetails } from '../lib/types'
 import { csrfHeaders } from '../lib/util'
 import AntiCSRFForm from './AntiCSRFForm'
 
@@ -27,13 +27,19 @@ const buildProof = (platform: string, fields: Fields) => {
   return proof
 }
 
-const verify = async (e: FormEvent, platform: string, name: string) => {
+const verify = async (
+  e: FormEvent,
+  platform: string,
+  name: string,
+  timestampMs: string
+) => {
   e.preventDefault()
   const fields = e.target as Fields
   const csrf = fields.csrf.value
   const data = {
     platform,
     name,
+    timestampMs,
     proof: buildProof(platform, fields),
   }
   await fetch('/api/verify', {
@@ -118,21 +124,21 @@ const VerificationPending = () => {
 }
 
 interface Props {
-  platform: string
-  name: string
-  status: string
+  identity: Identity
+  verification: VerificationDetails
 }
 
-const VerifyIdentityForm = ({ platform, name, status }: Props) => {
-  const hash = 'e2a464cf'
-  const url = `https://also.domain/u/name?v=${hash}`
+const VerifyIdentityForm = ({ identity, verification }: Props) => {
+  const { name, platform, status } = identity
+  const { hash, timestampMs } = verification
+  const url = `https://also.domain/u/name?v=${hash.substring(0, 16)}`
   return (
     <section>
       <b>Verify</b>
       {status === 'PENDING' ? (
         <VerificationPending />
       ) : (
-        <AntiCSRFForm onSubmit={(e) => verify(e, platform, name)}>
+        <AntiCSRFForm onSubmit={(e) => verify(e, platform, name, timestampMs)}>
           To verify that this {platform} account belongs to you:
           <ol>
             <Instructions platform={platform} name={name} url={url} />

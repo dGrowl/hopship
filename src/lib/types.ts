@@ -19,3 +19,8 @@ export interface CSRFPayload extends JwtPayload {
 export interface CSRFFormFields {
   csrf: HTMLInputElement
 }
+
+export interface VerificationDetails {
+  hash: string
+  timestampMs: string
+}

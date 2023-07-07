@@ -1,6 +1,6 @@
 import { Dispatch, FormEvent, useState } from 'react'
 
-import { CSRFFormFields } from '../lib/types'
+import { CSRFFormFields, Identity } from '../lib/types'
 import { csrfHeaders } from '../lib/util'
 import AntiCSRFForm from './AntiCSRFForm'
 
@@ -30,12 +30,12 @@ const checkInvalid = (
 }
 
 interface Props {
-  platform: string
-  name: string
+  identity: Identity
 }
 
-const RemoveIdentityForm = ({ platform, name }: Props) => {
+const RemoveIdentityForm = ({ identity }: Props) => {
   const [invalid, setInvalid] = useState(true)
+  const { platform, name } = identity
   const key = `${platform}//${name}`
   return (
     <section>

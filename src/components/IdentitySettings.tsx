@@ -1,3 +1,4 @@
+import { Identity, VerificationDetails } from '../lib/types'
 import RemoveIdentityForm from './RemoveIdentityForm'
 import UpdateIdentityForm from './UpdateIdentityForm'
 import VerifyIdentityForm from './VerifyIdentityForm'
@@ -5,20 +6,18 @@ import VerifyIdentityForm from './VerifyIdentityForm'
 import styles from '../styles/IdentitySettings.module.css'
 
 interface Props {
-  platform: string
-  name: string
-  desc: string
-  status: string
+  identity: Identity
+  verification: VerificationDetails
 }
 
-const IdentitySettings = ({ platform, name, desc, status }: Props) => {
+const IdentitySettings = ({ identity, verification }: Props) => {
   return (
     <article id={styles.container}>
-      {status === 'VERIFIED' ? null : (
-        <VerifyIdentityForm platform={platform} name={name} status={status} />
+      {identity.status === 'VERIFIED' ? null : (
+        <VerifyIdentityForm identity={identity} verification={verification} />
       )}
-      <UpdateIdentityForm desc={desc} name={name} platform={platform} />
-      <RemoveIdentityForm name={name} platform={platform} />
+      <UpdateIdentityForm identity={identity} />
+      <RemoveIdentityForm identity={identity} />
     </article>
   )
 }

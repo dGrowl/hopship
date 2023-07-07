@@ -1,3 +1,4 @@
+import { createHash } from 'crypto'
 import { GetServerSidePropsContext } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 import { useRouter } from 'next/router'
@@ -5,7 +6,7 @@ import Head from 'next/head'
 import jwt from 'jsonwebtoken'
 import Link from 'next/link'
 
-import { AuthPayload, Identity } from '../../lib/types'
+import { AuthPayload, Identity, VerificationDetails } from '../../lib/types'
 import { platforms } from '../../lib/util'
 import { validateUserData } from '../../server/helpers'
 import db from '../../server/db'
@@ -162,6 +163,7 @@ const getIdentityData = async (
     const result = await db.query(
       `
         SELECT
+          u.id,
           i.description AS desc,
           i.status
         FROM public.identities i
@@ -182,16 +184,38 @@ const getIdentityData = async (
   return null
 }
 
+const genVerificationDetails = (userID: string, identity: Identity) => {
+  if (!process.env.VERIFICATION_SECRET) {
+    throw 'Environment is missing verification secret'
+  }
+  const timestampMs = Math.floor(Date.now() / 1000).toString()
+  const hash = createHash('sha256')
+  hash.update(userID.toString())
+  hash.update(identity.platform)
+  hash.update(identity.name)
+  hash.update(timestampMs)
+  hash.update(process.env.VERIFICATION_SECRET)
+  return {
+    hash: hash.digest('base64url'),
+    timestampMs,
+  }
+}
+
 interface SettingsData extends AuthPayload {
   bio: string
-  identity: Identity
   identities: Identity[]
+  identity: Identity
+  verification: VerificationDetails
 }
 
 const fetchSettingsData = async (subpage: string, auth: AuthPayload) => {
   const user: SettingsData = {
     ...auth,
     bio: '',
+    verification: {
+      hash: '',
+      timestampMs: '',
+    },
     identity: {
       desc: '',
       name: '',
@@ -219,9 +243,13 @@ const fetchSettingsData = async (subpage: string, auth: AuthPayload) => {
       return null
     }
     user.identity = {
-      ...identity,
+      desc: identity.desc,
+      status: identity.status,
       platform,
       name: platformName,
+    }
+    if (identity.status === 'UNVERIFIED') {
+      user.verification = genVerificationDetails(identity.id, user.identity)
     }
   }
   return user
@@ -289,11 +317,7 @@ const SubPage = ({ subpage, data }: Props) => {
     case 'delete':
       return <RemoveUserForm {...data} />
   }
-  return isIdentitySubpage(subpage) ? (
-    <IdentitySettings {...data.identity} />
-  ) : (
-    <></>
-  )
+  return isIdentitySubpage(subpage) ? <IdentitySettings {...data} /> : <></>
 }
 
 const TITLES: { [key: string]: string } = {

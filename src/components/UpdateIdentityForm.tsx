@@ -1,6 +1,6 @@
 import { Dispatch, FormEvent, useState } from 'react'
 
-import { CSRFFormFields } from '../lib/types'
+import { CSRFFormFields, Identity } from '../lib/types'
 import { csrfHeaders } from '../lib/util'
 import { MAX_DESCRIPTION_LENGTH } from '../lib/safety'
 import AntiCSRFForm from './AntiCSRFForm'
@@ -35,13 +35,12 @@ const checkUnchanged = (e: FormEvent, setUnchanged: Dispatch<boolean>) => {
 }
 
 interface Props {
-  platform: string
-  name: string
-  desc: string
+  identity: Identity
 }
 
-const UpdateIdentityForm = ({ platform, name, desc }: Props) => {
+const UpdateIdentityForm = ({ identity }: Props) => {
   const [unchanged, setUnchanged] = useState(true)
+  const { platform, name, desc } = identity
   return (
     <section>
       <b>Edit</b>
