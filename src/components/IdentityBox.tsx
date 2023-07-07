@@ -75,6 +75,19 @@ export const AddIdentityBox = ({ close }: AddProps) => {
   )
 }
 
+interface StatusBadgeProps {
+  settingsURL: string
+  status: string
+}
+
+const StatusBadge = ({ settingsURL, status }: StatusBadgeProps) => {
+  return (
+    <Link href={settingsURL}>
+      <div className={`${styles.statusBadge} ${styles[status]}`}>{status}</div>
+    </Link>
+  )
+}
+
 interface Props {
   platform: string
   name: string
@@ -91,10 +104,8 @@ const IdentityBox = ({ platform, name, desc, status, editable }: Props) => {
       <div className={styles.details}>
         <div className={styles.nameRow}>
           <h3>{name}</h3>
-          {status !== 'VERIFIED' ? (
-            <Link href={settingsURL}>
-              <div className={styles.unverified}>UNVERIFIED</div>
-            </Link>
+          {editable ? (
+            <StatusBadge settingsURL={settingsURL} status={status} />
           ) : null}
         </div>
         {desc.length > 0 ? <div>{desc}</div> : null}
