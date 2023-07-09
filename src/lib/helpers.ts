@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import jwt from 'jsonwebtoken'
 
-import { AuthPayload, CSRFPayload } from '../lib/types'
+import { AuthPayload, CSRFPayload } from './types'
 import db from './db'
 
 export const validateUserData = async (payload: AuthPayload) => {

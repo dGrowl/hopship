@@ -9,7 +9,7 @@ import {
   MAX_PLATFORM_NAME_LENGTH,
   MAX_USER_NAME_LENGTH,
 } from '../../lib/safety'
-import db from '../../server/db'
+import db from '../../lib/db'
 import Field from '../../components/Field'
 import IdentityBox from '../../components/IdentityBox'
 

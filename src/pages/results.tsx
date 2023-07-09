@@ -4,7 +4,7 @@ import Head from 'next/head'
 
 import { arrayToFirstString, platforms } from '../lib/util'
 import { MAX_PLATFORM_NAME_LENGTH, MAX_PLATFORM_LENGTH } from '../lib/safety'
-import db from '../server/db'
+import db from '../lib/db'
 
 import styles from '../styles/Results.module.css'
 

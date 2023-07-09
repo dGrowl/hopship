@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { checkCSRF, processAuth } from '../../../../server/helpers'
+import { checkCSRF, processAuth } from '../../../../lib/helpers'
 import { hasKey } from '../../../../lib/util'
-import db from '../../../../server/db'
+import db from '../../../../lib/db'
 
 const update = async (req: NextApiRequest, res: NextApiResponse) => {
   const payload = await processAuth(req, res)

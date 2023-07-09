@@ -2,10 +2,10 @@ import argon2 from 'argon2'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { ARGON_OPTIONS, sanitizeName } from '../../../lib/safety'
-import { checkCSRF, processAuth } from '../../../server/helpers'
+import { checkCSRF, processAuth } from '../../../lib/helpers'
 import { getUserData, genAuthCookie } from '../login'
 import { hasKey } from '../../../lib/util'
-import db from '../../../server/db'
+import db from '../../../lib/db'
 
 interface Data {
   name?: string

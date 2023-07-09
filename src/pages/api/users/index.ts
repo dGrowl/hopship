@@ -2,8 +2,8 @@ import argon2 from 'argon2'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { ARGON_OPTIONS, sanitizeName } from '../../../lib/safety'
-import { checkCSRF } from '../../../server/helpers'
-import db from '../../../server/db'
+import { checkCSRF } from '../../../lib/helpers'
+import db from '../../../lib/db'
 
 const create = async (req: NextApiRequest, res: NextApiResponse) => {
   const { body } = req

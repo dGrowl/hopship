@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { buildCookie, clamp } from '../../lib/util'
-import { checkCSRF } from '../../server/helpers'
-import db from '../../server/db'
+import { checkCSRF } from '../../lib/helpers'
+import db from '../../lib/db'
 
 const WEEK_IN_SECONDS = 60 * 60 * 24 * 7
 

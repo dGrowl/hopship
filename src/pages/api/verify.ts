@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { checkCSRF, processAuth } from '../../server/helpers'
-import db from '../../server/db'
+import { checkCSRF, processAuth } from '../../lib/helpers'
+import db from '../../lib/db'
 
 const verify = async (req: NextApiRequest, res: NextApiResponse) => {
   const payload = await processAuth(req, res)
