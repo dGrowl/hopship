@@ -1,4 +1,11 @@
+#container {
+  max-width: 360px;
+  width: 100%;
+}
+
 #switcher {
+  background-color: var(--c-3);
+  border-radius: 2px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   width: 100%;
@@ -8,9 +15,10 @@
   background-color: transparent;
   border: 0;
   cursor: pointer;
+  padding: 4px;
 }
 
 #switcher button.activeMode {
-  background-color: #fefefe;
-  color: #222;
+  background-color: var(--c-inverse);
+  color: var(--c-2);
 }

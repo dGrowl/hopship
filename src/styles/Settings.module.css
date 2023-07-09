@@ -27,28 +27,19 @@
 }
 
 .current {
-  background-color: rgba(128, 128, 128, 0.1);
-}
-
-.platformIcon {
-  background-color: #eee;
-  border-radius: 4px;
-  display: inline-block;
-  height: 16px;
-  margin: 0 6px 0 0;
-  width: 16px;
+  background-color: var(--c-2);
 }
 
 .identity {
   align-items: center;
-  background-color: rgba(128, 128, 128, 0.1);
+  background-color: var(--c-2);
   cursor: pointer;
   display: flex;
   padding-left: 32px;
 }
 
 .identityDetails {
-  border-left: 4px solid #eee;
+  border-left: 4px solid var(--c-inverse);
   display: flex;
   flex-direction: column;
   margin-left: 8px;
@@ -56,11 +47,11 @@
 }
 
 .Twitter {
-  border-color: #3494ff !important;
+  border-color: var(--c-twitter-light) !important;
 }
 
 .Twitch {
-  border-color: #822fff !important;
+  border-color: var(--c-twitch-light) !important;
 }
 
 #dropNav {
@@ -70,15 +61,17 @@
 }
 
 #dropNav select {
-  background-color: transparent;
-  border-color: #fefefe;
+  background-color: var(--c-inverse);
+  border-radius: 4px;
   border-width: 0 0 2px 0;
+  color: var(--c-1);
   cursor: pointer;
   font-size: 1.4rem;
   font-weight: bold;
 }
 
 #dropNav option {
+  color: var(--c-inverse);
   cursor: pointer;
 }
 

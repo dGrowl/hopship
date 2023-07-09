@@ -1,5 +1,15 @@
+#container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+#link {
+  text-align: right;
+}
+
 @media screen and (max-width: 720px) {
   .hiddenForMobile {
-    display: none;
+    display: none !important;
   }
 }

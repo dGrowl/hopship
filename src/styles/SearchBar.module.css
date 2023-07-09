@@ -1,5 +1,5 @@
 #container {
-  background-color: rgba(128, 128, 128, 0.25);
+  background-color: var(--c-3);
   border-radius: 4px;
   column-gap: 6px;
   display: flex;

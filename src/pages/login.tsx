@@ -94,43 +94,41 @@ const Login = () => {
       <Head>
         <title>also: Login/Register</title>
       </Head>
-      <section>
-        <div id={styles.switcher}>
-          <button
-            className={registerMode ? '' : styles.activeMode}
-            onClick={() => setRegisterMode(false)}
-          >
-            Login
-          </button>
-          <button
-            className={registerMode ? styles.activeMode : ''}
-            onClick={() => setRegisterMode(true)}
-          >
-            Register
-          </button>
-        </div>
-        <AntiCSRFForm onSubmit={(e) => submit(e, registerMode, router)}>
-          <Field name="email">
-            <input id="email" name="email" type="email" />
-          </Field>
-          {registerMode ? (
-            <>
+      <div id={styles.container}>
+        <section>
+          <div id={styles.switcher}>
+            <button
+              className={registerMode ? '' : styles.activeMode}
+              onClick={() => setRegisterMode(false)}
+            >
+              Login
+            </button>
+            <button
+              className={registerMode ? styles.activeMode : ''}
+              onClick={() => setRegisterMode(true)}
+            >
+              Register
+            </button>
+          </div>
+          <AntiCSRFForm onSubmit={(e) => submit(e, registerMode, router)}>
+            <Field name="email">
+              <input id="email" name="email" type="email" />
+            </Field>
+            {registerMode ? (
               <Field name="name">
                 <input id="name" name="name" />
               </Field>
-            </>
-          ) : null}
-          <Field name="password">
-            <input
-              id="password"
-              maxLength={MAX_PASSWORD_LENGTH}
-              minLength={MIN_PASSWORD_LENGTH}
-              name="password"
-              type="password"
-            />
-          </Field>
-          {registerMode ? (
-            <>
+            ) : null}
+            <Field name="password">
+              <input
+                id="password"
+                maxLength={MAX_PASSWORD_LENGTH}
+                minLength={MIN_PASSWORD_LENGTH}
+                name="password"
+                type="password"
+              />
+            </Field>
+            {registerMode ? (
               <Field name="repassword" label="password (again)">
                 <input
                   id="repassword"
@@ -140,11 +138,11 @@ const Login = () => {
                   type="password"
                 />
               </Field>
-            </>
-          ) : null}
-          <button>{registerMode ? 'create' : 'verify'}</button>
-        </AntiCSRFForm>
-      </section>
+            ) : null}
+            <button>{registerMode ? 'create' : 'verify'}</button>
+          </AntiCSRFForm>
+        </section>
+      </div>
     </>
   )
 }

@@ -1,3 +1,20 @@
 :root {
+  --c-1: rgb(22, 22, 22);
+  --c-2: rgb(36, 36, 36);
+  --c-3: rgb(44, 44, 44);
+  --c-4: rgb(64, 64, 64);
+  --c-5: rgb(85, 85, 85);
+  --c-6: rgb(109, 109, 109);
+  --c-7: rgb(148, 148, 148);
+  --c-inverse: rgb(244, 244, 244);
+
+  --c-twitch-dark: rgb(49, 24, 87);
+  --c-twitch-light: rgb(130, 47, 255);
+  --c-twitch: rgb(93, 31, 185);
+
+  --c-twitter-dark: rgb(17, 54, 97);
+  --c-twitter-light: rgb(52, 148, 255);
+  --c-twitter: rgb(32, 107, 192);
+
   --page-width: 720px;
 }

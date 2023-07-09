@@ -26,7 +26,10 @@ const HomeBar = ({ userName }: HomeBarProps) => {
   const [searching, setSearching] = useState(false)
   return (
     <header id={styles.header}>
-      <div id={styles.headerContent}>
+      <div
+        className={searching ? styles.expandMobile : ''}
+        id={styles.headerContent}
+      >
         <Link href="/" className={searching ? styles.hiddenForMobile : ''}>
           <h1 className={styles.title}>also</h1>
         </Link>

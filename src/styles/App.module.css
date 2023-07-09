@@ -8,21 +8,20 @@
 }
 
 #header {
-  background-color: rgb(48 48 48);
+  background-color: var(--c-2);
   display: flex;
+  height: 64px;
   justify-content: center;
   position: sticky;
   top: 0px;
-  height: 64px;
 }
 
 #headerContent {
   align-items: center;
   column-gap: 16px;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 110px 1fr 110px;
   max-width: var(--page-width);
-  margin: 2px 16px;
   width: 100%;
 }
 
@@ -39,13 +38,11 @@
     display: none;
   }
 
+  .expandMobile {
+    grid-template-columns: auto !important;
+  }
+
   #headerContent {
     margin: 2px 8px;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .footer {
-    border-color: #222;
   }
 }

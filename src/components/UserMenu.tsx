@@ -9,16 +9,18 @@ interface Props {
 
 const UserMenu = ({ name, searching }: Props) => {
   return (
-    <div className={searching ? styles.hiddenForMobile : ''}>
+    <div
+      className={searching ? styles.hiddenForMobile : ''}
+      id={styles.container}
+    >
       {name === null ? (
-        <Link href="/login">
-          <div>Login/Register</div>
+        <Link id={styles.link} href="/login">
+          Login |<br />
+          Register
         </Link>
       ) : (
         <>
-          <Link href="/settings">
-            <div>{name}</div>
-          </Link>
+          <Link href="/settings">{name}</Link>
           <Link href="/logout">Logout</Link>
         </>
       )}

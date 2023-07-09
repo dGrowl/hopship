@@ -1,21 +1,22 @@
 .example {
-  border-left: 4px solid #eee;
+  border-left: 4px solid var(--c-inverse);
   padding: 12px;
   border-radius: 4px;
 }
 
 .example a {
   text-decoration: underline;
+  color: var(--c-inverse);
 }
 
 .TwitterExample {
-  background-color: #3494ff44;
-  border-color: #3494ff;
+  background-color: var(--c-twitter-dark);
+  border-color: var(--c-twitter-light);
 }
 
 .TwitchExample {
-  background-color: #822fff44;
-  border-color: #822fff;
+  background-color: var(--c-twitch-dark);
+  border-color: var(--c-twitch-light);
 }
 
 .TwitterMessageRow {

@@ -6,24 +6,22 @@ body {
 }
 
 body {
+  background-color: var(--c-1);
+  color: var(--c-inverse);
   min-height: 100dvh;
-  width: 100%;
   position: absolute;
+  width: 100%;
 }
 
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
-  body {
-    color: #fefefe;
-    background: #161616;
-  }
 }
 
 a {
-  text-decoration: none;
   color: inherit;
+  text-decoration: none;
 }
 
 b,
@@ -65,7 +63,7 @@ ol {
 
 section {
   align-items: flex-start;
-  background-color: rgba(128, 128, 128, 0.1);
+  background-color: var(--c-2);
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -81,45 +79,47 @@ fieldset {
 select,
 input,
 textarea {
-  border: 2px solid rgba(128, 128, 128, 0.8);
+  border: 2px solid var(--c-5);
   box-sizing: border-box;
+  color: var(--c-inverse);
   font-family: inherit;
   font-size: 1.2rem;
   padding: 3px;
   width: 100%;
+  background-color: var(--c-4);
 }
 
 option {
-  background-color: #161616;
+  background-color: var(--c-2);
 }
 
 button,
 input[type='button'],
 input[type='submit'] {
-  background-color: rgba(128, 128, 128, 0.4);
+  background-color: var(--c-4);
   border-radius: 2px;
-  border: 2px solid rgba(128, 128, 128, 0.4);
+  border: 2px solid var(--c-5);
   box-sizing: border-box;
-  color: #eee;
+  color: var(--c-inverse);
   font-size: 1.1rem;
-  mix-blend-mode: color-dodge;
   padding: 2px 12px;
 }
 
 button:active,
 input[type='button']:active,
 input[type='submit']:active {
-  background-color: rgba(128, 128, 128, 0.8);
+  background-color: var(--c-5);
 }
 
 button:focus,
 input[type='button']:focus,
 input[type='submit']:focus {
-  border: 2px solid rgba(128, 128, 128, 1);
+  border: 2px solid var(--c-7);
 }
 
 button:disabled {
-  color: gray;
+  background-color: var(--c-3);
+  color: var(--c-5);
   pointer-events: none;
   user-select: none;
 }
