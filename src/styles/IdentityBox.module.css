@@ -14,7 +14,7 @@
   flex-direction: column;
   font-weight: bold;
   justify-content: center;
-  width: 100px;
+  width: 90px;
 }
 
 .Twitter {
@@ -71,11 +71,7 @@
 }
 
 .buttonColumn {
-  padding: 4px 3px;
-}
-
-.buttonColumn button {
-  cursor: pointer;
+  padding: 6px 5px;
 }
 
 #addSelector {

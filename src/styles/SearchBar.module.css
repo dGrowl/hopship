@@ -4,7 +4,7 @@
   column-gap: 6px;
   display: flex;
   flex-grow: 100;
-  padding: 6px;
+  padding: 8px;
 }
 
 #container input {
@@ -19,16 +19,21 @@
   flex-grow: 100;
 }
 
+#toggleContainer {
+  height: 38px;
+  justify-content: center;
+}
+
 .hidden {
   display: none !important;
 }
 
 .shown {
-  display: block !important;
+  display: flex !important;
 }
 
 .hiddenForMobile {
-  display: block !important;
+  display: flex !important;
 }
 
 .shownForMobile {
@@ -41,6 +46,6 @@
   }
 
   .shownForMobile {
-    display: block !important;
+    display: flex !important;
   }
 }

@@ -85,7 +85,7 @@ const DropNav = ({ current }: NavProps) => {
   }
   return (
     <nav id={styles.dropNav}>
-      <h2>Settings &gt;</h2>
+      <h2>Settings /</h2>
       <select
         defaultValue={currentValue}
         key={currentValue}

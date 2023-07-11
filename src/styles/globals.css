@@ -96,12 +96,16 @@ option {
 button,
 input[type='button'],
 input[type='submit'] {
+  align-items: center;
   background-color: var(--c-4);
   border-radius: 2px;
   border: 2px solid var(--c-5);
   box-sizing: border-box;
   color: var(--c-inverse);
+  cursor: pointer;
+  display: flex;
   font-size: 1.1rem;
+  justify-content: center;
   padding: 2px 12px;
 }
 

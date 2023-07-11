@@ -1,3 +1,4 @@
+import { BsArrowReturnRight } from 'react-icons/bs'
 import { Dispatch, FormEvent, useState } from 'react'
 
 import { CSRFFormFields } from '../lib/types'
@@ -58,7 +59,10 @@ const NameInput = ({ initial }: NameInputProps) => {
         onChange={(e) => setName(e.target.value)}
         value={name}
       />
-      <div className={styles.nameResult}>⮩ also.domain/u/{name}</div>
+      <div id={styles.nameResult}>
+        <BsArrowReturnRight strokeWidth={1} />
+        <span>also.domain/u/{name}</span>
+      </div>
     </>
   )
 }

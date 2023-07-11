@@ -1,3 +1,4 @@
+import { BsGearFill, BsTwitch, BsTwitter } from 'react-icons/bs'
 import { FormEvent, useState } from 'react'
 import Link from 'next/link'
 
@@ -88,6 +89,20 @@ const StatusBadge = ({ settingsURL, status }: StatusBadgeProps) => {
   )
 }
 
+interface PlatformBadgeProps {
+  platform: string
+}
+
+const PlatformBadge = ({ platform }: PlatformBadgeProps) => {
+  switch (platform) {
+    case 'Twitter':
+      return <BsTwitter size={48} />
+    case 'Twitch':
+      return <BsTwitch size={48} />
+  }
+  return '?'
+}
+
 interface Props {
   platform: string
   name: string
@@ -100,7 +115,9 @@ const IdentityBox = ({ platform, name, desc, status, editable }: Props) => {
   const settingsURL = `/settings/${platform}/${name}`
   return (
     <div className={`${styles.container} ${styles[platform + 'Border']}`}>
-      <div className={`${styles.platform} ${styles[platform]}`}>{platform}</div>
+      <div className={`${styles.platform} ${styles[platform]}`}>
+        <PlatformBadge platform={platform} />
+      </div>
       <div className={styles.details}>
         <div className={styles.nameRow}>
           <h3>{name}</h3>
@@ -113,7 +130,7 @@ const IdentityBox = ({ platform, name, desc, status, editable }: Props) => {
       {editable ? (
         <div className={styles.buttonColumn}>
           <Link href={settingsURL}>
-            <button>C</button>
+            <BsGearFill size={24} />
           </Link>
         </div>
       ) : null}

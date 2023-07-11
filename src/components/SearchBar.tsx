@@ -1,3 +1,4 @@
+import { BsArrowLeft, BsSearch } from 'react-icons/bs'
 import { Dispatch, FormEvent, useEffect, useRef, useState } from 'react'
 import { NextRouter, useRouter } from 'next/router'
 
@@ -107,21 +108,24 @@ const SearchBar = ({ searching, setSearching }: Props) => {
               onClick={() => setSearching(false)}
               type="button"
             >
-              &lt;
+              <BsArrowLeft size={20} strokeWidth={0.75} />
             </button>
             <PlatformSelect />
             <NameInput searching={searching} />
-            <button>s</button>
+            <button>
+              <BsSearch size={20} strokeWidth={0.75} />
+            </button>
           </nav>
         </fieldset>
       </form>
-      <button
+      <div
         className={searching ? styles.hidden : styles.shownForMobile}
-        onClick={() => setSearching(true)}
-        type="button"
+        id={styles.toggleContainer}
       >
-        s
-      </button>
+        <button onClick={() => setSearching(true)} type="button">
+          <BsSearch size={20} strokeWidth={0.75} />
+        </button>
+      </div>
     </>
   )
 }

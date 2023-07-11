@@ -56,6 +56,7 @@
 
 #dropNav {
   align-items: center;
+  column-gap: 8px;
   display: none;
   grid-template-columns: auto 1fr;
 }

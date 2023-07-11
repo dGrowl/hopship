@@ -1,3 +1,4 @@
+import { BsPersonCircle } from 'react-icons/bs'
 import Link from 'next/link'
 
 import styles from '../styles/UserMenu.module.css'
@@ -15,12 +16,13 @@ const UserMenu = ({ name, searching }: Props) => {
     >
       {name === null ? (
         <Link id={styles.link} href="/login">
-          Login |<br />
-          Register
+          <BsPersonCircle size={36} />
         </Link>
       ) : (
         <>
-          <Link href="/settings">{name}</Link>
+          <Link id={styles.link} href="/settings">
+            <BsPersonCircle size={36} />
+          </Link>
           <Link href="/logout">Logout</Link>
         </>
       )}
