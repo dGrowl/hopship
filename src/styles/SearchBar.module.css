@@ -7,6 +7,16 @@
   padding: 8px;
 }
 
+#container button {
+  background-color: transparent;
+  border: 0;
+  padding: 6px;
+}
+
+#container button:hover {
+  background-color: var(--c-4);
+}
+
 #container input {
   flex-grow: 100;
 }
@@ -20,8 +30,19 @@
 }
 
 #toggleContainer {
+  align-items: center;
   height: 38px;
   justify-content: center;
+}
+
+#toggleContainer svg {
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 6px;
+}
+
+#toggleContainer svg:hover {
+  background-color: var(--c-4);
 }
 
 .hidden {

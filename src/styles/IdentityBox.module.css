@@ -71,7 +71,16 @@
 }
 
 .buttonColumn {
-  padding: 6px 5px;
+  padding: 2px;
+}
+
+.buttonColumn svg {
+  border-radius: 3px;
+  padding: 4px;
+}
+
+.buttonColumn svg:hover {
+  background-color: var(--c-4);
 }
 
 #addSelector {

@@ -21,6 +21,7 @@ body {
 
 a {
   color: inherit;
+  display: contents;
   text-decoration: none;
 }
 
@@ -126,4 +127,8 @@ button:disabled {
   color: var(--c-5);
   pointer-events: none;
   user-select: none;
+}
+
+svg {
+  overflow: visible;
 }
