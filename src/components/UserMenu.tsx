@@ -1,6 +1,7 @@
 import {
   BsGearFill,
   BsPersonAdd,
+  BsPersonCheckFill,
   BsPersonCircle,
   BsSlashCircle,
 } from 'react-icons/bs'
@@ -44,6 +45,9 @@ const UserMenu = ({ name, searching }: Props) => {
       )}
       {isOpen ? (
         <nav id={styles.menu} onClick={() => setIsOpen(false)}>
+          <Link href={`/u/${name}`}>
+            <BsPersonCheckFill strokeWidth={0.75} /> {name}
+          </Link>
           <Link href="/settings">
             <BsGearFill strokeWidth={0.75} /> settings
           </Link>
