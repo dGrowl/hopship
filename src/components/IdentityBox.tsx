@@ -125,7 +125,7 @@ const IdentityBox = ({ platform, name, desc, status, editable }: Props) => {
             <StatusBadge settingsURL={settingsURL} status={status} />
           ) : null}
         </div>
-        {desc.length > 0 ? <div>{desc}</div> : null}
+        {desc.length > 0 ? <div className={styles.descRow}>{desc}</div> : null}
       </div>
       {editable ? (
         <div className={styles.buttonColumn}>

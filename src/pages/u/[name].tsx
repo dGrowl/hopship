@@ -1,3 +1,4 @@
+import { BsBookHalf, BsPersonHeart, BsPersonVcard } from 'react-icons/bs'
 import { GetServerSidePropsContext } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 import Head from 'next/head'
@@ -10,7 +11,6 @@ import {
   MAX_USER_NAME_LENGTH,
 } from '../../lib/safety'
 import db from '../../lib/db'
-import Field from '../../components/Field'
 import IdentityBox from '../../components/IdentityBox'
 
 import styles from '../../styles/UserPage.module.css'
@@ -117,11 +117,8 @@ interface NoIdentitiesProps {
 const NoIdentities = ({ userName }: NoIdentitiesProps) => {
   return (
     <>
-      <h2>:(</h2>
-      <p>
-        {userName} hasn&apos;t added any identities yet. If you know them, tell
-        them that they should!
-      </p>
+      <p>{userName} hasn&apos;t verified any identities yet. :(</p>
+      <p>If you know them, tell them that they should!</p>
     </>
   )
 }
@@ -146,38 +143,37 @@ const UserPage = ({
       <Head>
         <title>{`also: ${userName}`}</title>
       </Head>
-      <div id={styles.container}>
-        <div id={styles.details}>
-          {platform && platformName ? (
-            <p>
-              We know <b>{platformName}</b>!
-            </p>
-          ) : null}
-          <Field name="name">
-            <p id="name">
-              <b>{userName}</b>
-            </p>
-          </Field>
-          {bio ? (
-            <>
-              <Field name="bio">
-                <p id="bio">
-                  <b>{bio}</b>
-                </p>
-              </Field>
-            </>
-          ) : null}
-        </div>
-        <section>
-          <div id={styles.identities}>
-            {identities.length > 0 ? (
-              buildRows(identities)
-            ) : (
-              <NoIdentities userName={userName} />
-            )}
-          </div>
-        </section>
-      </div>
+      <dl id={styles.container}>
+        <dt className={styles.label}>
+          <BsPersonHeart size={26} />
+          name
+        </dt>
+        <dd>
+          <h2>{userName}</h2>
+        </dd>
+        {bio ? (
+          <>
+            <dt className={styles.label}>
+              <BsBookHalf size={26} />
+              biography
+            </dt>
+            <dd id={styles.bio}>{bio}</dd>
+          </>
+        ) : null}
+        <dt className={`${styles.label} ${styles.wide}`}>
+          <BsPersonVcard size={26} />
+          identities
+        </dt>
+        <dd className={styles.wide}>
+          {identities.length > 0 ? (
+            <section>
+              <div id={styles.identities}>{buildRows(identities)}</div>
+            </section>
+          ) : (
+            <NoIdentities userName={userName} />
+          )}
+        </dd>
+      </dl>
     </>
   )
 }

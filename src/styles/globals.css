@@ -26,8 +26,9 @@ a {
 }
 
 b,
-em {
-  font-weight: bold;
+em,
+strong {
+  font-weight: 700;
 }
 
 p {

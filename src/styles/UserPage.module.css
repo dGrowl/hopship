@@ -2,20 +2,32 @@
   align-items: start;
   display: grid;
   gap: 16px;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 160px 1fr;
   max-width: var(--page-width);
   width: 100%;
 }
 
-#details {
-  background-color: transparent;
-  display: flex;
-  flex-direction: column;
-  row-gap: 10px;
+#container dd {
+  font-size: 1.2rem;
 }
 
-#details p {
-  font-size: 1.2rem;
+#container p {
+  margin-bottom: 16px;
+}
+
+#bio {
+  font-size: 1.1rem;
+}
+
+.label {
+  display: grid;
+  font-size: 1.1rem;
+  grid-template-columns: 36px 1fr;
+}
+
+.label svg {
+  position: relative;
+  top: -3px;
 }
 
 #identities {
@@ -27,6 +39,10 @@
 
 @media screen and (max-width: 720px) {
   #container {
-    grid-template-columns: 1fr;
+    grid-template-columns: 120px 1fr;
+  }
+
+  .wide {
+    grid-column: 1 / 3;
   }
 }

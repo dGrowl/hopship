@@ -48,6 +48,10 @@
   flex-direction: row;
 }
 
+.descRow {
+  font-size: 1rem;
+}
+
 .statusBadge {
   border-radius: 6px;
   font-size: 0.8rem;

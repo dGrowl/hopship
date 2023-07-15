@@ -1,11 +1,9 @@
-export async function getServerSideProps() {
-  return {
-    redirect: {
-      destination: '/',
-      permanent: true,
-    },
-  }
-}
+export const getServerSideProps = async () => ({
+  redirect: {
+    destination: '/',
+    permanent: true,
+  },
+})
 
 const Index = () => <></>
 
