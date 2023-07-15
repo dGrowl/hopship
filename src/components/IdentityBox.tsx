@@ -90,15 +90,17 @@ const StatusBadge = ({ settingsURL, status }: StatusBadgeProps) => {
 }
 
 interface PlatformBadgeProps {
+  editable: boolean
   platform: string
 }
 
-const PlatformBadge = ({ platform }: PlatformBadgeProps) => {
+const PlatformBadge = ({ editable, platform }: PlatformBadgeProps) => {
+  const size = editable ? 36 : 44
   switch (platform) {
     case 'Twitter':
-      return <BsTwitter size={48} />
+      return <BsTwitter size={size} />
     case 'Twitch':
-      return <BsTwitch size={48} />
+      return <BsTwitch size={size} />
   }
   return '?'
 }
@@ -116,15 +118,13 @@ const IdentityBox = ({ platform, name, desc, status, editable }: Props) => {
   return (
     <div className={`${styles.container} ${styles[platform + 'Border']}`}>
       <div className={`${styles.platform} ${styles[platform]}`}>
-        <PlatformBadge platform={platform} />
+        <PlatformBadge editable={!!editable} platform={platform} />
+        {editable ? (
+          <StatusBadge settingsURL={settingsURL} status={status} />
+        ) : null}
       </div>
       <div className={styles.details}>
-        <div className={styles.nameRow}>
-          <h3>{name}</h3>
-          {editable ? (
-            <StatusBadge settingsURL={settingsURL} status={status} />
-          ) : null}
-        </div>
+        <h3>{name}</h3>
         {desc.length > 0 ? <div className={styles.descRow}>{desc}</div> : null}
       </div>
       {editable ? (

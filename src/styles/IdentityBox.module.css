@@ -14,6 +14,7 @@
   flex-direction: column;
   font-weight: bold;
   justify-content: center;
+  row-gap: 6px;
   width: 90px;
 }
 
@@ -42,12 +43,6 @@
   row-gap: 8px;
 }
 
-.nameRow {
-  column-gap: 8px;
-  display: flex;
-  flex-direction: row;
-}
-
 .descRow {
   font-size: 1rem;
 }
@@ -55,7 +50,8 @@
 .statusBadge {
   border-radius: 6px;
   font-size: 0.8rem;
-  padding: 2px 8px;
+  font-weight: 600;
+  padding: 1px 4px;
 }
 
 .UNVERIFIED {
@@ -91,10 +87,4 @@
   background-color: transparent;
   font-size: inherit;
   font-weight: bold;
-}
-
-@media screen and (max-width: 720px) {
-  .nameRow {
-    flex-direction: column;
-  }
 }
