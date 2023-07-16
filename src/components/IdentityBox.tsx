@@ -105,6 +105,18 @@ const PlatformBadge = ({ editable, platform }: PlatformBadgeProps) => {
   return '?'
 }
 
+const genExternalUrl = (platform: string, name: string) => {
+  let url = 'https://'
+  switch (platform) {
+    case 'Twitter':
+      return url + `twitter.com/${name}`
+    case 'Twitch':
+      return url + `twitch.tv/${name}`
+    default:
+      throw 'Invalid platform provided'
+  }
+}
+
 interface Props {
   platform: string
   name: string
@@ -124,7 +136,13 @@ const IdentityBox = ({ platform, name, desc, status, editable }: Props) => {
         ) : null}
       </div>
       <div className={styles.details}>
-        <h3>{name}</h3>
+        <a
+          href={genExternalUrl(platform, name)}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <h3>{name}</h3>
+        </a>
         {desc.length > 0 ? <div className={styles.descRow}>{desc}</div> : null}
       </div>
       {editable ? (
