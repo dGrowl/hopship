@@ -43,6 +43,14 @@
   row-gap: 8px;
 }
 
+.addFields {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  row-gap: 8px;
+}
+
 .descRow {
   font-size: 1rem;
 }
@@ -76,6 +84,7 @@
 
 .buttonColumn svg {
   border-radius: 3px;
+  cursor: pointer;
   padding: 4px;
 }
 

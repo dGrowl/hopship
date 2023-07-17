@@ -1,4 +1,10 @@
-import { BsGearFill, BsTwitch, BsTwitter } from 'react-icons/bs'
+import {
+  BsGearFill,
+  BsQuestionCircle,
+  BsTwitch,
+  BsTwitter,
+  BsXLg,
+} from 'react-icons/bs'
 import { FormEvent, useState } from 'react'
 import Link from 'next/link'
 
@@ -8,6 +14,22 @@ import { MAX_DESCRIPTION_LENGTH, MAX_PLATFORM_NAME_LENGTH } from '../lib/safety'
 import AntiCSRFForm from './AntiCSRFForm'
 
 import styles from '../styles/IdentityBox.module.css'
+
+interface PlatformBadgeProps {
+  editable: boolean
+  platform: string
+}
+
+const PlatformBadge = ({ editable, platform }: PlatformBadgeProps) => {
+  const size = editable ? 36 : 44
+  switch (platform) {
+    case 'Twitter':
+      return <BsTwitter size={size} />
+    case 'Twitch':
+      return <BsTwitch size={size} />
+  }
+  return <BsQuestionCircle size={size} />
+}
 
 type AddFields = EventTarget &
   CSRFFormFields & {
@@ -42,6 +64,7 @@ export const AddIdentityBox = ({ close }: AddProps) => {
     <div className={`${styles.container} ${styles[platform + 'Border']}`}>
       <AntiCSRFForm onSubmit={add}>
         <div className={`${styles.platform} ${styles[platform]}`}>
+          <PlatformBadge editable={true} platform={platform} />
           <select
             id={styles.addSelector}
             name="platform"
@@ -51,7 +74,7 @@ export const AddIdentityBox = ({ close }: AddProps) => {
             <option>Twitter</option>
           </select>
         </div>
-        <div className={styles.details}>
+        <div className={styles.addFields}>
           <input
             maxLength={MAX_PLATFORM_NAME_LENGTH}
             minLength={1}
@@ -70,7 +93,7 @@ export const AddIdentityBox = ({ close }: AddProps) => {
         </div>
       </AntiCSRFForm>
       <div className={styles.buttonColumn}>
-        <button onClick={close}>X</button>
+        <BsXLg onClick={close} size={24} strokeWidth={0.75} />
       </div>
     </div>
   )
@@ -87,22 +110,6 @@ const StatusBadge = ({ settingsURL, status }: StatusBadgeProps) => {
       <div className={`${styles.statusBadge} ${styles[status]}`}>{status}</div>
     </Link>
   )
-}
-
-interface PlatformBadgeProps {
-  editable: boolean
-  platform: string
-}
-
-const PlatformBadge = ({ editable, platform }: PlatformBadgeProps) => {
-  const size = editable ? 36 : 44
-  switch (platform) {
-    case 'Twitter':
-      return <BsTwitter size={size} />
-    case 'Twitch':
-      return <BsTwitch size={size} />
-  }
-  return '?'
 }
 
 const genExternalUrl = (platform: string, name: string) => {
