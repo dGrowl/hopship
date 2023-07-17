@@ -57,7 +57,7 @@ const submit = async (
   if (response.status === 200) {
     router.push('/settings')
   } else {
-    router.push('/login')
+    router.reload()
   }
 }
 
