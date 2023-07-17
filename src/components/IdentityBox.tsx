@@ -85,6 +85,7 @@ export const AddIdentityBox = ({ close }: AddProps) => {
             title="Platform IDs can only contain letters, numbers, and underscores."
           />
           <textarea
+            className={styles.descRow}
             maxLength={MAX_DESCRIPTION_LENGTH}
             name="desc"
             placeholder="(optional) A description of what you use this account for."
@@ -144,11 +145,12 @@ const IdentityBox = ({ platform, name, desc, status, editable }: Props) => {
       </div>
       <div className={styles.details}>
         <a
+          className={styles.nameRow}
           href={genExternalUrl(platform, name)}
           rel="noopener noreferrer"
           target="_blank"
         >
-          <h3>{name}</h3>
+          {name}
         </a>
         {desc.length > 0 ? <div className={styles.descRow}>{desc}</div> : null}
       </div>

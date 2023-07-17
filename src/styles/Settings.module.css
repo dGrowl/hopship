@@ -2,7 +2,7 @@
   align-items: start;
   display: grid;
   gap: 16px;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 200px 1fr;
   max-width: var(--page-width);
   width: 100%;
 }
@@ -16,18 +16,26 @@
 
 #sidebar {
   font-size: 1.1rem;
-  min-width: 160px;
   position: sticky;
   top: 72px;
 }
 
 #sidebar li {
+  align-items: center;
   border-radius: 4px;
+  display: grid;
+  grid-template-columns: 36px auto;
   padding: 8px 16px;
 }
 
 .current {
   background-color: var(--c-2);
+  font-weight: 600;
+}
+
+.ellided {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .identity {
@@ -35,23 +43,16 @@
   background-color: var(--c-2);
   cursor: pointer;
   display: flex;
+  font-weight: 600;
   padding-left: 32px;
 }
 
-.identityDetails {
-  border-left: 4px solid var(--c-inverse);
-  display: flex;
-  flex-direction: column;
-  margin-left: 8px;
-  padding: 4px 8px;
-}
-
 .Twitter {
-  border-color: var(--c-twitter-light) !important;
+  color: var(--c-twitter-light) !important;
 }
 
 .Twitch {
-  border-color: var(--c-twitch-light) !important;
+  color: var(--c-twitch-light) !important;
 }
 
 #dropNav {

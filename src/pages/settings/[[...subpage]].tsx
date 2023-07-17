@@ -1,6 +1,15 @@
+import {
+  BsKeyFill,
+  BsPersonCheckFill,
+  BsPersonVcard,
+  BsTrash3Fill,
+  BsTwitch,
+  BsTwitter,
+} from 'react-icons/bs'
 import { createHash } from 'crypto'
 import { GetServerSidePropsContext } from 'next'
 import { ParsedUrlQuery } from 'querystring'
+import { ReactElement } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import jwt from 'jsonwebtoken'
@@ -22,15 +31,20 @@ const SUBPAGES: readonly string[] = ['identities', 'user', 'password', 'delete']
 
 const isIdentitySubpage = (subpage: string) => subpage.includes('/')
 
+const ICONS: { [key: string]: ReactElement } = {
+  identities: <BsPersonVcard size={24} />,
+  user: <BsPersonCheckFill size={24} />,
+  password: <BsKeyFill size={24} />,
+  delete: <BsTrash3Fill size={24} />,
+  Twitch: <BsTwitch size={24} className={styles.Twitch} />,
+  Twitter: <BsTwitter size={24} className={styles.Twitter} />,
+}
+
 const buildLink = (page: string, current: string) => (
   <Link href={page} key={page}>
-    {page === current ? (
-      <li className={styles.current}>
-        <b>{page}</b>
-      </li>
-    ) : (
-      <li>{page}</li>
-    )}
+    <li className={page === current ? styles.current : ''}>
+      {ICONS[page]} {page}
+    </li>
   </Link>
 )
 
@@ -46,13 +60,8 @@ const SideNav = ({ current }: NavProps) => {
       1,
       0,
       <li key={current} className={styles.identity}>
-        <div className={`${styles.identityDetails} ${styles[platform]}`}>
-          <b>
-            {platform} &#47;&#47;
-            <br />
-            {name}
-          </b>
-        </div>
+        {ICONS[platform]}
+        <span className={styles.ellided}>{name}</span>
       </li>
     )
   }

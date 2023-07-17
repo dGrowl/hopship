@@ -108,12 +108,12 @@ const SearchBar = ({ searching, setSearching }: Props) => {
               onClick={() => setSearching(false)}
               type="button"
             >
-              <BsArrowLeft size={24} strokeWidth={0.75} />
+              <BsArrowLeft size={22} strokeWidth={0.75} />
             </button>
             <PlatformSelect />
             <NameInput searching={searching} />
             <button>
-              <BsSearch size={24} strokeWidth={0.75} />
+              <BsSearch size={22} strokeWidth={0.75} />
             </button>
           </nav>
         </fieldset>
@@ -124,7 +124,7 @@ const SearchBar = ({ searching, setSearching }: Props) => {
       >
         <BsSearch
           onClick={() => setSearching(true)}
-          size={28}
+          size={24}
           strokeWidth={0.75}
         />
       </div>
