@@ -145,7 +145,7 @@ const UserPage = ({
       </Head>
       <dl id={styles.container}>
         <dt className={styles.label}>
-          <BsPersonHeart size={26} />
+          <BsPersonHeart size={24} />
           name
         </dt>
         <dd>
@@ -154,14 +154,14 @@ const UserPage = ({
         {bio ? (
           <>
             <dt className={styles.label}>
-              <BsBookHalf size={26} />
+              <BsBookHalf size={24} />
               biography
             </dt>
             <dd id={styles.bio}>{bio}</dd>
           </>
         ) : null}
         <dt className={`${styles.label} ${styles.wide}`}>
-          <BsPersonVcard size={26} />
+          <BsPersonVcard size={24} />
           identities
         </dt>
         <dd className={styles.wide}>
