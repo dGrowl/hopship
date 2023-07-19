@@ -40,26 +40,30 @@
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
-  padding: 16px;
-  row-gap: 8px;
+  padding: 10px;
+  row-gap: 2px;
 }
 
 .addFields {
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  padding: 16px;
+  padding: 12px;
   row-gap: 8px;
 }
 
 .nameRow {
   font-size: 1.2rem;
-  overflow: hidden;
+  overflow: hidden visible;
+  padding: 4px;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
 }
 
 .descRow {
   font-size: 1rem;
+  padding: 4px;
 }
 
 .statusBadge {
