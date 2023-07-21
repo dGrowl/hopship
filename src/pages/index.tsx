@@ -1,3 +1,4 @@
+import { BsArrowRightCircle } from 'react-icons/bs'
 import Link from 'next/link'
 
 import OrbitAnimation from '../components/OrbitAnimation'
@@ -10,34 +11,40 @@ const Home = () => {
   return (
     <div id={styles.container}>
       <OrbitAnimation width={360} height={360} />
-      <div id={styles.questions}>
+      <dl id={styles.questions}>
         <section>
-          <b>What?</b>
-          <p>
+          <div>
+            <dt>What?</dt>
+          </div>
+          <dd>
             A search engine for netizens. Look up one account to find the rest!
-          </p>
+          </dd>
         </section>
         <section>
-          <b>Why?</b>
-          <p>
+          <div>
+            <dt>Why?</dt>
+          </div>
+          <dd>
             People over platforms. Our goal is to ease transitions between
             services.
-          </p>
+          </dd>
         </section>
         <section>
-          <b>How?</b>
-          <p>
-            Open-source software hosted&nbsp;
-            <Link
-              href="https://github.com/dGrowl/also"
-              style={{ textDecoration: 'underline' }}
-            >
-              here
+          <div>
+            <dt>How?</dt>
+            <Link href="/about/code">
+              <BsArrowRightCircle size={24} strokeWidth={0.35} />
             </Link>
-            . Bring issues, let's work on them!
-          </p>
+          </div>
+          <dd>
+            Built from open-source software, with its own code hosted&nbsp;
+            <a href="https://github.com/dGrowl/also" className="underline">
+              here
+            </a>
+            . Bring issues!
+          </dd>
         </section>
-      </div>
+      </dl>
     </div>
   )
 }

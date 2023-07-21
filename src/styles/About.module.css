@@ -1,0 +1,10 @@
+#container {
+  max-width: var(--page-width);
+  width: 100%;
+}
+
+#container article {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

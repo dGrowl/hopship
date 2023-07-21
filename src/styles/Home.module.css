@@ -13,6 +13,17 @@
   margin: 0 16px;
 }
 
+#questions div {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+#questions dt {
+  font-weight: 700;
+}
+
 @media screen and (max-width: 720px) {
   #questions {
     grid-template-columns: 1fr;

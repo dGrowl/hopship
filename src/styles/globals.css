@@ -46,7 +46,8 @@ legend {
 }
 
 h3 {
-  font-size: 1.3rem;
+  font-size: 1.05rem;
+  font-weight: 700;
 }
 
 ol,
@@ -60,6 +61,12 @@ ol {
   margin-left: 16px;
   padding-left: 16px;
   row-gap: 4px;
+}
+
+pre {
+  font-family: monospace;
+  font-size: 1rem;
+  white-space: pre-wrap;
 }
 
 section {
@@ -131,4 +138,8 @@ button:disabled {
 
 svg {
   overflow: visible;
+}
+
+.underline {
+  text-decoration: underline;
 }

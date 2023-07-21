@@ -4,11 +4,6 @@
   border-radius: 4px;
 }
 
-.example a {
-  text-decoration: underline;
-  color: var(--c-inverse);
-}
-
 .TwitterExample {
   background-color: var(--c-twitter-dark);
   border-color: var(--c-twitter-light);

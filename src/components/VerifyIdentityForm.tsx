@@ -134,7 +134,7 @@ const VerifyIdentityForm = ({ identity, verification }: Props) => {
   const url = `https://also.domain/u/name?v=${hash.substring(0, 16)}`
   return (
     <section>
-      <b>Verify</b>
+      <h3>Verify</h3>
       {status === 'PENDING' ? (
         <VerificationPending />
       ) : (
@@ -149,7 +149,11 @@ const VerifyIdentityForm = ({ identity, verification }: Props) => {
           <div>Example:</div>
           <div className={`${styles.example} ${styles[platform + 'Example']}`}>
             Hey everyone, I&apos;m linking accounts using Also! Check my other
-            pages out at <a href={url}>{url}</a>!
+            pages out at{' '}
+            <a href={url} className="underline">
+              {url}
+            </a>
+            !
           </div>
           <button>submit</button>
         </AntiCSRFForm>

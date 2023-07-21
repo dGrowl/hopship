@@ -43,7 +43,7 @@ const UpdateIdentityForm = ({ identity }: Props) => {
   const { platform, name, desc } = identity
   return (
     <section>
-      <b>Edit</b>
+      <h3>Edit</h3>
       <AntiCSRFForm
         onChange={(e) => checkUnchanged(e, setUnchanged)}
         onSubmit={(e) => update(e, platform, name)}
