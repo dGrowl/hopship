@@ -1,0 +1,29 @@
+#container {
+  font-size: 1.1rem;
+  position: sticky;
+  top: 72px;
+}
+
+#container li {
+  align-items: center;
+  border-radius: 4px;
+  display: grid;
+  grid-template-columns: 36px auto;
+  padding: 8px 16px;
+}
+
+#container span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.current {
+  background-color: var(--c-2);
+  font-weight: 600;
+}
+
+@media screen and (max-width: 720px) {
+  #container {
+    display: none;
+  }
+}

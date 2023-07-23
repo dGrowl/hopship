@@ -36,7 +36,7 @@ interface Props {
 const RemoveIdentityForm = ({ identity }: Props) => {
   const [invalid, setInvalid] = useState(true)
   const { platform, name } = identity
-  const key = `${platform}//${name}`
+  const key = `${platform}/${name}`
   return (
     <section>
       <h3>Remove</h3>

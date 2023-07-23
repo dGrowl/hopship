@@ -10,100 +10,56 @@ import { createHash } from 'crypto'
 import { GetServerSidePropsContext } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 import { ReactElement } from 'react'
-import { useRouter } from 'next/router'
 import Head from 'next/head'
 import jwt from 'jsonwebtoken'
-import Link from 'next/link'
 
-import { AuthPayload, Identity, VerificationDetails } from '../../lib/types'
-import { platforms } from '../../lib/util'
+import {
+  AuthPayload,
+  Identity,
+  LinkDatum,
+  VerificationDetails,
+} from '../../lib/types'
+import { hasKey, platforms } from '../../lib/util'
 import { validateUserData } from '../../lib/helpers'
 import db from '../../lib/db'
+import DropNav from '../../components/DropNav'
 import EditableIdentitiesList from '../../components/EditableIdentitiesList'
 import IdentitySettings from '../../components/IdentitySettings'
 import RemoveUserForm from '../../components/RemoveUserForm'
+import SideNav from '../../components/SideNav'
 import UpdatePasswordForm from '../../components/UpdatePasswordForm'
 import UpdateUserForm from '../../components/UpdateUserForm'
 
 import styles from '../../styles/Settings.module.css'
 
-const SUBPAGES: readonly string[] = ['identities', 'user', 'password', 'delete']
-
 const isIdentitySubpage = (subpage: string) => subpage.includes('/')
 
-const ICONS: { [key: string]: ReactElement } = {
-  identities: <BsPersonVcard size={24} />,
-  user: <BsPersonCheckFill size={24} />,
-  password: <BsKeyFill size={24} />,
-  delete: <BsTrash3Fill size={24} />,
+const PLATFORM_ICONS: { [key: string]: ReactElement } = {
   Twitch: <BsTwitch size={24} className={styles.Twitch} />,
   Twitter: <BsTwitter size={24} className={styles.Twitter} />,
 }
 
-const buildLink = (page: string, current: string) => (
-  <Link href={page} key={page}>
-    <li className={page === current ? styles.current : ''}>
-      {ICONS[page]} {page}
-    </li>
-  </Link>
-)
-
-interface NavProps {
-  current: string
-}
-
-const SideNav = ({ current }: NavProps) => {
-  const links = SUBPAGES.map((s) => buildLink(s, current))
-  if (isIdentitySubpage(current)) {
-    const [platform, name] = current.split('/')
-    links.splice(
-      1,
-      0,
-      <li key={current} className={styles.identity}>
-        {ICONS[platform]}
-        <span className={styles.ellided}>{name}</span>
-      </li>
-    )
-  }
-  return (
-    <nav id={styles.sidebar}>
-      <ul>{links}</ul>
-    </nav>
-  )
-}
-
-const DropNav = ({ current }: NavProps) => {
-  const router = useRouter()
-  const links = SUBPAGES.map((subpage) => (
-    <option key={subpage} value={subpage}>
-      {subpage}
-    </option>
-  ))
-  const currentValue = isIdentitySubpage(current)
-    ? `/settings/${current}`
-    : current
-  if (isIdentitySubpage(current)) {
-    const [platform, name] = current.split('/')
-    links.splice(
-      1,
-      0,
-      <option className={styles.indent} key={currentValue} value={currentValue}>
-        {platform} &#47;&#47; {name}
-      </option>
-    )
-  }
-  return (
-    <nav id={styles.dropNav}>
-      <h2>Settings /</h2>
-      <select
-        defaultValue={currentValue}
-        key={currentValue}
-        onChange={(e) => router.push(e.target.value)}
-      >
-        {links}
-      </select>
-    </nav>
-  )
+const linkData: { [key: string]: LinkDatum } = {
+  identities: {
+    text: 'identities',
+    icon: <BsPersonVcard size={24} />,
+    url: '/settings',
+  },
+  user: {
+    text: 'user',
+    icon: <BsPersonCheckFill size={24} />,
+    url: '/settings/user',
+  },
+  password: {
+    text: 'password',
+    icon: <BsKeyFill size={24} />,
+    url: '/settings/password',
+  },
+  delete: {
+    text: 'delete',
+    icon: <BsTrash3Fill size={24} />,
+    url: '/settings/delete',
+  },
 }
 
 const DEFAULT_SUBPAGE = 'identities'
@@ -111,7 +67,7 @@ const DEFAULT_SUBPAGE = 'identities'
 const paramsToSubpage = (params: ParsedUrlQuery | undefined) => {
   const subpage = params?.subpage || DEFAULT_SUBPAGE
   if (Array.isArray(subpage)) {
-    if (subpage.length === 1 && SUBPAGES.includes(subpage[0])) {
+    if (subpage.length === 1 && hasKey(linkData, subpage[0])) {
       return subpage[0]
     } else if (subpage.length === 2 && platforms.includes(subpage[0])) {
       return `${subpage[0]}/${subpage[1]}`
@@ -341,14 +297,29 @@ const buildTitle = (subpage: string) => {
 }
 
 const Settings = ({ subpage, data }: Props) => {
+  let relevantLinkData = Object.values(linkData)
+  let currentURL = linkData[subpage]?.url
+  if (isIdentitySubpage(subpage)) {
+    const [platform, _] = subpage.split('/')
+    currentURL = `/settings/${subpage}`
+    relevantLinkData.splice(1, 0, {
+      text: subpage,
+      icon: PLATFORM_ICONS[platform],
+      url: currentURL,
+    })
+  }
   return (
     <>
       <Head>
         <title>{`also: ${buildTitle(subpage)}`}</title>
       </Head>
       <div id={styles.container}>
-        <DropNav current={subpage} />
-        <SideNav current={subpage} />
+        <SideNav current={currentURL} linkData={relevantLinkData} />
+        <DropNav
+          current={currentURL}
+          linkData={relevantLinkData}
+          root="Settings"
+        />
         <SubPage subpage={subpage} data={data} />
       </div>
     </>
