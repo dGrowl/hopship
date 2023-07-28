@@ -29,7 +29,7 @@ const RemoveUserForm = ({ name }: Props) => {
     <section>
       <p>
         WARNING: Account deletion is forever. We don&apos;t keep backups of your
-        data. <em>Everything will be gone.</em>
+        data. <strong>Everything will be gone.</strong>
       </p>
       <p>
         If you want to delete your account, enter your username below, then hit

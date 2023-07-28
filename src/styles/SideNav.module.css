@@ -4,6 +4,12 @@
   top: 72px;
 }
 
+#container ul {
+  margin-left: 0px;
+  padding-left: 0px;
+  row-gap: 0px;
+}
+
 #container li {
   align-items: center;
   border-radius: 4px;
