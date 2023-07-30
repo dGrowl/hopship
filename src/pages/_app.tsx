@@ -1,3 +1,4 @@
+import { Nunito_Sans } from 'next/font/google'
 import { NextApiRequestCookies } from 'next/dist/server/api-utils'
 import { NextIncomingMessage } from 'next/dist/server/request-meta'
 import { useState } from 'react'
@@ -17,6 +18,7 @@ import '../styles/variables.css'
 import styles from '../styles/App.module.css'
 
 const HALF_HOUR_IN_SECONDS = 60 * 30
+const TITLE_FONT = Nunito_Sans({ subsets: ['latin'] })
 
 interface HomeBarProps {
   userName: string
@@ -31,7 +33,7 @@ const HomeBar = ({ userName }: HomeBarProps) => {
         id={styles.headerContent}
       >
         <Link href="/" className={searching ? styles.hiddenForMobile : ''}>
-          <h1 className={styles.title}>also</h1>
+          <h1 className={TITLE_FONT.className}>also</h1>
         </Link>
         <SearchBar searching={searching} setSearching={setSearching} />
         <UserMenu name={userName} searching={searching} />
