@@ -48,7 +48,7 @@ const UserMenu = ({ name, searching }: Props) => {
           <Link href={`/u/${name}`}>
             <BsPersonCheckFill strokeWidth={0.75} /> {name}
           </Link>
-          <Link href="/settings">
+          <Link href="/settings/identities">
             <BsGearFill strokeWidth={0.75} /> settings
           </Link>
           <Link href="/logout">

@@ -4,7 +4,6 @@ import {
   BsGearFill,
   BsPersonAdd,
   BsPersonCircle,
-  BsPersonPlus,
   BsQuestionLg,
   BsSearch,
 } from 'react-icons/bs'
@@ -24,120 +23,162 @@ import Link from 'next/link'
 
 const linkData: { [key: string]: LinkDatum } = {
   help: {
-    text: 'help',
     icon: <BsQuestionLg size={24} strokeWidth={0.5} />,
-    url: '/about',
+    text: 'help',
+    title: 'Help',
+    url: '/about/help',
+  },
+  mission: {
+    icon: <BsBullseye size={24} strokeWidth={0.5} />,
+    text: 'mission',
+    title: 'Mission',
+    url: '/about/mission',
   },
   code: {
-    text: 'code',
     icon: <BsCodeSlash size={24} strokeWidth={0.5} />,
+    text: 'code',
+    title: 'Code',
     url: '/about/code',
   },
 }
 
-const DEFAULT_SUBPAGE = 'help'
-
 const paramsToSubpage = (params: ParsedUrlQuery | undefined) => {
-  const subpage = params?.subpage || DEFAULT_SUBPAGE
-  if (Array.isArray(subpage)) {
-    if (subpage.length === 1 && hasKey(linkData, subpage[0])) {
-      return subpage[0]
-    }
-    return DEFAULT_SUBPAGE
+  const subpage = params?.subpage
+  if (!subpage) {
+    return null
   }
-  return subpage
+  if (Array.isArray(subpage)) {
+    return subpage.length === 1 && hasKey(linkData, subpage[0])
+      ? subpage[0]
+      : null
+  }
+  return hasKey(linkData, subpage) ? subpage : null
 }
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const subpage = paramsToSubpage(ctx.params)
-  return { props: { subpage } }
+  return subpage
+    ? { props: { subpage } }
+    : {
+        redirect: {
+          destination: '/about/help',
+          permanent: true,
+        },
+      }
 }
 
-const AboutHelp = () => {
-  return (
-    <article id={styles.content}>
-      <section>
-        <p>
-          <b>also</b> is built primarily to serve two types of users:
-        </p>
-        <ul>
-          <li>
-            <b>Searchers</b> who wish to follow their friends on other
-            platforms.
-          </li>
-          <li>
-            <b>Providers</b> who wish to add their accounts to our system.
-          </li>
-        </ul>
-      </section>
-      <section>
-        <h3>Searcher</h3>
-        <p>
-          You'll need to know one of the accounts of the person you're hoping to
-          look up. Using the fields at the top, moving from left to right:
-        </p>
-        <ol>
-          <li>Select the platform of the account from the dropdown.</li>
-          <li>Type their ID/name on that platform into the text field.</li>
-          <li>
-            Click the <BsSearch strokeWidth={0.85} /> magnifying glass to run
-            the search.
-          </li>
-        </ol>
-      </section>
-      <section>
-        <h3>Provider</h3>
-        <p>
-          To make changes to your account, update your user page, or modify your
-          identities, first navigate to the{' '}
-          <Link href="/settings" className="underline">
+const Help = (
+  <article id={styles.content}>
+    <section>
+      <p>
+        <b>also</b> is built primarily to serve two types of users:
+      </p>
+      <ul>
+        <li>
+          <b>Searchers</b> who wish to follow their friends on other platforms.
+        </li>
+        <li>
+          <b>Providers</b> who wish to add their accounts to our system.
+        </li>
+      </ul>
+    </section>
+    <section>
+      <h3>Searcher</h3>
+      <p>
+        You'll need to know one of the accounts of the person you're hoping to
+        look up. Using the fields at the top, moving from left to right:
+      </p>
+      <ol>
+        <li>Select the platform of the account from the dropdown.</li>
+        <li>Type their ID/name on that platform into the text field.</li>
+        <li>
+          Click the <BsSearch strokeWidth={0.85} /> magnifying glass to run the
+          search.
+        </li>
+      </ol>
+    </section>
+    <section>
+      <h3>Provider</h3>
+      <p>
+        To make changes to your account, update your user page, or modify your
+        identities, first navigate to the{' '}
+        <Link href="/settings/identities" className="underline">
+          settings
+        </Link>{' '}
+        page:
+      </p>
+      <ol>
+        <li>
+          If you aren't logged in, create or sign into an account by clicking
+          the <BsPersonAdd strokeWidth={0.65} size={18} /> unknown user icon and
+          following the steps on the{' '}
+          <Link href="/login" className="underline">
+            login
+          </Link>{' '}
+          page.
+        </li>
+        <li>
+          Open the user menu by clicking the{' '}
+          <BsPersonCircle strokeWidth={0.35} size={18} /> logged in user icon.
+        </li>
+        <li>
+          Click the <BsGearFill /> settings link.
+        </li>
+      </ol>
+      <p>
+        <strong>Note:</strong> After adding a new identity to your account, you
+        must prove that it belongs to you before it will show up in search
+        results. To verify an identity's authenticity:
+      </p>
+      <ol>
+        <li>
+          Navigate to the{' '}
+          <Link href="/settings/identities" className="underline">
             settings
           </Link>{' '}
-          page:
-        </p>
-        <ol>
-          <li>
-            If you aren't logged in, create or sign into an account by clicking
-            the <BsPersonAdd strokeWidth={0.65} size={18} /> unknown user icon
-            and following the steps on the{' '}
-            <Link href="/login" className="underline">
-              login
-            </Link>{' '}
-            page.
-          </li>
-          <li>
-            Open the user menu by clicking the{' '}
-            <BsPersonCircle strokeWidth={0.35} size={18} /> logged in user icon.
-          </li>
-          <li>
-            Click the <BsGearFill /> settings link.
-          </li>
-        </ol>
-        <p>
-          <strong>Note:</strong> After adding a new identity to your account,
-          you must prove that it belongs to you before it will show up in search
-          results. To verify an identity's authenticity:
-        </p>
-        <ol>
-          <li>
-            Navigate to the{' '}
-            <Link href="/settings" className="underline">
-              settings
-            </Link>{' '}
-            page; see above.
-          </li>
-          <li>
-            Click the <BsGearFill /> button on the identity to go to the
-            identity's settings.
-          </li>
-          <li>Follow the steps in the "Verify" section.</li>
-        </ol>
-      </section>
-    </article>
-  )
-}
+          page; see above.
+        </li>
+        <li>
+          Click the <BsGearFill /> button on the identity to go to the
+          identity's settings.
+        </li>
+        <li>Follow the steps in the "Verify" section.</li>
+      </ol>
+    </section>
+  </article>
+)
 
-const AboutCode = () => {
+const Mission = (
+  <article id={styles.content}>
+    <section style={{ rowGap: '20px' }}>
+      <p>
+        <b>also</b> is a mission is to empower people by fostering genuine
+        connections and promoting freedom of choice. In a world filled with
+        siloed platforms, we aim to break down barriers by providing a
+        user-friendly social search engine that respects consent and celebrates
+        diversity.
+      </p>
+
+      <p>
+        Philosophically, we believe that individuals should have the liberty to
+        navigate the online world on their terms. We aspire to contribute to a
+        more unified internet where people are free to express their true
+        selves. Higher-order communities, such as this, are one means of
+        advancing this goal.
+      </p>
+
+      <p>
+        We have a strong commitment to privacy and transparency. We prioritize
+        safeguarding user data and ensure that our project adheres to ethical
+        principles. Instead of competing with other platforms, we aim to
+        collaborate and complement their services while placing users' needs
+        first.
+      </p>
+    </section>
+  </article>
+)
+
+const Code = () => {
   const [current, setCurrent] = useState(0)
   return (
     <article id={styles.content}>
@@ -186,9 +227,11 @@ const AboutCode = () => {
 const Content = ({ subpage }: Props) => {
   switch (subpage) {
     case 'code':
-      return <AboutCode />
+      return <Code />
+    case 'mission':
+      return Mission
   }
-  return <AboutHelp />
+  return Help
 }
 
 interface Props {
@@ -196,16 +239,16 @@ interface Props {
 }
 
 const About = ({ subpage }: Props) => {
-  const { url } = linkData[subpage]
+  const linkDatum = linkData[subpage]
   const allLinkData = Object.values(linkData)
   return (
     <>
       <Head>
-        <title>also: Code</title>
+        <title>{`also: About > ${linkDatum.title}`}</title>
       </Head>
       <div id={styles.container}>
-        <SideNav current={url} linkData={allLinkData} />
-        <DropNav current={url} linkData={allLinkData} root="About" />
+        <SideNav current={linkDatum.url} linkData={allLinkData} />
+        <DropNav current={linkDatum.url} linkData={allLinkData} root="About" />
         <Content subpage={subpage} />
       </div>
     </>

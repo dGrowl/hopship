@@ -12,6 +12,10 @@
   gap: 16px;
 }
 
+#container section {
+  line-height: 21px;
+}
+
 #container div {
   display: flex;
   flex-direction: column;

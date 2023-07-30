@@ -41,40 +41,45 @@ const PLATFORM_ICONS: { [key: string]: ReactElement } = {
 
 const linkData: { [key: string]: LinkDatum } = {
   identities: {
-    text: 'identities',
     icon: <BsPersonVcard size={24} />,
-    url: '/settings',
+    text: 'identities',
+    title: 'Manage Identities',
+    url: '/settings/identities',
   },
   user: {
-    text: 'user',
     icon: <BsPersonCheckFill size={24} />,
+    text: 'user',
+    title: 'Update User Details',
     url: '/settings/user',
   },
   password: {
-    text: 'password',
     icon: <BsKeyFill size={24} />,
+    text: 'password',
+    title: 'Change Password',
     url: '/settings/password',
   },
   delete: {
-    text: 'delete',
     icon: <BsTrash3Fill size={24} />,
+    text: 'delete',
+    title: 'Delete Account',
     url: '/settings/delete',
   },
 }
 
-const DEFAULT_SUBPAGE = 'identities'
-
 const paramsToSubpage = (params: ParsedUrlQuery | undefined) => {
-  const subpage = params?.subpage || DEFAULT_SUBPAGE
+  const subpage = params?.subpage
+  if (!subpage) {
+    return null
+  }
   if (Array.isArray(subpage)) {
     if (subpage.length === 1 && hasKey(linkData, subpage[0])) {
       return subpage[0]
     } else if (subpage.length === 2 && platforms.includes(subpage[0])) {
       return `${subpage[0]}/${subpage[1]}`
     }
-    return DEFAULT_SUBPAGE
+    return null
   }
-  return subpage
+  return hasKey(linkData, subpage) ? subpage : null
 }
 
 const getBio = async (name: string) => {
@@ -241,11 +246,21 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         }
       }
       const subpage = paramsToSubpage(ctx.params)
+      if (!subpage) {
+        return {
+          redirect: {
+            destination: '/settings/identities',
+            permanent: true,
+          },
+        }
+      }
       const data = await fetchSettingsData(subpage, payload)
       if (!data) {
         return {
           redirect: {
-            destination: isIdentitySubpage(subpage) ? '/settings' : '/logout',
+            destination: isIdentitySubpage(subpage)
+              ? '/settings/identities'
+              : '/logout',
             permanent: false,
           },
         }
@@ -271,7 +286,7 @@ interface Props {
   data: SettingsData
 }
 
-const SubPage = ({ subpage, data }: Props) => {
+const Content = ({ subpage, data }: Props) => {
   switch (subpage) {
     case 'identities':
       return <EditableIdentitiesList {...data} />
@@ -285,42 +300,35 @@ const SubPage = ({ subpage, data }: Props) => {
   return isIdentitySubpage(subpage) ? <IdentitySettings {...data} /> : <></>
 }
 
-const TITLES: { [key: string]: string } = {
-  identities: 'Manage Identities',
-  user: 'Update User Details',
-  password: 'Change Password',
-  delete: 'Delete Account',
-}
-
-const buildTitle = (subpage: string) => {
-  return TITLES[subpage] || 'Modify ' + subpage.replace('/', ' // ')
+const buildIdentityLinkDatum = (subpage: string) => {
+  const [platform, _] = subpage.split('/')
+  return {
+    icon: PLATFORM_ICONS[platform],
+    text: subpage,
+    title: `Modify ${subpage.replace('/', '/')}`,
+    url: `/settings/${subpage}`,
+  }
 }
 
 const Settings = ({ subpage, data }: Props) => {
   let relevantLinkData = Object.values(linkData)
-  let currentURL = linkData[subpage]?.url
+  const linkDatum = linkData[subpage] || buildIdentityLinkDatum(subpage)
   if (isIdentitySubpage(subpage)) {
-    const [platform, _] = subpage.split('/')
-    currentURL = `/settings/${subpage}`
-    relevantLinkData.splice(1, 0, {
-      text: subpage,
-      icon: PLATFORM_ICONS[platform],
-      url: currentURL,
-    })
+    relevantLinkData.splice(1, 0, linkDatum)
   }
   return (
     <>
       <Head>
-        <title>{`also: ${buildTitle(subpage)}`}</title>
+        <title>{`also: ${linkDatum.title}`}</title>
       </Head>
       <div id={styles.container}>
-        <SideNav current={currentURL} linkData={relevantLinkData} />
+        <SideNav current={linkDatum.url} linkData={relevantLinkData} />
         <DropNav
-          current={currentURL}
+          current={linkDatum.url}
           linkData={relevantLinkData}
           root="Settings"
         />
-        <SubPage subpage={subpage} data={data} />
+        <Content subpage={subpage} data={data} />
       </div>
     </>
   )

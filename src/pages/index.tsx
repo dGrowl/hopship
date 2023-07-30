@@ -15,6 +15,9 @@ const Home = () => {
         <section>
           <div>
             <dt>What?</dt>
+            <Link href="/about/help">
+              <BsArrowRightCircle size={24} strokeWidth={0.35} />
+            </Link>
           </div>
           <dd>
             A search engine for netizens. Look up one account to find the rest!
@@ -23,6 +26,9 @@ const Home = () => {
         <section>
           <div>
             <dt>Why?</dt>
+            <Link href="/about/mission">
+              <BsArrowRightCircle size={24} strokeWidth={0.35} />
+            </Link>
           </div>
           <dd>
             People over platforms. Our goal is to ease transitions between
