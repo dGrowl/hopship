@@ -109,6 +109,10 @@ textarea {
   background-color: var(--c-4);
 }
 
+textarea {
+  resize: vertical;
+}
+
 option {
   background-color: var(--c-2);
 }
