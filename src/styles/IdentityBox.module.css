@@ -40,7 +40,7 @@
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
-  padding: 10px;
+  padding: 10px 4px 10px 10px;
   row-gap: 2px;
 }
 
@@ -48,7 +48,7 @@
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  padding: 12px;
+  padding: 12px 4px 12px 12px;
   row-gap: 8px;
 }
 
