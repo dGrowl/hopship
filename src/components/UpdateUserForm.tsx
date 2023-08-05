@@ -59,9 +59,9 @@ const NameInput = ({ initial }: NameInputProps) => {
         onChange={(e) => setName(e.target.value)}
         value={name}
       />
-      <div id={styles.nameResult}>
+      <div id={styles.namePreview}>
         <BsArrowReturnRight strokeWidth={1} />
-        <span>also.domain/u/{name}</span>
+        also.domain/u/{name}
       </div>
     </>
   )

@@ -22,3 +22,27 @@
   background-color: var(--c-inverse);
   color: var(--c-2);
 }
+
+#namePreview {
+  align-items: center;
+  column-gap: 4px;
+  display: flex;
+  font-size: 1.05rem;
+  margin-top: 4px;
+}
+
+.errorInput {
+  border: 2px solid rgb(161 55 48);
+}
+
+.errorDescription {
+  background-color: rgb(161 55 48);
+  border-radius: 0px 0px 4px 4px;
+  column-gap: 8px;
+  display: flex;
+  padding: 6px 6px 10px 6px;
+}
+
+.errorDescription svg {
+  margin-top: 2px;
+}

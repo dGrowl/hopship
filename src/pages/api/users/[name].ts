@@ -37,7 +37,7 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   if (hasKey(body, 'currentPassword')) {
     const user = await getUserData(currentEmail, body.currentPassword)
-    if (user) {
+    if (user.valid) {
       data.passhash = await argon2.hash(body.futurePassword, ARGON_OPTIONS)
     } else {
       return res

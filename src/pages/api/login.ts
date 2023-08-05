@@ -30,7 +30,7 @@ export const genAuthCookie = (
 export const getUserData = async (email: string, password: string) => {
   const result = await db.query(
     `
-      SELECT u.name, u.passhash
+      SELECT TRUE as valid, u.name, u.passhash
       FROM public.users u
       WHERE u.email = $1;
     `,
@@ -40,30 +40,29 @@ export const getUserData = async (email: string, password: string) => {
     const data = result.rows[0]
     if (data.passhash !== null) {
       try {
-        if (!process.env.JWT_AUTH_SECRET) {
-          throw 'Environment is missing JWT secret'
-        }
         if (await argon2.verify(data.passhash, password)) {
           return data
         }
       } catch (error) {
         console.error(error)
       }
+      return { valid: false, error: 'WRONG_PASSWORD' }
     }
   }
-  return null
+  return { valid: false, error: 'UNKNOWN_EMAIL' }
 }
 
 const authenticate = async (req: NextApiRequest, res: NextApiResponse) => {
   const { body } = req
   const { email, password } = body
   const user = await getUserData(email, password)
-  if (user) {
+  if (user.valid) {
     const cookie = genAuthCookie(user.name, email)
     return res.status(200).setHeader('Set-Cookie', cookie).json({})
   }
   return res.status(401).json({
     message: "Provided account credentials don't match any known users",
+    error: user.error,
   })
 }
 

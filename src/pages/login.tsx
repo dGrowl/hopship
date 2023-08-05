@@ -1,4 +1,5 @@
-import { FormEvent, useState } from 'react'
+import { BsArrowReturnRight, BsExclamationCircle } from 'react-icons/bs'
+import { Dispatch, FormEvent, ReactNode, useState } from 'react'
 import { GetServerSidePropsContext } from 'next'
 import { NextRouter, useRouter } from 'next/router'
 import Head from 'next/head'
@@ -11,43 +12,34 @@ import Field from '../components/Field'
 
 import styles from '../styles/Login.module.css'
 
+const ErrorDescription = ({
+  children,
+}: {
+  children: ReactNode | ReactNode[]
+}) => (
+  <div className={styles.errorDescription}>
+    <BsExclamationCircle size={24} strokeWidth={0.75} />
+    {children}
+  </div>
+)
+
 interface LoginFormFields extends EventTarget {
   csrf: HTMLInputElement
   email: HTMLInputElement
   password: HTMLInputElement
-  name?: HTMLInputElement
-  repassword?: HTMLInputElement
 }
 
-const submit = async (
+const login = async (
   e: FormEvent,
-  registerMode: boolean,
-  router: NextRouter
+  router: NextRouter,
+  setBadEmail: Dispatch<string>,
+  setBadPassword: Dispatch<string>
 ) => {
   e.preventDefault()
   const fields = e.target as LoginFormFields
   const csrf = fields.csrf.value
   const email = fields.email.value
   const password = fields.password.value
-  if (registerMode) {
-    if (!fields.name || !fields.repassword) {
-      return
-    }
-    const name = fields.name.value
-    const repassword = fields.repassword.value
-    if (password !== repassword) {
-      return
-    }
-    const data = { email, name, password }
-    const response = await fetch('/api/users', {
-      method: 'POST',
-      headers: csrfHeaders(csrf),
-      body: JSON.stringify(data),
-    })
-    if (response.status !== 200) {
-      return
-    }
-  }
   const data = { email, password }
   const response = await fetch('/api/login', {
     method: 'POST',
@@ -57,8 +49,212 @@ const submit = async (
   if (response.status === 200) {
     router.push('/settings/identities')
   } else {
+    const body = await response.json()
+    switch (body.error) {
+      case 'WRONG_PASSWORD':
+        return setBadPassword(password)
+      case 'UNKNOWN_EMAIL':
+        return setBadEmail(email)
+    }
+  }
+}
+
+const LoginForm = () => {
+  const [badEmail, setBadEmail] = useState('')
+  const [badPassword, setBadPassword] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const router = useRouter()
+  const hasEmailError = badEmail && email === badEmail
+  const hasPasswordError = badPassword && password === badPassword
+  return (
+    <AntiCSRFForm
+      onSubmit={(e) => login(e, router, setBadEmail, setBadPassword)}
+    >
+      <Field name="email">
+        <input
+          autoComplete="email"
+          className={hasEmailError ? styles.errorInput : ''}
+          id="email"
+          name="email"
+          onChange={(e) => {
+            setEmail(e.target.value)
+            setBadPassword('')
+          }}
+          placeholder="user@e.mail"
+          required
+          type="email"
+        />
+        {hasEmailError ? (
+          <ErrorDescription>
+            Email does not match any known users. Please enter a known email or
+            register for a new account.
+          </ErrorDescription>
+        ) : null}
+      </Field>
+      <Field name="password">
+        <input
+          autoComplete="current-password"
+          className={hasPasswordError ? styles.errorInput : ''}
+          id="password"
+          maxLength={MAX_PASSWORD_LENGTH}
+          minLength={MIN_PASSWORD_LENGTH}
+          name="password"
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          type="password"
+        />
+        {hasPasswordError ? (
+          <ErrorDescription>
+            Password does not match that email. Please enter the correct
+            password or register for a new account.
+          </ErrorDescription>
+        ) : null}
+      </Field>
+      <button>auth</button>
+    </AntiCSRFForm>
+  )
+}
+
+interface RegisterFormFields extends LoginFormFields {
+  name: HTMLInputElement
+  repassword: HTMLInputElement
+}
+
+const register = async (
+  e: FormEvent,
+  router: NextRouter,
+  setBadEmail: Dispatch<string>,
+  setBadName: Dispatch<string>,
+  setBadPassword: Dispatch<string>
+) => {
+  e.preventDefault()
+  const fields = e.target as RegisterFormFields
+  const csrf = fields.csrf.value
+  const email = fields.email.value
+  const password = fields.password.value
+  const name = fields.name.value
+  const repassword = fields.repassword.value
+  if (password !== repassword) {
+    return setBadPassword(repassword)
+  }
+  const data = { email, name, password }
+  const response = await fetch('/api/users', {
+    method: 'POST',
+    headers: csrfHeaders(csrf),
+    body: JSON.stringify(data),
+  })
+  if (response.status !== 200) {
+    const body = await response.json()
+    if (body.error === 'DUPLICATE_EMAIL') {
+      return setBadEmail(email)
+    }
+    if (body.error === 'DUPLICATE_NAME') {
+      return setBadName(name)
+    }
+  }
+  const dataLogin = { email, password }
+  const responseLogin = await fetch('/api/login', {
+    method: 'POST',
+    headers: csrfHeaders(csrf),
+    body: JSON.stringify(dataLogin),
+  })
+  if (responseLogin.status === 200) {
+    router.push('/settings/identities')
+  } else {
     router.reload()
   }
+}
+
+const RegisterForm = () => {
+  const [name, setName] = useState('')
+  const [badName, setBadName] = useState('')
+  const [email, setEmail] = useState('')
+  const [badEmail, setBadEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [badPassword, setBadPassword] = useState('')
+  const router = useRouter()
+  const hasNameError = badName && name === badName
+  const hasPasswordError = badPassword && password === badPassword
+  const hasEmailError = badEmail && email === badEmail
+  return (
+    <AntiCSRFForm
+      onSubmit={(e) =>
+        register(e, router, setBadEmail, setBadName, setBadPassword)
+      }
+    >
+      <Field name="email">
+        <input
+          autoComplete="email"
+          className={hasEmailError ? styles.errorInput : ''}
+          id="email"
+          name="email"
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="user@e.mail"
+          required
+          type="email"
+        />
+        {hasEmailError ? (
+          <ErrorDescription>
+            Email does not match any known users. Please enter a known email or
+            register for a new account.
+          </ErrorDescription>
+        ) : null}
+      </Field>
+      <Field name="name">
+        <input
+          autoComplete="username"
+          className={hasNameError ? styles.errorInput : ''}
+          id="name"
+          name="name"
+          onChange={(e) => setName(e.target.value)}
+          placeholder="user"
+          required
+        />
+        {hasNameError ? (
+          <ErrorDescription>
+            Name is already in use. Please choose a different one.
+          </ErrorDescription>
+        ) : null}
+        <div id={styles.namePreview}>
+          <BsArrowReturnRight strokeWidth={1} />
+          also.domain/u/{name || 'user'}
+        </div>
+      </Field>
+      <Field name="password">
+        <input
+          autoComplete="new-password"
+          id="password"
+          maxLength={MAX_PASSWORD_LENGTH}
+          minLength={MIN_PASSWORD_LENGTH}
+          name="password"
+          onChange={() => setBadPassword('')}
+          required
+          type="password"
+        />
+      </Field>
+      <Field name="repassword" label="password (again)">
+        <input
+          autoComplete="new-password"
+          className={hasPasswordError ? styles.errorInput : ''}
+          id="repassword"
+          maxLength={MAX_PASSWORD_LENGTH}
+          minLength={MIN_PASSWORD_LENGTH}
+          name="repassword"
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          type="password"
+        />
+        {hasPasswordError ? (
+          <ErrorDescription>
+            Second password does not match the first. Please ensure that they
+            match.
+          </ErrorDescription>
+        ) : null}
+      </Field>
+      <button>create</button>
+    </AntiCSRFForm>
+  )
 }
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -88,7 +284,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
 const Login = () => {
   const [registerMode, setRegisterMode] = useState(false)
-  const router = useRouter()
   return (
     <>
       <Head>
@@ -110,37 +305,7 @@ const Login = () => {
               Register
             </button>
           </div>
-          <AntiCSRFForm onSubmit={(e) => submit(e, registerMode, router)}>
-            <Field name="email">
-              <input id="email" name="email" type="email" />
-            </Field>
-            {registerMode ? (
-              <Field name="name">
-                <input id="name" name="name" />
-              </Field>
-            ) : null}
-            <Field name="password">
-              <input
-                id="password"
-                maxLength={MAX_PASSWORD_LENGTH}
-                minLength={MIN_PASSWORD_LENGTH}
-                name="password"
-                type="password"
-              />
-            </Field>
-            {registerMode ? (
-              <Field name="repassword" label="password (again)">
-                <input
-                  id="repassword"
-                  maxLength={MAX_PASSWORD_LENGTH}
-                  minLength={MIN_PASSWORD_LENGTH}
-                  name="repassword"
-                  type="password"
-                />
-              </Field>
-            ) : null}
-            <button>{registerMode ? 'create' : 'verify'}</button>
-          </AntiCSRFForm>
+          {registerMode ? <RegisterForm /> : <LoginForm />}
         </section>
       </div>
     </>

@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 import styles from '../styles/Field.module.css'
 
 interface Props {
   name: string
   label?: string
-  children: JSX.Element
+  children: ReactNode | ReactNode[]
 }
 
 const Field = React.memo(function Field({ name, label, children }: Props) {
