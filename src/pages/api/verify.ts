@@ -11,11 +11,20 @@ const verify = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await db.query(
       `
+        WITH v as (
+          INSERT INTO public.verifications (user_id, platform, name, requested_at, proof)
+          VALUES (
+            (SELECT id FROM public.users WHERE name = $1),
+            $2,
+            $3,
+            to_timestamp($4),
+            $5
+          )
+          RETURNING user_id
+        )
         UPDATE public.identities
-        SET status = 'PENDING',
-          proof = $5,
-          requested_at = to_timestamp($4)
-        WHERE user_id = (SELECT id FROM public.users WHERE name = $1)
+        SET status = 'PENDING'
+        WHERE user_id = (SELECT user_id FROM v)
           AND platform = $2
           AND name = $3
           AND (

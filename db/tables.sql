@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS public.verifications;
 DROP TABLE IF EXISTS public.identities;
 DROP TABLE IF EXISTS public.platforms;
 DROP TABLE IF EXISTS public.users;
@@ -70,7 +71,22 @@ CREATE TABLE public.identities (
 		NOT NULL,
 	status VERIFICATION_STATUS
 		DEFAULT 'UNVERIFIED',
-	requested_at TIMESTAMP,
-	proof JSONB,
 	PRIMARY KEY (user_id, platform, name)
+);
+
+CREATE TABLE public.verifications (
+	user_id INTEGER,
+	platform TEXT,
+	name IDENTITY_NAME_TEXT,
+	requested_at TIMESTAMP,
+	proof JSONB
+		DEFAULT NULL,
+	approved BOOLEAN
+		DEFAULT NULL,
+	response TEXT
+		DEFAULT NULL,
+	PRIMARY KEY (user_id, platform, name, requested_at),
+	FOREIGN KEY (user_id, platform, name)
+		REFERENCES public.identities (user_id, platform, name)
+		ON DELETE CASCADE
 );
