@@ -4,9 +4,6 @@ DROP TABLE IF EXISTS public.networks;
 DROP TABLE IF EXISTS public.platforms;
 DROP TABLE IF EXISTS public.users;
 
-DROP DOMAIN IF EXISTS IDENTITY_DESCRIPTION_TEXT;
-DROP DOMAIN IF EXISTS IDENTITY_NAME_TEXT;
-
 DROP TYPE IF EXISTS VERIFICATION_STATUS;
 
 DROP EXTENSION IF EXISTS citext;
@@ -14,17 +11,6 @@ DROP EXTENSION IF EXISTS citext;
 CREATE EXTENSION citext;
 
 CREATE TYPE VERIFICATION_STATUS AS ENUM ('UNVERIFIED', 'PENDING', 'REJECTED', 'VERIFIED');
-
-CREATE DOMAIN IDENTITY_NAME_TEXT AS CITEXT
-	CONSTRAINT network_name_proper_chars CHECK (VALUE ~ '^\w+$')
-	CONSTRAINT network_name_min_length CHECK (char_length(VALUE) >= 1)
-	CONSTRAINT network_name_max_length CHECK (char_length(VALUE) <= 64);
-
-CREATE DOMAIN IDENTITY_DESCRIPTION_TEXT AS TEXT
-	CONSTRAINT description_proper_chars CHECK (
-		VALUE ~ '^[a-zA-Z\d,;:''" \.\+\-\*\/\&%()?!]*$'
-	)
-	CONSTRAINT description_max_length CHECK (char_length(VALUE) <= 48);
 
 CREATE TABLE public.users (
 	id INTEGER
@@ -77,18 +63,25 @@ CREATE TABLE public.identities (
 	network TEXT
 		REFERENCES public.networks (name)
 		ON DELETE CASCADE,
-	name IDENTITY_NAME_TEXT,
-	description IDENTITY_DESCRIPTION_TEXT
+	name CITEXT,
+	description TEXT
 		NOT NULL,
 	status VERIFICATION_STATUS
 		DEFAULT 'UNVERIFIED',
-	PRIMARY KEY (user_id, network, name)
+	PRIMARY KEY (user_id, network, name),
+	CONSTRAINT network_name_proper_chars CHECK (name ~ '^\w+$'),
+	CONSTRAINT network_name_min_length CHECK (char_length(name) >= 1),
+	CONSTRAINT network_name_max_length CHECK (char_length(name) <= 64),
+	CONSTRAINT description_proper_chars CHECK (
+		description ~ '^[a-zA-Z\d,;:''" \.\+\-\*\/\&%()?!]*$'
+	),
+	CONSTRAINT description_max_length CHECK (char_length(description) <= 48)
 );
 
 CREATE TABLE public.verifications (
 	user_id INTEGER,
 	network TEXT,
-	name IDENTITY_NAME_TEXT,
+	name CITEXT,
 	requested_at TIMESTAMP,
 	proof JSONB
 		DEFAULT NULL,
