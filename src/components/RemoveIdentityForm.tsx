@@ -1,7 +1,7 @@
 import { Dispatch, FormEvent, useState } from 'react'
 
 import { CSRFFormFields, Identity } from '../lib/types'
-import { csrfHeaders } from '../lib/util'
+import { DECENTRALIZED_NETWORKS, csrfHeaders } from '../lib/util'
 import AntiCSRFForm from './AntiCSRFForm'
 
 type Fields = EventTarget &
@@ -9,10 +9,10 @@ type Fields = EventTarget &
     consent: HTMLInputElement
   }
 
-const remove = async (e: FormEvent, platform: string, name: string) => {
+const remove = async (e: FormEvent, network: string, name: string) => {
   e.preventDefault()
   const { csrf } = e.target as Fields
-  await fetch(`/api/identities/${platform}/${name}`, {
+  await fetch(`/api/identities/${network}/${name}`, {
     method: 'DELETE',
     headers: csrfHeaders(csrf.value),
   })
@@ -35,8 +35,10 @@ interface Props {
 
 const RemoveIdentityForm = ({ identity }: Props) => {
   const [invalid, setInvalid] = useState(true)
-  const { platform, name } = identity
-  const key = `${platform}/${name}`
+  const { platform, network, name } = identity
+  const key = DECENTRALIZED_NETWORKS.includes(network)
+    ? `${network}/${name}`
+    : `${platform}/${name}`
   return (
     <section>
       <h3>Remove</h3>
@@ -46,7 +48,7 @@ const RemoveIdentityForm = ({ identity }: Props) => {
       </p>
       <AntiCSRFForm
         onChange={(e) => checkInvalid(e, key, setInvalid)}
-        onSubmit={(e) => remove(e, platform, name)}
+        onSubmit={(e) => remove(e, network, name)}
       >
         <input name="consent" placeholder={key} />
         <button disabled={invalid}>delete</button>

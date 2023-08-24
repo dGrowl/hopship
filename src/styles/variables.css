@@ -8,13 +8,29 @@
   --c-7: rgb(148, 148, 148);
   --c-inverse: rgb(244, 244, 244);
 
-  --c-twitch-dark: rgb(49, 24, 87);
-  --c-twitch-light: rgb(130, 47, 255);
-  --c-twitch: rgb(93, 31, 185);
+  --c-bluesky-dark: hsl(218, 60%, 21%);
+  --c-bluesky-light: hsl(218, 100%, 60%);
+  --c-bluesky: hsl(218, 100%, 51%);
 
-  --c-twitter-dark: rgb(17, 54, 97);
-  --c-twitter-light: rgb(52, 148, 255);
-  --c-twitter: rgb(32, 107, 192);
+  --c-mastodon-dark: hsl(240, 50%, 35%);
+  --c-mastodon-light: hsl(240, 100%, 69%);
+  --c-mastodon: hsl(240, 100%, 69%);
+
+  --c-threads-dark: hsl(0, 0%, 10%);
+  --c-threads-light: hsl(0, 0%, 100%);
+  --c-threads: hsl(0, 0%, 0%);
+
+  --c-twitch-dark: hsl(264, 43%, 21%);
+  --c-twitch-light: hsl(264, 71%, 63%);
+  --c-twitch: hsl(264, 71%, 42%);
+
+  --c-twitter-dark: hsl(212, 43%, 22%);
+  --c-twitter-light: hsl(212, 81%, 54%);
+  --c-twitter: hsl(212, 71%, 44%);
+
+  --c-youtube-dark: hsl(0, 70%, 30%);
+  --c-youtube-light: hsl(0, 100%, 50%);
+  --c-youtube: hsl(0, 100%, 50%);
 
   --page-width: 720px;
 }

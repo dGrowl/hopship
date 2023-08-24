@@ -1,4 +1,4 @@
-import { platforms } from './util'
+import { NETWORKS } from './util'
 
 export const sanitizeName = (name: string) => name.toLowerCase()
 
@@ -15,11 +15,13 @@ export const MAX_PASSWORD_LENGTH = 4096
 
 export const MAX_BIO_LENGTH = 64
 
-export const MAX_PLATFORM_LENGTH = platforms.reduce(
+export const MAX_NETWORK_LENGTH = NETWORKS.reduce(
   (len, p) => (p.length > len ? p.length : len),
   0
 )
 
-export const MAX_PLATFORM_NAME_LENGTH = 64
+export const MAX_NETWORK_NAME_LENGTH = 64
+
+export const DESCRIPTION_REGEX = /^[a-zA-Z\d,;:''" \.\+\-\*\/\&%()?!]*$/
 
 export const MAX_DESCRIPTION_LENGTH = 48

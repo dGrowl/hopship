@@ -1,16 +1,30 @@
 import {
+  BsCloudSunFill,
   BsGearFill,
+  BsHurricane,
+  BsMastodon,
   BsQuestionCircle,
   BsTwitch,
   BsTwitter,
   BsXLg,
+  BsYoutube,
 } from 'react-icons/bs'
 import { FormEvent, useState } from 'react'
 import Link from 'next/link'
 
-import { CSRFFormFields } from '../lib/types'
-import { csrfHeaders, platforms } from '../lib/util'
-import { MAX_DESCRIPTION_LENGTH, MAX_PLATFORM_NAME_LENGTH } from '../lib/safety'
+import { CSRFFormFields, Identity } from '../lib/types'
+import {
+  buildProfileURL,
+  csrfHeaders,
+  DECENTRALIZED_NETWORKS,
+  PLATFORM_NETWORKS,
+  PLATFORMS,
+} from '../lib/util'
+import {
+  DESCRIPTION_REGEX,
+  MAX_DESCRIPTION_LENGTH,
+  MAX_NETWORK_NAME_LENGTH,
+} from '../lib/safety'
 import AntiCSRFForm from './AntiCSRFForm'
 
 import styles from '../styles/IdentityBox.module.css'
@@ -23,10 +37,18 @@ interface PlatformBadgeProps {
 const PlatformBadge = ({ editable, platform }: PlatformBadgeProps) => {
   const size = editable ? 36 : 44
   switch (platform) {
+    case 'Bluesky':
+      return <BsCloudSunFill size={size} />
+    case 'Mastodon':
+      return <BsMastodon size={size} />
+    case 'Threads':
+      return <BsHurricane size={size} />
     case 'Twitter':
       return <BsTwitter size={size} />
     case 'Twitch':
       return <BsTwitch size={size} />
+    case 'YouTube':
+      return <BsYoutube size={size} />
   }
   return <BsQuestionCircle size={size} />
 }
@@ -36,6 +58,7 @@ type AddFields = EventTarget &
     desc: HTMLTextAreaElement
     name: HTMLInputElement
     platform: HTMLSelectElement
+    network?: HTMLSelectElement
   }
 
 const add = async (e: FormEvent) => {
@@ -43,9 +66,13 @@ const add = async (e: FormEvent) => {
   const form = e.target as AddFields
   const csrf = form.csrf.value
   const desc = form.desc.value
+  if (!desc.match(DESCRIPTION_REGEX)) {
+    return
+  }
   const name = form.name.value
   const platform = form.platform.value
-  const data = { platform, name, desc }
+  const network = form.network?.value || PLATFORM_NETWORKS[platform][0]
+  const data = { platform, network, name, desc }
   await fetch('/api/identities', {
     method: 'POST',
     headers: csrfHeaders(csrf),
@@ -59,36 +86,45 @@ interface AddProps {
 }
 
 export const AddIdentityBox = ({ close }: AddProps) => {
-  const [platform, setPlatform] = useState(platforms[0])
+  const [platform, setPlatform] = useState(PLATFORMS[0])
+  const networks = PLATFORM_NETWORKS[platform]
   return (
-    <div className={`${styles.container} ${styles[platform + 'Border']}`}>
+    <div className={`${styles.container} ${styles[platform]}`}>
       <AntiCSRFForm onSubmit={add}>
-        <div className={`${styles.platform} ${styles[platform]}`}>
+        <div className={styles.platform}>
           <PlatformBadge editable={true} platform={platform} />
           <select
             id={styles.addSelector}
             name="platform"
             onChange={(e) => setPlatform(e.target.value)}
           >
-            <option>Twitch</option>
-            <option>Twitter</option>
+            {PLATFORMS.map((p) => (
+              <option key={p}>{p}</option>
+            ))}
           </select>
         </div>
         <div className={styles.addFields}>
+          {networks.length > 1 ? (
+            <select name="network">
+              {networks.map((n) => (
+                <option key={n}>{n}</option>
+              ))}
+            </select>
+          ) : null}
           <input
-            maxLength={MAX_PLATFORM_NAME_LENGTH}
+            maxLength={MAX_NETWORK_NAME_LENGTH}
             minLength={1}
             name="name"
             pattern="\w+"
             placeholder={`${platform} name`}
             required
-            title="Platform IDs can only contain letters, numbers, and underscores."
+            title={`${platform} IDs can only contain letters, numbers, and underscores.`}
           />
           <textarea
             className={styles.descRow}
             maxLength={MAX_DESCRIPTION_LENGTH}
             name="desc"
-            placeholder="(optional) A description of what you use this account for."
+            placeholder="(optional) A description of what you use this identity for."
           />
           <button>add</button>
         </div>
@@ -113,31 +149,22 @@ const StatusBadge = ({ settingsURL, status }: StatusBadgeProps) => {
   )
 }
 
-const genExternalUrl = (platform: string, name: string) => {
-  let url = 'https://'
-  switch (platform) {
-    case 'Twitter':
-      return url + `twitter.com/${name}`
-    case 'Twitch':
-      return url + `twitch.tv/${name}`
-    default:
-      throw 'Invalid platform provided'
-  }
-}
-
-interface Props {
-  platform: string
-  name: string
-  desc: string
-  status: string
+interface Props extends Identity {
   editable?: boolean
 }
 
-const IdentityBox = ({ platform, name, desc, status, editable }: Props) => {
-  const settingsURL = `/settings/${platform}/${name}`
+const IdentityBox = ({
+  desc,
+  editable,
+  name,
+  network,
+  platform,
+  status,
+}: Props) => {
+  const settingsURL = `/settings/${network}/${name}`
   return (
-    <div className={`${styles.container} ${styles[platform + 'Border']}`}>
-      <div className={`${styles.platform} ${styles[platform]}`}>
+    <div className={`${styles.container} ${styles[platform]}`}>
+      <div className={styles.platform}>
         <PlatformBadge editable={!!editable} platform={platform} />
         {editable ? (
           <StatusBadge settingsURL={settingsURL} status={status} />
@@ -146,10 +173,13 @@ const IdentityBox = ({ platform, name, desc, status, editable }: Props) => {
       <div className={styles.details}>
         <a
           className={styles.nameRow}
-          href={genExternalUrl(platform, name)}
+          href={buildProfileURL(platform, network, name)}
           rel="noopener noreferrer"
           target="_blank"
         >
+          {DECENTRALIZED_NETWORKS.includes(network) ? (
+            <p style={{ fontSize: '.8rem' }}>{network}</p>
+          ) : null}
           {name}
         </a>
         {desc.length > 0 ? <div className={styles.descRow}>{desc}</div> : null}

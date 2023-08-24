@@ -7,12 +7,12 @@ const verify = async (req: NextApiRequest, res: NextApiResponse) => {
   const payload = await processAuth(req, res)
   if (!payload) return
   const { name: userName } = payload
-  const { platform, name: platformName, timestampMs, proof } = req.body
+  const { network, name: networkName, timestampMs, proof } = req.body
   try {
     await db.query(
       `
         WITH v as (
-          INSERT INTO public.verifications (user_id, platform, name, requested_at, proof)
+          INSERT INTO public.verifications (user_id, network, name, requested_at, proof)
           VALUES (
             (SELECT id FROM public.users WHERE name = $1),
             $2,
@@ -25,14 +25,14 @@ const verify = async (req: NextApiRequest, res: NextApiResponse) => {
         UPDATE public.identities
         SET status = 'PENDING'
         WHERE user_id = (SELECT user_id FROM v)
-          AND platform = $2
+          AND network = $2
           AND name = $3
           AND (
             status = 'UNVERIFIED'
             OR status = 'REJECTED'
           );
       `,
-      [userName, platform, platformName, timestampMs, JSON.stringify(proof)]
+      [userName, network, networkName, timestampMs, JSON.stringify(proof)]
     )
   } catch (error) {
     console.error(error)

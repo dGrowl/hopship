@@ -7,13 +7,14 @@ const create = async (req: NextApiRequest, res: NextApiResponse) => {
   const payload = await processAuth(req, res)
   if (!payload) return
   const { name: userName } = payload
-  const { platform, name: platformName, desc } = req.body
+  const { platform, network, name: networkName, desc } = req.body
   try {
     await db.query(
       `
         INSERT INTO public.identities (
           user_id,
           platform,
+          network,
           name,
           description
         )
@@ -21,10 +22,11 @@ const create = async (req: NextApiRequest, res: NextApiResponse) => {
           (SELECT id FROM public.users WHERE name = $1),
           $2,
           $3,
-          $4
+          $4,
+          $5
         );
       `,
-      [userName, platform, platformName, desc]
+      [userName, platform, network, networkName, desc]
     )
   } catch (error) {
     console.error(error)

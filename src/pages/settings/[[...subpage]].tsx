@@ -1,10 +1,14 @@
 import {
+  BsCloudSunFill,
+  BsHurricane,
   BsKeyFill,
+  BsMastodon,
   BsPersonCheckFill,
   BsPersonVcard,
   BsTrash3Fill,
   BsTwitch,
   BsTwitter,
+  BsYoutube,
 } from 'react-icons/bs'
 import { createHash } from 'crypto'
 import { GetServerSidePropsContext } from 'next'
@@ -19,7 +23,7 @@ import {
   LinkDatum,
   VerificationDetails,
 } from '../../lib/types'
-import { hasKey, platforms } from '../../lib/util'
+import { NETWORKS, hasKey } from '../../lib/util'
 import { validateUserData } from '../../lib/helpers'
 import db from '../../lib/db'
 import DropNav from '../../components/DropNav'
@@ -35,11 +39,15 @@ import styles from '../../styles/Settings.module.css'
 const isIdentitySubpage = (subpage: string) => subpage.includes('/')
 
 const PLATFORM_ICONS: { [key: string]: ReactElement } = {
+  Bluesky: <BsCloudSunFill size={24} className={styles.Bluesky} />,
+  Mastodon: <BsMastodon size={24} className={styles.Mastodon} />,
+  Threads: <BsHurricane size={24} className={styles.Threads} />,
   Twitch: <BsTwitch size={24} className={styles.Twitch} />,
   Twitter: <BsTwitter size={24} className={styles.Twitter} />,
+  YouTube: <BsYoutube size={24} className={styles.YouTube} />,
 }
 
-const linkData: { [key: string]: LinkDatum } = {
+const LINK_DATA: { [key: string]: LinkDatum } = {
   identities: {
     icon: <BsPersonVcard size={24} />,
     text: 'identities',
@@ -72,14 +80,14 @@ const paramsToSubpage = (params: ParsedUrlQuery | undefined) => {
     return null
   }
   if (Array.isArray(subpage)) {
-    if (subpage.length === 1 && hasKey(linkData, subpage[0])) {
+    if (subpage.length === 1 && hasKey(LINK_DATA, subpage[0])) {
       return subpage[0]
-    } else if (subpage.length === 2 && platforms.includes(subpage[0])) {
+    } else if (subpage.length === 2 && NETWORKS.includes(subpage[0])) {
       return `${subpage[0]}/${subpage[1]}`
     }
     return null
   }
-  return hasKey(linkData, subpage) ? subpage : null
+  return hasKey(LINK_DATA, subpage) ? subpage : null
 }
 
 const getBio = async (name: string) => {
@@ -107,6 +115,7 @@ const getUserIdentities = async (userName: string) => {
       `
         SELECT
           i.platform,
+          i.network,
           i.name,
           i.description AS desc,
           i.status
@@ -126,8 +135,8 @@ const getUserIdentities = async (userName: string) => {
 
 const getIdentityData = async (
   userName: string,
-  platform: string,
-  platformName: string
+  network: string,
+  networkName: string
 ) => {
   try {
     const result = await db.query(
@@ -135,15 +144,17 @@ const getIdentityData = async (
         SELECT
           u.id,
           i.description AS desc,
+          i.platform,
+          i.network,
           i.status
         FROM public.identities i
           INNER JOIN public.users u
             ON u.id = i.user_id
         WHERE u.name = $1
-          AND i.platform = $2
+          AND i.network = $2
           AND i.name = $3;
       `,
-      [userName, platform, platformName]
+      [userName, network, networkName]
     )
     if (result.rowCount === 1) {
       return result.rows[0]
@@ -189,6 +200,7 @@ const fetchSettingsData = async (subpage: string, auth: AuthPayload) => {
     identity: {
       desc: '',
       name: '',
+      network: '',
       platform: '',
       status: '',
     },
@@ -207,16 +219,17 @@ const fetchSettingsData = async (subpage: string, auth: AuthPayload) => {
     }
     user.identities = identities
   } else if (isIdentitySubpage(subpage)) {
-    const [platform, platformName] = subpage.split('/')
-    const identity = await getIdentityData(user.name, platform, platformName)
+    const [network, networkName] = subpage.split('/')
+    const identity = await getIdentityData(user.name, network, networkName)
     if (identity === null) {
       return null
     }
     user.identity = {
       desc: identity.desc,
+      name: networkName,
+      network,
+      platform: identity.platform,
       status: identity.status,
-      platform,
-      name: platformName,
     }
     if (identity.status === 'UNVERIFIED') {
       user.verification = genVerificationDetails(identity.id, user.identity)
@@ -300,19 +313,19 @@ const Content = ({ subpage, data }: Props) => {
   return isIdentitySubpage(subpage) ? <IdentitySettings {...data} /> : <></>
 }
 
-const buildIdentityLinkDatum = (subpage: string) => {
-  const [platform, _] = subpage.split('/')
+const buildIdentityLinkDatum = (subpage: string, identity: Identity) => {
   return {
-    icon: PLATFORM_ICONS[platform],
-    text: subpage,
-    title: `Modify ${subpage.replace('/', '/')}`,
+    icon: PLATFORM_ICONS[identity.platform],
+    text: identity.name,
+    title: `Modify ${subpage}`,
     url: `/settings/${subpage}`,
   }
 }
 
 const Settings = ({ subpage, data }: Props) => {
-  let relevantLinkData = Object.values(linkData)
-  const linkDatum = linkData[subpage] || buildIdentityLinkDatum(subpage)
+  let relevantLinkData = Object.values(LINK_DATA)
+  const linkDatum =
+    LINK_DATA[subpage] || buildIdentityLinkDatum(subpage, data.identity)
   if (isIdentitySubpage(subpage)) {
     relevantLinkData.splice(1, 0, linkDatum)
   }

@@ -1,7 +1,8 @@
-import { FormEvent } from 'react'
+import { BsArrowReturnRight } from 'react-icons/bs'
+import { FormEvent, ReactNode, useState } from 'react'
 
 import { CSRFFormFields, Identity, VerificationDetails } from '../lib/types'
-import { csrfHeaders } from '../lib/util'
+import { buildMessageURL, csrfHeaders } from '../lib/util'
 import AntiCSRFForm from './AntiCSRFForm'
 
 import styles from '../styles/VerifyIdentityForm.module.css'
@@ -29,15 +30,15 @@ const buildProof = (platform: string, fields: Fields) => {
 
 const verify = async (
   e: FormEvent,
-  platform: string,
-  name: string,
+  identity: Identity,
   timestampMs: string
 ) => {
   e.preventDefault()
   const fields = e.target as Fields
   const csrf = fields.csrf.value
+  const { platform, network, name } = identity
   const data = {
-    platform,
+    network,
     name,
     timestampMs,
     proof: buildProof(platform, fields),
@@ -50,38 +51,90 @@ const verify = async (
   window.location.reload()
 }
 
-interface PlatformProps {
+const Preview = ({ children }: { children: ReactNode }) => (
+  <div className={styles.preview}>
+    <BsArrowReturnRight strokeWidth={1} />
+    <span>{children}</span>
+  </div>
+)
+
+interface PlatformDetails {
+  placeholder: string
+  pattern: string
+  title: string
+}
+
+const platformDetails: { [platform: string]: PlatformDetails } = {
+  Bluesky: {
+    placeholder: 'abc123',
+    pattern: '[a-z\\d]+',
+    title:
+      'Bluesky message IDs can only contain digits and lower-case letters.',
+  },
+  Mastodon: {
+    placeholder: '123',
+    pattern: '\\d+',
+    title: 'Mastodon message IDs can only contain digits.',
+  },
+  Threads: {
+    placeholder: 'abcDEF123',
+    pattern: '[a-zA-Z\\d]+',
+    title: 'Threads message IDs can only contain digits and letters.',
+  },
+  Twitter: {
+    placeholder: '123',
+    pattern: '\\d+',
+    title: 'Twitter message IDs can only contain digits.',
+  },
+}
+
+interface InstructionsProps {
+  platform: string
+  network: string
   name: string
   url: string
 }
 
-const TwitterInstructions = ({ name, url }: PlatformProps) => {
+const MessageInstructions = ({
+  platform,
+  network,
+  name,
+  url,
+}: InstructionsProps) => {
+  const [messageID, setMessageID] = useState('')
+  const details = platformDetails[platform]
   return (
     <>
       <li>
-        Post a tweet that contains this URL (which redirects to your user page).
+        Post a message that contains this URL (which redirects to your user
+        page).
         <p>
           <input name="url" value={url} readOnly />
         </p>
       </li>
       <li>
-        Copy and paste the ID of that tweet into this field.
-        <p className={styles.TwitterMessageRow}>
-          twitter.com/{name}/status/
-          <input
-            name="messageID"
-            pattern="\d+"
-            placeholder="123456789"
-            required
-            title="Tweet IDs can only contain digits."
-          />
-        </p>
+        Copy and paste the ID of that message into this field.
+        <input
+          name="messageID"
+          onChange={(e) => setMessageID(e.target.value)}
+          required
+          value={messageID}
+          {...details}
+        />
+        <Preview>
+          {buildMessageURL(
+            platform,
+            network,
+            name,
+            messageID || details.placeholder
+          )}
+        </Preview>
       </li>
     </>
   )
 }
 
-const TwitchInstructions = ({ name, url }: PlatformProps) => {
+const BioInstructions = ({ url }: InstructionsProps) => {
   return (
     <>
       <li>
@@ -95,16 +148,16 @@ const TwitchInstructions = ({ name, url }: PlatformProps) => {
   )
 }
 
-interface InstructionsProps extends PlatformProps {
-  platform: string
-}
+const supportsMessages = ['Bluesky', 'Mastodon', 'Threads', 'Twitter']
 
-const Instructions = ({ platform, name, url }: InstructionsProps) => {
-  switch (platform) {
-    case 'Twitch':
-      return <TwitchInstructions name={name} url={url} />
-    case 'Twitter':
-      return <TwitterInstructions name={name} url={url} />
+const supportsBios = ['Twitch', 'YouTube']
+
+const Instructions = (props: InstructionsProps) => {
+  if (supportsMessages.includes(props.platform)) {
+    return <MessageInstructions {...props} />
+  }
+  if (supportsBios.includes(props.platform)) {
+    return <BioInstructions {...props} />
   }
   return (
     <li>
@@ -138,12 +191,12 @@ const VerifyIdentityForm = ({ identity, verification }: Props) => {
       {status === 'PENDING' ? (
         <VerificationPending />
       ) : (
-        <AntiCSRFForm onSubmit={(e) => verify(e, platform, name, timestampMs)}>
+        <AntiCSRFForm onSubmit={(e) => verify(e, identity, timestampMs)}>
           To verify that this {platform} account belongs to you:
-          <ol>
-            <Instructions platform={platform} name={name} url={url} />
+          <ol className={styles.instructions}>
+            <Instructions {...identity} url={url} />
             <li>
-              Hit the <b>verify</b> button below.
+              Hit the <b>request</b> button below.
             </li>
           </ol>
           <div>Example:</div>
@@ -155,7 +208,7 @@ const VerifyIdentityForm = ({ identity, verification }: Props) => {
             </a>
             !
           </div>
-          <button>submit</button>
+          <button>request</button>
         </AntiCSRFForm>
       )}
     </section>

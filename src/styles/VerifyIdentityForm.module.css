@@ -4,9 +4,19 @@
   border-radius: 4px;
 }
 
-.TwitterExample {
-  background-color: var(--c-twitter-dark);
-  border-color: var(--c-twitter-light);
+.BlueskyExample {
+  background-color: var(--c-bluesky-dark);
+  border-color: var(--c-bluesky-light);
+}
+
+.MastodonExample {
+  background-color: var(--c-mastodon-dark);
+  border-color: var(--c-mastodon-light);
+}
+
+.ThreadsExample {
+  background-color: var(--c-threads-dark);
+  border-color: var(--c-threads-light);
 }
 
 .TwitchExample {
@@ -14,8 +24,39 @@
   border-color: var(--c-twitch-light);
 }
 
-.TwitterMessageRow {
+.TwitterExample {
+  background-color: var(--c-twitter-dark);
+  border-color: var(--c-twitter-light);
+}
+
+.YouTubeExample {
+  background-color: var(--c-youtube-dark);
+  border-color: var(--c-youtube-light);
+}
+
+.messageRow {
   align-items: center;
   display: flex;
-  flex-direction: row;
+  row-gap: 16px;
+}
+
+.instructions {
+  row-gap: 12px;
+}
+
+.instructions input {
+  margin-top: 6px;
+}
+
+.preview {
+  column-gap: 4px;
+  display: flex;
+  margin-top: 4px;
+  max-width: 400px;
+  align-items: center;
+}
+
+.preview span {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

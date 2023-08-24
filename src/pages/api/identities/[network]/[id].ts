@@ -9,7 +9,7 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!payload) return
   const { name: userName } = payload
   const { body, query } = req
-  const { platform, id: platformName } = query
+  const { network, id: networkName } = query
   if (hasKey(body, 'desc')) {
     const { desc } = body
     try {
@@ -18,10 +18,10 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
           UPDATE public.identities
           SET description = $4
           WHERE user_id = (SELECT id FROM public.users WHERE name = $1)
-            AND platform = $2
+            AND network = $2
             AND name = $3;
         `,
-        [userName, platform, platformName, desc]
+        [userName, network, networkName, desc]
       )
     } catch (error) {
       console.error(error)
@@ -36,16 +36,16 @@ const remove = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!payload) return
   const { name: userName } = payload
   const { query } = req
-  const { platform, id: platformName } = query
+  const { network, id: networkName } = query
   try {
     await db.query(
       `
         DELETE FROM public.identities
         WHERE user_id = (SELECT id FROM public.users WHERE name = $1)
-          AND platform = $2
+          AND network = $2
           AND name = $3;
       `,
-      [userName, platform, platformName]
+      [userName, network, networkName]
     )
   } catch (error) {
     console.error(error)

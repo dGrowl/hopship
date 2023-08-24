@@ -5,8 +5,12 @@ import { hasKey } from '../lib/util'
 const TWO_PI = 2 * Math.PI
 
 const PLATFORM_COLORS: { [platform: string]: string } = {
-  Twitter: '#3494ff',
+  Bluesky: '#0560ff',
+  Mastodon: '#6363ff',
+  Threads: '#ffffff',
   Twitch: '#822fff',
+  Twitter: '#3494ff',
+  YouTube: '#ff0000',
 }
 
 class Particle {
@@ -63,7 +67,7 @@ class Particle {
 }
 
 class Animation {
-  static readonly N_PARTICLES = 64
+  static readonly N_PARTICLES = 32
   static readonly FRAME_RATE_LIMIT = 40
   static readonly FRAME_TIME_MS = 1000 / Animation.FRAME_RATE_LIMIT
 

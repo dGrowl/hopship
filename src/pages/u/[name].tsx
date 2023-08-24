@@ -3,13 +3,9 @@ import { GetServerSidePropsContext } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 import Head from 'next/head'
 
-import { arrayToFirstString, platforms } from '../../lib/util'
+import { arrayToFirstString } from '../../lib/util'
 import { Identity } from '../../lib/types'
-import {
-  MAX_PLATFORM_LENGTH,
-  MAX_PLATFORM_NAME_LENGTH,
-  MAX_USER_NAME_LENGTH,
-} from '../../lib/safety'
+import { MAX_USER_NAME_LENGTH } from '../../lib/safety'
 import db from '../../lib/db'
 import IdentityBox from '../../components/IdentityBox'
 
@@ -66,30 +62,15 @@ const getVerifiedIdentities = async (userName: string) => {
 
 const processQuery = (query: ParsedUrlQuery) => {
   let userName = arrayToFirstString(query.name || null)
-  if (userName) {
-    userName = userName.slice(0, MAX_USER_NAME_LENGTH)
+  if (userName && userName.length > MAX_USER_NAME_LENGTH) {
+    userName = null
   }
-
-  let platform = arrayToFirstString(query.platform || null)
-  if (platform) {
-    platform = platform.slice(0, MAX_PLATFORM_LENGTH)
-    if (!platforms.includes(platform)) {
-      platform = null
-    }
-  }
-
-  let platformName = arrayToFirstString(query.id || null)
-  if (platformName) {
-    platformName = platformName.slice(0, MAX_PLATFORM_NAME_LENGTH)
-    platformName = platformName.replace(/[^\w]/g, '')
-  }
-
-  return { userName, platform, platformName }
+  return { userName }
 }
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const { query } = ctx
-  const { userName, platform, platformName } = processQuery(query)
+  const { userName } = processQuery(query)
   if (!userName) {
     return {
       redirect: {
@@ -103,7 +84,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     getVerifiedIdentities(userName),
   ])
   return {
-    props: { userName, bio, platform, platformName, identities },
+    props: { userName, bio, identities },
   }
 }
 
@@ -126,16 +107,12 @@ const NoIdentities = ({ userName }: NoIdentitiesProps) => {
 interface Props {
   userName: string
   bio: string
-  platform: string | null
-  platformName: string | null
   identities: Identity[]
 }
 
 const UserPage = ({
   userName,
   bio,
-  platform,
-  platformName,
   identities,
 }: Props) => {
   return (

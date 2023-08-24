@@ -22,6 +22,8 @@
 }
 
 #container select {
+  max-width: 148px;
+  text-overflow: ellipsis;
   width: auto;
 }
 

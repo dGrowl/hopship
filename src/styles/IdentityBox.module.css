@@ -15,23 +15,130 @@
   font-weight: bold;
   justify-content: center;
   row-gap: 6px;
-  width: 90px;
+  width: 100px;
+}
+
+.container input,
+.container textarea,
+.container select,
+.container button {
+  background-color: transparent;
+}
+
+.container *::placeholder {
+  color: rgba(240, 240, 240, 0.4);
+}
+
+button.addControl:focus {
+  border: 2px solid var(--c-inverse);
+}
+
+.Bluesky {
+  border-color: var(--c-bluesky);
+  background-color: var(--c-bluesky-dark);
+}
+
+.Bluesky input,
+.Bluesky textarea,
+.Bluesky select,
+.Bluesky button {
+  border-color: var(--c-bluesky);
+}
+
+.Bluesky button:active,
+.Bluesky svg:hover,
+.Bluesky .platform {
+  background-color: var(--c-bluesky);
+}
+
+.Mastodon {
+  border-color: var(--c-mastodon);
+  background-color: var(--c-mastodon-dark);
+}
+
+.Mastodon input,
+.Mastodon textarea,
+.Mastodon select,
+.Mastodon button {
+  border-color: var(--c-mastodon);
+}
+
+.Mastodon button:active,
+.Mastodon svg:hover,
+.Mastodon .platform {
+  background-color: var(--c-mastodon);
+}
+
+.Threads {
+  border-color: var(--c-threads);
+  background-color: var(--c-threads-dark);
+}
+
+.Threads input,
+.Threads textarea,
+.Threads select,
+.Threads button {
+  border-color: var(--c-threads);
+}
+
+.Threads button:active,
+.Threads svg:hover,
+.Threads .platform {
+  background-color: var(--c-threads);
 }
 
 .Twitter {
+  border-color: var(--c-twitter);
+  background-color: var(--c-twitter-dark);
+}
+
+.Twitter input,
+.Twitter textarea,
+.Twitter select,
+.Twitter button {
+  border-color: var(--c-twitter);
+}
+
+.Twitter button:active,
+.Twitter svg:hover,
+.Twitter .platform {
   background-color: var(--c-twitter);
 }
 
 .Twitch {
+  border-color: var(--c-twitch);
+  background-color: var(--c-twitch-dark);
+}
+
+.Twitch input,
+.Twitch textarea,
+.Twitch select,
+.Twitch button {
+  border-color: var(--c-twitch);
+}
+
+.Twitch button:active,
+.Twitch svg:hover,
+.Twitch .platform {
   background-color: var(--c-twitch);
 }
 
-.TwitterBorder {
-  border-color: var(--c-twitter);
+.YouTube {
+  border-color: var(--c-youtube);
+  background-color: var(--c-youtube-dark);
 }
 
-.TwitchBorder {
-  border-color: var(--c-twitch);
+.YouTube input,
+.YouTube textarea,
+.YouTube select,
+.YouTube button {
+  border-color: var(--c-youtube);
+}
+
+.YouTube button:active,
+.YouTube svg:hover,
+.YouTube .platform {
+  background-color: var(--c-youtube);
 }
 
 .details {
@@ -99,12 +206,13 @@
   padding: 4px;
 }
 
-.buttonColumn svg:hover {
-  background-color: var(--c-4);
-}
-
 #addSelector {
   background-color: transparent;
-  font-size: inherit;
-  font-weight: bold;
+  border-radius: 4px;
+  border: 1px solid var(--c-inverse);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 6px 4px 4px 4px;
+  padding: 1px;
+  width: auto;
 }

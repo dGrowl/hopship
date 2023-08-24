@@ -4,6 +4,7 @@ import { ReactElement } from 'react'
 export interface Identity {
   desc: string
   name: string
+  network: string
   platform: string
   status: string
 }

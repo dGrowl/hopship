@@ -1,49 +1,54 @@
+import { BsEmojiFrownFill } from 'react-icons/bs'
 import { GetServerSidePropsContext } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 import Head from 'next/head'
 
-import { arrayToFirstString, platforms } from '../lib/util'
-import { MAX_PLATFORM_NAME_LENGTH, MAX_PLATFORM_LENGTH } from '../lib/safety'
+import {
+  arrayToFirstString,
+  getSpecificNetworkName,
+  NETWORKS,
+} from '../lib/util'
+import { MAX_NETWORK_NAME_LENGTH, MAX_NETWORK_LENGTH } from '../lib/safety'
 import db from '../lib/db'
 
 import styles from '../styles/Results.module.css'
 
 const processQuery = (query: ParsedUrlQuery) => {
-  let platform = arrayToFirstString(query.platform || null)
+  let network = arrayToFirstString(query.network || null)
   let name = arrayToFirstString(query.id || null)
-  if (platform) {
-    platform = platform.slice(0, MAX_PLATFORM_LENGTH)
-    if (!platforms.includes(platform)) {
-      platform = null
+  if (network) {
+    network = network.slice(0, MAX_NETWORK_LENGTH)
+    if (!NETWORKS.includes(network)) {
+      network = null
     }
   }
   if (name) {
-    name = name.slice(0, MAX_PLATFORM_NAME_LENGTH)
+    name = name.slice(0, MAX_NETWORK_NAME_LENGTH)
     name = name.replace(/[^\w]/g, '')
   }
-  return { platform, name }
+  return { network, name }
 }
 
-const errorMessage = (platform: string | null, name: string | null) => {
-  if (!platform) {
+const errorMessage = (network: string | null, name: string | null) => {
+  if (!network) {
     if (!name) {
-      return `The platform you gave isn't supported by our system and the name you gave isn't valid. Try again!`
+      return `Neither the network nor the ID you searched for are valid search inputs. Try again!`
     }
-    return `The platform you gave isn't supported by our system. Try again!`
+    return `The network you tried to search isn't supported by our system. Try again!`
   } else if (!name) {
-    return `The name you gave isn't valid. Try again!`
+    return `The ID you tried to search for isn't valid. Try again!`
   }
   return (
     <>
-      We don&apos;t know <b>{name}</b> from <b>{platform}</b>. If you do, ask
-      them to sign up!
+      We don&apos;t know <b>{name}</b> from{' '}
+      <b>{getSpecificNetworkName(network)}</b>. If you do, ask them to sign up!
     </>
   )
 }
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const { platform, name } = processQuery(ctx.query)
-  if (platform && name) {
+  const { network, name } = processQuery(ctx.query)
+  if (network && name) {
     const result = await db.query(
       `
         SELECT u.name AS user_name
@@ -51,17 +56,17 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
           INNER JOIN public.identities i
             ON u.id = i.user_id
         WHERE i.status = 'VERIFIED'
-          AND i.platform = $1
+          AND i.network = $1
           AND i.name = $2;
       `,
-      [platform, name]
+      [network, name]
     )
     if (result.rowCount === 1) {
       const userName = result.rows[0]['user_name']
       if (userName) {
         return {
           redirect: {
-            destination: `/u/${userName}?platform=${platform}&id=${name}`,
+            destination: `/u/${userName}`,
             permanent: false,
           },
         }
@@ -69,26 +74,30 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     }
   }
   return {
-    props: { platform, name },
+    props: { network, name },
   }
 }
 
 interface Props {
-  platform: string | null
+  network: string | null
   name: string | null
 }
 
-const Results = ({ platform, name }: Props) => {
+const Results = ({ network, name }: Props) => {
   return (
     <>
       <Head>
         <title>
-          {`also: ${platform && name ? `${platform}/${name}` : 'Results'}`}
+          {`also: ${
+            network && name
+              ? `${getSpecificNetworkName(network)}/${name}`
+              : 'Results'
+          }`}
         </title>
       </Head>
       <section id={styles.content}>
-        <h2>:(</h2>
-        <p>{errorMessage(platform, name)}</p>
+        <BsEmojiFrownFill size={48} />
+        <p>{errorMessage(network, name)}</p>
       </section>
     </>
   )

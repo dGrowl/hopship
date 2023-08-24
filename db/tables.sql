@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS public.verifications;
 DROP TABLE IF EXISTS public.identities;
+DROP TABLE IF EXISTS public.networks;
 DROP TABLE IF EXISTS public.platforms;
 DROP TABLE IF EXISTS public.users;
 
@@ -15,9 +16,9 @@ CREATE EXTENSION citext;
 CREATE TYPE VERIFICATION_STATUS AS ENUM ('UNVERIFIED', 'PENDING', 'REJECTED', 'VERIFIED');
 
 CREATE DOMAIN IDENTITY_NAME_TEXT AS CITEXT
-	CONSTRAINT platform_name_proper_chars CHECK (VALUE ~ '^\w+$')
-	CONSTRAINT platform_name_min_length CHECK (char_length(VALUE) >= 1)
-	CONSTRAINT platform_name_max_length CHECK (char_length(VALUE) <= 24);
+	CONSTRAINT network_name_proper_chars CHECK (VALUE ~ '^\w+$')
+	CONSTRAINT network_name_min_length CHECK (char_length(VALUE) >= 1)
+	CONSTRAINT network_name_max_length CHECK (char_length(VALUE) <= 64);
 
 CREATE DOMAIN IDENTITY_DESCRIPTION_TEXT AS TEXT
 	CONSTRAINT description_proper_chars CHECK (
@@ -55,8 +56,15 @@ CREATE TABLE public.users (
 
 CREATE TABLE public.platforms (
 	name TEXT
+		PRIMARY KEY
+);
+
+CREATE TABLE public.networks (
+	name TEXT
 		PRIMARY KEY,
-	CONSTRAINT platform_proper_chars CHECK (name ~ '^[a-zA-Z]+$')
+	platform TEXT
+		REFERENCES public.platforms (name)
+		ON DELETE CASCADE
 );
 
 CREATE TABLE public.identities (
@@ -66,17 +74,20 @@ CREATE TABLE public.identities (
 	platform TEXT
 		REFERENCES public.platforms (name)
 		ON DELETE CASCADE,
+	network TEXT
+		REFERENCES public.networks (name)
+		ON DELETE CASCADE,
 	name IDENTITY_NAME_TEXT,
 	description IDENTITY_DESCRIPTION_TEXT
 		NOT NULL,
 	status VERIFICATION_STATUS
 		DEFAULT 'UNVERIFIED',
-	PRIMARY KEY (user_id, platform, name)
+	PRIMARY KEY (user_id, network, name)
 );
 
 CREATE TABLE public.verifications (
 	user_id INTEGER,
-	platform TEXT,
+	network TEXT,
 	name IDENTITY_NAME_TEXT,
 	requested_at TIMESTAMP,
 	proof JSONB
@@ -85,8 +96,8 @@ CREATE TABLE public.verifications (
 		DEFAULT NULL,
 	response TEXT
 		DEFAULT NULL,
-	PRIMARY KEY (user_id, platform, name, requested_at),
-	FOREIGN KEY (user_id, platform, name)
-		REFERENCES public.identities (user_id, platform, name)
+	PRIMARY KEY (user_id, network, name, requested_at),
+	FOREIGN KEY (user_id, network, name)
+		REFERENCES public.identities (user_id, network, name)
 		ON DELETE CASCADE
 );

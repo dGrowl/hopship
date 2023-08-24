@@ -14,12 +14,28 @@
   row-gap: 24px;
 }
 
+.Bluesky {
+  color: var(--c-bluesky-light) !important;
+}
+
+.Mastodon {
+  color: var(--c-mastodon-light) !important;
+}
+
+.Threads {
+  color: var(--c-threads-light) !important;
+}
+
 .Twitter {
   color: var(--c-twitter-light) !important;
 }
 
 .Twitch {
   color: var(--c-twitch-light) !important;
+}
+
+.YouTube {
+  color: var(--c-youtube-light) !important;
 }
 
 @media screen and (max-width: 720px) {
