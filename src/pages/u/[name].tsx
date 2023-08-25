@@ -1,4 +1,9 @@
-import { BsBookHalf, BsPersonHeart, BsPersonVcard } from 'react-icons/bs'
+import {
+  BsBookHalf,
+  BsEmojiFrownFill,
+  BsPersonHeart,
+  BsPersonVcard,
+} from 'react-icons/bs'
 import { GetServerSidePropsContext } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 import Head from 'next/head'
@@ -41,6 +46,7 @@ const getVerifiedIdentities = async (userName: string) => {
       `
         SELECT
           i.platform,
+          i.network,
           i.name,
           i.description AS desc,
           i.status
@@ -89,7 +95,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 }
 
 const buildRows = (identities: Identity[]) =>
-  identities.map((i) => <IdentityBox key={i.platform + i.name} {...i} />)
+  identities.map((i) => <IdentityBox key={i.network + i.name} {...i} />)
 
 interface NoIdentitiesProps {
   userName: string
@@ -98,7 +104,10 @@ interface NoIdentitiesProps {
 const NoIdentities = ({ userName }: NoIdentitiesProps) => {
   return (
     <>
-      <p>{userName} hasn&apos;t verified any identities yet. :(</p>
+      <p>
+        {userName} hasn&apos;t verified any identities yet.{' '}
+        <BsEmojiFrownFill size={18} />
+      </p>
       <p>If you know them, tell them that they should!</p>
     </>
   )
@@ -110,24 +119,19 @@ interface Props {
   identities: Identity[]
 }
 
-const UserPage = ({
-  userName,
-  bio,
-  identities,
-}: Props) => {
+const UserPage = ({ userName, bio, identities }: Props) => {
   return (
     <>
       <Head>
         <title>{`also: ${userName}`}</title>
       </Head>
+      <header id={styles.nameContainer}>
+        <h2 id={styles.name}>
+          <BsPersonHeart />
+          {userName}
+        </h2>
+      </header>
       <dl id={styles.container}>
-        <dt className={styles.label}>
-          <BsPersonHeart size={24} />
-          name
-        </dt>
-        <dd>
-          <h2>{userName}</h2>
-        </dd>
         {bio ? (
           <>
             <dt className={styles.label}>

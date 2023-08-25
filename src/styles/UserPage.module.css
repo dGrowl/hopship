@@ -4,11 +4,33 @@
   gap: 16px;
   grid-template-columns: 160px 1fr;
   max-width: var(--page-width);
+  padding-left: 4px;
   width: 100%;
 }
 
 #container p {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+}
+
+#nameContainer {
+  align-items: flex-end;
+  background-color: var(--c-inverse);
+  color: var(--c-1);
+  border-radius: 12px;
+  display: flex;
+  height: 128px;
+  margin: 0px 16px 16px 16px;
+  max-width: var(--page-width);
+  width: 100%;
+}
+
+#name {
+  align-items: center;
+  column-gap: 10px;
+  display: flex;
+  font-size: 2rem;
+  font-weight: 700;
+  padding: 12px 16px;
 }
 
 #bio {
