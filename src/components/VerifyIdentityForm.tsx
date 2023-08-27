@@ -1,9 +1,9 @@
-import { BsArrowReturnRight } from 'react-icons/bs'
-import { FormEvent, ReactNode, useState } from 'react'
+import { FormEvent, useState } from 'react'
 
-import { CSRFFormFields, Identity, VerificationDetails } from '../lib/types'
 import { buildMessageURL, csrfHeaders } from '../lib/util'
+import { CSRFFormFields, Identity, VerificationDetails } from '../lib/types'
 import AntiCSRFForm from './AntiCSRFForm'
+import Preview from './Preview'
 
 import styles from '../styles/VerifyIdentityForm.module.css'
 
@@ -50,13 +50,6 @@ const verify = async (
   })
   window.location.reload()
 }
-
-const Preview = ({ children }: { children: ReactNode }) => (
-  <div className={styles.preview}>
-    <BsArrowReturnRight strokeWidth={1} />
-    <span>{children}</span>
-  </div>
-)
 
 interface PlatformDetails {
   placeholder: string

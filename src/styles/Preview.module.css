@@ -1,0 +1,16 @@
+.preview {
+  align-items: center;
+  column-gap: 4px;
+  display: inline-grid;
+  font-size: 1.05rem;
+  grid-template-columns: auto 1fr;
+  margin-top: 2px;
+  overflow: hidden;
+}
+
+.preview span {
+  overflow: hidden;
+  padding: 4px 0px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -8,7 +8,7 @@ import {
   getSpecificNetworkName,
   NETWORKS,
 } from '../lib/util'
-import { MAX_NETWORK_NAME_LENGTH, MAX_NETWORK_LENGTH } from '../lib/safety'
+import { NETWORK_NAME_MAX_LENGTH, NETWORK_MAX_LENGTH } from '../lib/safety'
 import db from '../lib/db'
 
 import styles from '../styles/Results.module.css'
@@ -17,13 +17,13 @@ const processQuery = (query: ParsedUrlQuery) => {
   let network = arrayToFirstString(query.network || null)
   let name = arrayToFirstString(query.id || null)
   if (network) {
-    network = network.slice(0, MAX_NETWORK_LENGTH)
+    network = network.slice(0, NETWORK_MAX_LENGTH)
     if (!NETWORKS.includes(network)) {
       network = null
     }
   }
   if (name) {
-    name = name.slice(0, MAX_NETWORK_NAME_LENGTH)
+    name = name.slice(0, NETWORK_NAME_MAX_LENGTH)
     name = name.replace(/[^\w]/g, '')
   }
   return { network, name }

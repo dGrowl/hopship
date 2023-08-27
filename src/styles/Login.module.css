@@ -23,14 +23,6 @@
   color: var(--c-2);
 }
 
-#namePreview {
-  align-items: center;
-  column-gap: 4px;
-  display: flex;
-  font-size: 1.05rem;
-  margin-top: 4px;
-}
-
 .errorInput {
   border: 2px solid rgb(161 55 48);
 }

@@ -2,7 +2,7 @@ import { FormEvent } from 'react'
 
 import { CSRFFormFields } from '../lib/types'
 import { csrfHeaders } from '../lib/util'
-import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from '../lib/safety'
+import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '../lib/safety'
 import AntiCSRFForm from './AntiCSRFForm'
 import Field from './Field'
 
@@ -42,8 +42,8 @@ const UpdatePasswordForm = ({ name }: Props) => {
         <Field name="current">
           <input
             id="current"
-            maxLength={MAX_PASSWORD_LENGTH}
-            minLength={MIN_PASSWORD_LENGTH}
+            maxLength={PASSWORD_MAX_LENGTH}
+            minLength={PASSWORD_MIN_LENGTH}
             name="current"
             required
             type="password"
@@ -52,8 +52,8 @@ const UpdatePasswordForm = ({ name }: Props) => {
         <Field name="future" label="new">
           <input
             id="future"
-            maxLength={MAX_PASSWORD_LENGTH}
-            minLength={MIN_PASSWORD_LENGTH}
+            maxLength={PASSWORD_MAX_LENGTH}
+            minLength={PASSWORD_MIN_LENGTH}
             name="future"
             required
             type="password"
@@ -62,8 +62,8 @@ const UpdatePasswordForm = ({ name }: Props) => {
         <Field name="reFuture" label="new (again)">
           <input
             id="reFuture"
-            maxLength={MAX_PASSWORD_LENGTH}
-            minLength={MIN_PASSWORD_LENGTH}
+            maxLength={PASSWORD_MAX_LENGTH}
+            minLength={PASSWORD_MIN_LENGTH}
             name="reFuture"
             required
             type="password"

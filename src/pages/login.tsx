@@ -1,4 +1,4 @@
-import { BsArrowReturnRight, BsExclamationCircle } from 'react-icons/bs'
+import { BsExclamationCircle } from 'react-icons/bs'
 import { Dispatch, FormEvent, ReactNode, useState } from 'react'
 import { GetServerSidePropsContext } from 'next'
 import { NextRouter, useRouter } from 'next/router'
@@ -6,17 +6,23 @@ import Head from 'next/head'
 import jwt from 'jsonwebtoken'
 
 import { csrfHeaders } from '../lib/util'
-import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from '../lib/safety'
+import {
+  EMAIL_MAX_LENGTH,
+  EMAIL_MIN_LENGTH,
+  EMAIL_REGEX,
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+  USER_NAME_MAX_LENGTH,
+  USER_NAME_MIN_LENGTH,
+  USER_NAME_REGEX,
+} from '../lib/safety'
 import AntiCSRFForm from '../components/AntiCSRFForm'
 import Field from '../components/Field'
 
 import styles from '../styles/Login.module.css'
+import Preview from '../components/Preview'
 
-const ErrorDescription = ({
-  children,
-}: {
-  children: ReactNode | ReactNode[]
-}) => (
+const ErrorDescription = ({ children }: { children: ReactNode }) => (
   <div className={styles.errorDescription}>
     <BsExclamationCircle size={24} strokeWidth={0.75} />
     {children}
@@ -76,11 +82,14 @@ const LoginForm = () => {
           autoComplete="email"
           className={hasEmailError ? styles.errorInput : ''}
           id="email"
+          maxLength={EMAIL_MAX_LENGTH}
+          minLength={EMAIL_MIN_LENGTH}
           name="email"
           onChange={(e) => {
             setEmail(e.target.value)
             setBadPassword('')
           }}
+          pattern={EMAIL_REGEX}
           placeholder="user@e.mail"
           required
           type="email"
@@ -97,8 +106,8 @@ const LoginForm = () => {
           autoComplete="current-password"
           className={hasPasswordError ? styles.errorInput : ''}
           id="password"
-          maxLength={MAX_PASSWORD_LENGTH}
-          minLength={MIN_PASSWORD_LENGTH}
+          maxLength={PASSWORD_MAX_LENGTH}
+          minLength={PASSWORD_MIN_LENGTH}
           name="password"
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -188,8 +197,11 @@ const RegisterForm = () => {
           autoComplete="email"
           className={hasEmailError ? styles.errorInput : ''}
           id="email"
+          maxLength={EMAIL_MAX_LENGTH}
+          minLength={EMAIL_MIN_LENGTH}
           name="email"
           onChange={(e) => setEmail(e.target.value)}
+          pattern={EMAIL_REGEX}
           placeholder="user@e.mail"
           required
           type="email"
@@ -206,27 +218,28 @@ const RegisterForm = () => {
           autoComplete="username"
           className={hasNameError ? styles.errorInput : ''}
           id="name"
+          maxLength={USER_NAME_MAX_LENGTH}
+          minLength={USER_NAME_MIN_LENGTH}
           name="name"
           onChange={(e) => setName(e.target.value)}
+          pattern={USER_NAME_REGEX}
           placeholder="user"
           required
+          title="Usernames can only contain letters, numbers, and underscores."
         />
         {hasNameError ? (
           <ErrorDescription>
             Name is already in use. Please choose a different one.
           </ErrorDescription>
         ) : null}
-        <div id={styles.namePreview}>
-          <BsArrowReturnRight strokeWidth={1} />
-          also.domain/u/{name || 'user'}
-        </div>
+        <Preview>also.domain/u/{name || 'user'}</Preview>
       </Field>
       <Field name="password">
         <input
           autoComplete="new-password"
           id="password"
-          maxLength={MAX_PASSWORD_LENGTH}
-          minLength={MIN_PASSWORD_LENGTH}
+          maxLength={PASSWORD_MAX_LENGTH}
+          minLength={PASSWORD_MIN_LENGTH}
           name="password"
           onChange={() => setBadPassword('')}
           required
@@ -238,8 +251,8 @@ const RegisterForm = () => {
           autoComplete="new-password"
           className={hasPasswordError ? styles.errorInput : ''}
           id="repassword"
-          maxLength={MAX_PASSWORD_LENGTH}
-          minLength={MIN_PASSWORD_LENGTH}
+          maxLength={PASSWORD_MAX_LENGTH}
+          minLength={PASSWORD_MIN_LENGTH}
           name="repassword"
           onChange={(e) => setPassword(e.target.value)}
           required

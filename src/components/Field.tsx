@@ -1,14 +1,14 @@
-import React, { ReactNode } from 'react'
+import { memo, ReactNode } from 'react'
 
 import styles from '../styles/Field.module.css'
 
 interface Props {
   name: string
   label?: string
-  children: ReactNode | ReactNode[]
+  children: ReactNode
 }
 
-const Field = React.memo(function Field({ name, label, children }: Props) {
+const Field = memo(function Field({ name, label, children }: Props) {
   return (
     <div className={styles.field}>
       <label htmlFor={name}>{label || name}</label>

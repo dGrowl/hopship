@@ -1,13 +1,18 @@
-import { BsArrowReturnRight } from 'react-icons/bs'
 import { Dispatch, FormEvent, useState } from 'react'
 
 import { CSRFFormFields } from '../lib/types'
 import { csrfHeaders } from '../lib/util'
-import { MAX_BIO_LENGTH } from '../lib/safety'
+import {
+  BIO_MAX_LENGTH,
+  EMAIL_MAX_LENGTH,
+  EMAIL_MIN_LENGTH,
+  EMAIL_REGEX,
+  USER_NAME_MAX_LENGTH,
+  USER_NAME_MIN_LENGTH,
+} from '../lib/safety'
 import AntiCSRFForm from './AntiCSRFForm'
 import Field from './Field'
-
-import styles from '../styles/UpdateUserForm.module.css'
+import Preview from './Preview'
 
 interface Data {
   name?: string
@@ -55,14 +60,13 @@ const NameInput = ({ initial }: NameInputProps) => {
     <>
       <input
         id="name"
+        maxLength={USER_NAME_MAX_LENGTH}
+        minLength={USER_NAME_MIN_LENGTH}
         name="name"
         onChange={(e) => setName(e.target.value)}
         value={name}
       />
-      <div id={styles.namePreview}>
-        <BsArrowReturnRight strokeWidth={1} />
-        also.domain/u/{name}
-      </div>
+      <Preview>also.domain/u/{name}</Preview>
     </>
   )
 }
@@ -99,13 +103,21 @@ const UpdateUserForm = ({ name, email, bio }: Props) => {
           <NameInput initial={name} />
         </Field>
         <Field name="email">
-          <input defaultValue={email} id="email" name="email" type="email" />
+          <input
+            defaultValue={email}
+            id="email"
+            maxLength={EMAIL_MAX_LENGTH}
+            minLength={EMAIL_MIN_LENGTH}
+            name="email"
+            pattern={EMAIL_REGEX}
+            type="email"
+          />
         </Field>
         <Field name="bio">
           <textarea
             defaultValue={bio}
             id="bio"
-            maxLength={MAX_BIO_LENGTH}
+            maxLength={BIO_MAX_LENGTH}
             name="bio"
           />
         </Field>

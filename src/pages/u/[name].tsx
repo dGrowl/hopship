@@ -10,7 +10,7 @@ import Head from 'next/head'
 
 import { arrayToFirstString } from '../../lib/util'
 import { Identity } from '../../lib/types'
-import { MAX_USER_NAME_LENGTH } from '../../lib/safety'
+import { USER_NAME_MAX_LENGTH } from '../../lib/safety'
 import db from '../../lib/db'
 import IdentityBox from '../../components/IdentityBox'
 
@@ -68,7 +68,7 @@ const getVerifiedIdentities = async (userName: string) => {
 
 const processQuery = (query: ParsedUrlQuery) => {
   let userName = arrayToFirstString(query.name || null)
-  if (userName && userName.length > MAX_USER_NAME_LENGTH) {
+  if (userName && userName.length > USER_NAME_MAX_LENGTH) {
     userName = null
   }
   return { userName }

@@ -21,9 +21,11 @@ import {
   PLATFORMS,
 } from '../lib/util'
 import {
+  DESCRIPTION_MAX_LENGTH,
   DESCRIPTION_REGEX,
-  MAX_DESCRIPTION_LENGTH,
-  MAX_NETWORK_NAME_LENGTH,
+  NETWORK_NAME_MAX_LENGTH,
+  NETWORK_NAME_MIN_LENGTH,
+  NETWORK_NAME_REGEX,
 } from '../lib/safety'
 import AntiCSRFForm from './AntiCSRFForm'
 
@@ -112,17 +114,17 @@ export const AddIdentityBox = ({ close }: AddProps) => {
             </select>
           ) : null}
           <input
-            maxLength={MAX_NETWORK_NAME_LENGTH}
-            minLength={1}
+            maxLength={NETWORK_NAME_MAX_LENGTH}
+            minLength={NETWORK_NAME_MIN_LENGTH}
             name="name"
-            pattern="\w+"
+            pattern={NETWORK_NAME_REGEX}
             placeholder={`${platform} name`}
             required
             title={`${platform} IDs can only contain letters, numbers, and underscores.`}
           />
           <textarea
             className={styles.descRow}
-            maxLength={MAX_DESCRIPTION_LENGTH}
+            maxLength={DESCRIPTION_MAX_LENGTH}
             name="desc"
             placeholder="(optional) A description of what you use this identity for."
           />

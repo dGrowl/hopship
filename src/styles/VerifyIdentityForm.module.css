@@ -47,16 +47,3 @@
 .instructions input {
   margin-top: 6px;
 }
-
-.preview {
-  column-gap: 4px;
-  display: flex;
-  margin-top: 4px;
-  max-width: 400px;
-  align-items: center;
-}
-
-.preview span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}

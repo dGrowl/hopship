@@ -2,7 +2,7 @@ import { Dispatch, FormEvent, useState } from 'react'
 
 import { CSRFFormFields, Identity } from '../lib/types'
 import { csrfHeaders } from '../lib/util'
-import { MAX_DESCRIPTION_LENGTH } from '../lib/safety'
+import { DESCRIPTION_MAX_LENGTH } from '../lib/safety'
 import AntiCSRFForm from './AntiCSRFForm'
 import Field from './Field'
 
@@ -52,7 +52,7 @@ const UpdateIdentityForm = ({ identity }: Props) => {
           <textarea
             defaultValue={desc}
             id="description"
-            maxLength={MAX_DESCRIPTION_LENGTH}
+            maxLength={DESCRIPTION_MAX_LENGTH}
             name="desc"
           />
         </Field>

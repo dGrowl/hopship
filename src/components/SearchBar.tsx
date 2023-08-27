@@ -2,7 +2,11 @@ import { BsArrowLeft, BsSearch } from 'react-icons/bs'
 import { Dispatch, FormEvent, useEffect, useRef, useState } from 'react'
 import { NextRouter, useRouter } from 'next/router'
 
-import { MAX_NETWORK_NAME_LENGTH } from '../lib/safety'
+import {
+  NETWORK_NAME_MAX_LENGTH,
+  NETWORK_NAME_MIN_LENGTH,
+  NETWORK_NAME_REGEX,
+} from '../lib/safety'
 import { NETWORK_PLATFORM, PLATFORM_NETWORKS } from '../lib/util'
 import { setAnimationPlatform } from './OrbitAnimation'
 
@@ -64,11 +68,11 @@ const NameInput = ({ searching }: NameInputProps) => {
   useEffect(() => (searching ? nameRef.current?.focus() : void 0), [searching])
   return (
     <input
-      maxLength={MAX_NETWORK_NAME_LENGTH}
-      minLength={1}
+      maxLength={NETWORK_NAME_MAX_LENGTH}
+      minLength={NETWORK_NAME_MIN_LENGTH}
       name="name"
       onChange={(e) => setName(e.target.value)}
-      pattern="\w+"
+      pattern={NETWORK_NAME_REGEX}
       ref={nameRef}
       required
       title="Platform IDs can only contain letters, numbers, and underscores."
