@@ -1,4 +1,5 @@
 import { NETWORKS } from './util'
+import { PostgresError } from './types'
 
 export const sanitizeName = (name: string) => name.toLowerCase()
 
@@ -6,6 +7,17 @@ export const ARGON_OPTIONS = {
   memoryCost: 16384, // 2^14
   timeCost: 64,
 } as const
+
+export const buildPostgresErrorJson = (error: PostgresError) => {
+  switch (error.constraint) {
+    case 'users_email_key':
+      return { error: 'DUPLICATE_EMAIL' }
+    case 'users_name_key':
+      return { error: 'DUPLICATE_NAME' }
+    default:
+      return { error: 'UNKNOWN' }
+  }
+}
 
 export const USER_NAME_MAX_LENGTH = 24
 export const USER_NAME_MIN_LENGTH = 1

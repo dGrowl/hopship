@@ -1,0 +1,16 @@
+.badInput {
+  border: 2px solid rgb(161 55 48);
+}
+
+.explanation {
+  align-items: center;
+  background-color: rgb(161 55 48);
+  border-radius: 0px 0px 4px 4px;
+  column-gap: 8px;
+  display: flex;
+  padding: 6px 6px 10px 6px;
+}
+
+.explanation svg {
+  margin-top: 2px;
+}

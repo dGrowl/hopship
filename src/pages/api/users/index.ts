@@ -1,40 +1,14 @@
 import argon2 from 'argon2'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { ARGON_OPTIONS, sanitizeName } from '../../../lib/safety'
+import {
+  ARGON_OPTIONS,
+  buildPostgresErrorJson,
+  sanitizeName,
+} from '../../../lib/safety'
 import { checkCSRF } from '../../../lib/helpers'
+import { PostgresError } from '../../../lib/types'
 import db from '../../../lib/db'
-
-interface PostgresError {
-  length: number
-  severity: 'ERROR' | 'FATAL' | 'PANIC'
-  code: string
-  detail: string
-  hint?: string
-  position?: number
-  internalPosition?: number
-  internalQuery?: string
-  where?: string
-  schema: string
-  table: string
-  column: string
-  dataType?: string
-  constraint?: string
-  file: string
-  line: string
-  routine: string
-}
-
-const errorCode = (error: PostgresError) => {
-  switch (error.constraint) {
-    case 'users_email_key':
-      return 'DUPLICATE_EMAIL'
-    case 'users_name_key':
-      return 'DUPLICATE_NAME'
-    default:
-      return 'UNKNOWN'
-  }
-}
 
 const create = async (req: NextApiRequest, res: NextApiResponse) => {
   const { body } = req
@@ -54,9 +28,7 @@ const create = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   } catch (error) {
     console.error(error)
-    return res.status(400).json({
-      error: errorCode(error as PostgresError),
-    })
+    return res.status(400).json(buildPostgresErrorJson(error as PostgresError))
   }
   return res.status(200).json({})
 }

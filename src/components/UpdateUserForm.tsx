@@ -1,7 +1,7 @@
-import { Dispatch, FormEvent, useState } from 'react'
+import { Dispatch, FormEvent, useReducer, useState } from 'react'
 
 import { CSRFFormFields } from '../lib/types'
-import { csrfHeaders } from '../lib/util'
+import { csrfHeaders, objectReducer } from '../lib/util'
 import {
   BIO_MAX_LENGTH,
   EMAIL_MAX_LENGTH,
@@ -9,8 +9,10 @@ import {
   EMAIL_REGEX,
   USER_NAME_MAX_LENGTH,
   USER_NAME_MIN_LENGTH,
+  USER_NAME_REGEX,
 } from '../lib/safety'
 import AntiCSRFForm from './AntiCSRFForm'
+import FallibleInput from './FallibleInput'
 import Field from './Field'
 import Preview from './Preview'
 
@@ -27,7 +29,11 @@ type Fields = EventTarget &
     bio: HTMLTextAreaElement
   }
 
-const update = async (e: FormEvent, currentName: string) => {
+const update = async (
+  e: FormEvent,
+  currentName: string,
+  setBadValues: Dispatch<object>
+) => {
   e.preventDefault()
   const { csrf, name, email, bio } = e.target as Fields
   const data: Data = {}
@@ -41,34 +47,23 @@ const update = async (e: FormEvent, currentName: string) => {
     data.bio = bio.value
   }
   if (Object.keys(data).length !== 0) {
-    await fetch(`/api/users/${currentName}`, {
+    const response = await fetch(`/api/users/${currentName}`, {
       method: 'PATCH',
       headers: csrfHeaders(csrf.value),
       body: JSON.stringify(data),
     })
-    window.location.reload()
+    if (response.status !== 200) {
+      const body = await response.json()
+      if (body.error === 'DUPLICATE_NAME') {
+        return setBadValues({ name: name.value })
+      }
+      if (body.error === 'DUPLICATE_EMAIL') {
+        return setBadValues({ email: email.value })
+      }
+    } else {
+      window.location.reload()
+    }
   }
-}
-
-interface NameInputProps {
-  initial: string
-}
-
-const NameInput = ({ initial }: NameInputProps) => {
-  const [name, setName] = useState(initial)
-  return (
-    <>
-      <input
-        id="name"
-        maxLength={USER_NAME_MAX_LENGTH}
-        minLength={USER_NAME_MIN_LENGTH}
-        name="name"
-        onChange={(e) => setName(e.target.value)}
-        value={name}
-      />
-      <Preview>also.domain/u/{name}</Preview>
-    </>
-  )
 }
 
 const checkUnchanged = (
@@ -85,33 +80,62 @@ const checkUnchanged = (
   )
 }
 
-interface Props {
-  name: string
+interface FallibleValues {
   email: string
+  name: string
+}
+
+interface Props extends FallibleValues {
   bio: string
 }
 
 const UpdateUserForm = ({ name, email, bio }: Props) => {
+  const [badValues, setBadValues] = useReducer(objectReducer<FallibleValues>, {
+    email: '',
+    name: '',
+  })
   const [unchanged, setUnchanged] = useState(true)
+  const [userName, setUserName] = useState(name)
   return (
     <section>
       <AntiCSRFForm
         onChange={(e) => checkUnchanged(e, name, setUnchanged)}
-        onSubmit={(e) => update(e, name)}
+        onSubmit={(e) => update(e, name, setBadValues)}
       >
         <Field name="name">
-          <NameInput initial={name} />
+          <FallibleInput
+            autoComplete="username"
+            badValue={badValues.name}
+            defaultValue={name}
+            id="name"
+            maxLength={USER_NAME_MAX_LENGTH}
+            minLength={USER_NAME_MIN_LENGTH}
+            name="name"
+            onChange={(e) => setUserName(e.target.value)}
+            pattern={USER_NAME_REGEX}
+            placeholder="user"
+            required
+            title="Usernames can only contain letters, numbers, and underscores."
+          >
+            Name is already in use. Please choose a different one.
+          </FallibleInput>
+          <Preview>also.domain/u/{userName || 'user'}</Preview>
         </Field>
         <Field name="email">
-          <input
+          <FallibleInput
+            autoComplete="email"
+            badValue={badValues.email}
             defaultValue={email}
             id="email"
             maxLength={EMAIL_MAX_LENGTH}
             minLength={EMAIL_MIN_LENGTH}
             name="email"
             pattern={EMAIL_REGEX}
+            placeholder="user@e.mail"
             type="email"
-          />
+          >
+            Email is already in use. Please enter a different one.
+          </FallibleInput>
         </Field>
         <Field name="bio">
           <textarea
@@ -119,6 +143,7 @@ const UpdateUserForm = ({ name, email, bio }: Props) => {
             id="bio"
             maxLength={BIO_MAX_LENGTH}
             name="bio"
+            placeholder="A brief description of you who are."
           />
         </Field>
         <button disabled={unchanged}>update</button>

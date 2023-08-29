@@ -1,11 +1,16 @@
 import argon2 from 'argon2'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { ARGON_OPTIONS, sanitizeName } from '../../../lib/safety'
+import {
+  ARGON_OPTIONS,
+  buildPostgresErrorJson,
+  sanitizeName,
+} from '../../../lib/safety'
 import { checkCSRF, processAuth } from '../../../lib/helpers'
 import { getUserData, genAuthCookie } from '../login'
 import { hasKey } from '../../../lib/util'
 import db from '../../../lib/db'
+import { PostgresError } from '../../../lib/types'
 
 interface Data {
   name?: string
@@ -40,9 +45,7 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
     if (user.valid) {
       data.passhash = await argon2.hash(body.futurePassword, ARGON_OPTIONS)
     } else {
-      return res
-        .status(400)
-        .json({ message: 'Provided existing password is incorrect' })
+      return res.status(400).json({ error: 'WRONG_PASSWORD' })
     }
   }
   if (Object.keys(data).length === 0) {
@@ -61,11 +64,11 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
       [...Object.values(data), currentName]
     )
     if (result.rowCount === 0) {
-      return res.status(400).json({ message: 'Invalid authenticated user' })
+      return res.status(400).json({ error: 'UNKNOWN_USER' })
     }
   } catch (error) {
     console.error(error)
-    return res.status(500).json({ message: 'Database update query failed' })
+    return res.status(400).json(buildPostgresErrorJson(error as PostgresError))
   }
   if (data.name || data.email) {
     const currentSecs = Date.now() / 1000

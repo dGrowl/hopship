@@ -1,11 +1,11 @@
 import { BsExclamationCircle } from 'react-icons/bs'
-import { Dispatch, FormEvent, ReactNode, useState } from 'react'
+import { Dispatch, FormEvent, ReactNode, useReducer, useState } from 'react'
 import { GetServerSidePropsContext } from 'next'
 import { NextRouter, useRouter } from 'next/router'
 import Head from 'next/head'
 import jwt from 'jsonwebtoken'
 
-import { csrfHeaders } from '../lib/util'
+import { csrfHeaders, objectReducer } from '../lib/util'
 import {
   EMAIL_MAX_LENGTH,
   EMAIL_MIN_LENGTH,
@@ -17,17 +17,11 @@ import {
   USER_NAME_REGEX,
 } from '../lib/safety'
 import AntiCSRFForm from '../components/AntiCSRFForm'
+import FallibleInput from '../components/FallibleInput'
 import Field from '../components/Field'
-
-import styles from '../styles/Login.module.css'
 import Preview from '../components/Preview'
 
-const ErrorDescription = ({ children }: { children: ReactNode }) => (
-  <div className={styles.errorDescription}>
-    <BsExclamationCircle size={24} strokeWidth={0.75} />
-    {children}
-  </div>
-)
+import styles from '../styles/Login.module.css'
 
 interface LoginFormFields extends EventTarget {
   csrf: HTMLInputElement
@@ -38,8 +32,7 @@ interface LoginFormFields extends EventTarget {
 const login = async (
   e: FormEvent,
   router: NextRouter,
-  setBadEmail: Dispatch<string>,
-  setBadPassword: Dispatch<string>
+  setBadValues: Dispatch<object>
 ) => {
   e.preventDefault()
   const fields = e.target as LoginFormFields
@@ -58,67 +51,58 @@ const login = async (
     const body = await response.json()
     switch (body.error) {
       case 'WRONG_PASSWORD':
-        return setBadPassword(password)
+        return setBadValues({ password })
       case 'UNKNOWN_EMAIL':
-        return setBadEmail(email)
+        return setBadValues({ email })
     }
   }
 }
 
+interface LoginFallibleValues {
+  email: string
+  password: string
+}
+
 const LoginForm = () => {
-  const [badEmail, setBadEmail] = useState('')
-  const [badPassword, setBadPassword] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [badValues, setBadValues] = useReducer(
+    objectReducer<LoginFallibleValues>,
+    { email: '', password: '' }
+  )
   const router = useRouter()
-  const hasEmailError = badEmail && email === badEmail
-  const hasPasswordError = badPassword && password === badPassword
   return (
-    <AntiCSRFForm
-      onSubmit={(e) => login(e, router, setBadEmail, setBadPassword)}
-    >
+    <AntiCSRFForm onSubmit={(e) => login(e, router, setBadValues)}>
       <Field name="email">
-        <input
+        <FallibleInput
           autoComplete="email"
-          className={hasEmailError ? styles.errorInput : ''}
+          badValue={badValues.email}
           id="email"
           maxLength={EMAIL_MAX_LENGTH}
           minLength={EMAIL_MIN_LENGTH}
           name="email"
-          onChange={(e) => {
-            setEmail(e.target.value)
-            setBadPassword('')
-          }}
+          onChange={() => setBadValues({ password: '' })}
           pattern={EMAIL_REGEX}
           placeholder="user@e.mail"
           required
           type="email"
-        />
-        {hasEmailError ? (
-          <ErrorDescription>
-            Email does not match any known users. Please enter a known email or
-            register for a new account.
-          </ErrorDescription>
-        ) : null}
+        >
+          Email does not match any known users. Please enter a known email or
+          register for a new account.
+        </FallibleInput>
       </Field>
       <Field name="password">
-        <input
+        <FallibleInput
           autoComplete="current-password"
-          className={hasPasswordError ? styles.errorInput : ''}
+          badValue={badValues.password}
           id="password"
           maxLength={PASSWORD_MAX_LENGTH}
           minLength={PASSWORD_MIN_LENGTH}
           name="password"
-          onChange={(e) => setPassword(e.target.value)}
           required
           type="password"
-        />
-        {hasPasswordError ? (
-          <ErrorDescription>
-            Password does not match that email. Please enter the correct
-            password or register for a new account.
-          </ErrorDescription>
-        ) : null}
+        >
+          Password does not match that email. Please enter the correct password
+          or register for a new account.
+        </FallibleInput>
       </Field>
       <button>auth</button>
     </AntiCSRFForm>
@@ -133,9 +117,7 @@ interface RegisterFormFields extends LoginFormFields {
 const register = async (
   e: FormEvent,
   router: NextRouter,
-  setBadEmail: Dispatch<string>,
-  setBadName: Dispatch<string>,
-  setBadPassword: Dispatch<string>
+  setBadValues: Dispatch<object>
 ) => {
   e.preventDefault()
   const fields = e.target as RegisterFormFields
@@ -145,7 +127,7 @@ const register = async (
   const name = fields.name.value
   const repassword = fields.repassword.value
   if (password !== repassword) {
-    return setBadPassword(repassword)
+    return setBadValues({ password: repassword })
   }
   const data = { email, name, password }
   const response = await fetch('/api/users', {
@@ -156,10 +138,10 @@ const register = async (
   if (response.status !== 200) {
     const body = await response.json()
     if (body.error === 'DUPLICATE_EMAIL') {
-      return setBadEmail(email)
+      return setBadValues({ email })
     }
     if (body.error === 'DUPLICATE_NAME') {
-      return setBadName(name)
+      return setBadValues({ name })
     }
   }
   const dataLogin = { email, password }
@@ -175,48 +157,43 @@ const register = async (
   }
 }
 
+interface RegistrationFallibleValues extends LoginFallibleValues {
+  name: string
+}
+
 const RegisterForm = () => {
+  const [badValues, setBadValues] = useReducer(
+    objectReducer<RegistrationFallibleValues>,
+    {
+      email: '',
+      name: '',
+      password: '',
+    }
+  )
   const [name, setName] = useState('')
-  const [badName, setBadName] = useState('')
-  const [email, setEmail] = useState('')
-  const [badEmail, setBadEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [badPassword, setBadPassword] = useState('')
   const router = useRouter()
-  const hasNameError = badName && name === badName
-  const hasPasswordError = badPassword && password === badPassword
-  const hasEmailError = badEmail && email === badEmail
   return (
-    <AntiCSRFForm
-      onSubmit={(e) =>
-        register(e, router, setBadEmail, setBadName, setBadPassword)
-      }
-    >
+    <AntiCSRFForm onSubmit={(e) => register(e, router, setBadValues)}>
       <Field name="email">
-        <input
+        <FallibleInput
           autoComplete="email"
-          className={hasEmailError ? styles.errorInput : ''}
+          badValue={badValues.email}
           id="email"
           maxLength={EMAIL_MAX_LENGTH}
           minLength={EMAIL_MIN_LENGTH}
           name="email"
-          onChange={(e) => setEmail(e.target.value)}
           pattern={EMAIL_REGEX}
           placeholder="user@e.mail"
           required
           type="email"
-        />
-        {hasEmailError ? (
-          <ErrorDescription>
-            Email does not match any known users. Please enter a known email or
-            register for a new account.
-          </ErrorDescription>
-        ) : null}
+        >
+          Email is already in use. Please enter a different one.
+        </FallibleInput>
       </Field>
       <Field name="name">
-        <input
+        <FallibleInput
           autoComplete="username"
-          className={hasNameError ? styles.errorInput : ''}
+          badValue={badValues.name}
           id="name"
           maxLength={USER_NAME_MAX_LENGTH}
           minLength={USER_NAME_MIN_LENGTH}
@@ -226,12 +203,9 @@ const RegisterForm = () => {
           placeholder="user"
           required
           title="Usernames can only contain letters, numbers, and underscores."
-        />
-        {hasNameError ? (
-          <ErrorDescription>
-            Name is already in use. Please choose a different one.
-          </ErrorDescription>
-        ) : null}
+        >
+          Name is already in use. Please choose a different one.
+        </FallibleInput>
         <Preview>also.domain/u/{name || 'user'}</Preview>
       </Field>
       <Field name="password">
@@ -241,29 +215,25 @@ const RegisterForm = () => {
           maxLength={PASSWORD_MAX_LENGTH}
           minLength={PASSWORD_MIN_LENGTH}
           name="password"
-          onChange={() => setBadPassword('')}
+          onChange={() => setBadValues({ password: '' })}
           required
           type="password"
         />
       </Field>
       <Field name="repassword" label="password (again)">
-        <input
+        <FallibleInput
           autoComplete="new-password"
-          className={hasPasswordError ? styles.errorInput : ''}
+          badValue={badValues.password}
           id="repassword"
           maxLength={PASSWORD_MAX_LENGTH}
           minLength={PASSWORD_MIN_LENGTH}
           name="repassword"
-          onChange={(e) => setPassword(e.target.value)}
           required
           type="password"
-        />
-        {hasPasswordError ? (
-          <ErrorDescription>
-            Second password does not match the first. Please ensure that they
-            match.
-          </ErrorDescription>
-        ) : null}
+        >
+          Second password does not match the first. Please ensure that they
+          match.
+        </FallibleInput>
       </Field>
       <button>create</button>
     </AntiCSRFForm>

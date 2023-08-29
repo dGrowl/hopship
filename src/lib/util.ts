@@ -113,3 +113,5 @@ export const randomElement = <T>(a: T[]) =>
   a[Math.floor(Math.random() * a.length)]
 
 export const doNothing = () => {}
+
+export const objectReducer = <T>(s: T, a: object): T => ({ ...s, ...a })
