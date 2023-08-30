@@ -31,7 +31,7 @@ export const PASSWORD_MAX_LENGTH = 4096
 export const PASSWORD_MIN_LENGTH = 8
 
 export const BIO_MAX_LENGTH = 64
-export const BIO_REGEX = `^[a-zA-Z\d,;:''" \.\+\-\*\/\&%()?!]*$`
+export const BIO_REGEX = `^(?!\s)(?!.*\s{2})[\u0020-\u007E]*(?<!\s)$`
 
 export const NETWORK_MAX_LENGTH = NETWORKS.reduce(
   (len, p) => (p.length > len ? p.length : len),

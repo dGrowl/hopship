@@ -1,10 +1,11 @@
 import { Dispatch, FormEvent, useState } from 'react'
 
 import { CSRFFormFields, Identity } from '../lib/types'
-import { csrfHeaders } from '../lib/util'
-import { DESCRIPTION_MAX_LENGTH } from '../lib/safety'
+import { cleanSpaces, csrfHeaders } from '../lib/util'
+import { DESCRIPTION_MAX_LENGTH, DESCRIPTION_REGEX } from '../lib/safety'
 import AntiCSRFForm from './AntiCSRFForm'
 import Field from './Field'
+import ValidatedTextArea from './ValidatedTextArea'
 
 type Fields = EventTarget &
   CSRFFormFields & {
@@ -19,7 +20,7 @@ const update = async (
   e.preventDefault()
   const form = e.target as Fields
   const { csrf, desc } = form
-  const data = { desc: desc.value }
+  const data = { desc: cleanSpaces(desc.value) }
   await fetch(`/api/identities/${network}/${name}`, {
     method: 'PATCH',
     headers: csrfHeaders(csrf.value),
@@ -49,11 +50,12 @@ const UpdateIdentityForm = ({ identity }: Props) => {
         onSubmit={(e) => update(e, network, name)}
       >
         <Field name="description">
-          <textarea
+          <ValidatedTextArea
             defaultValue={desc}
             id="description"
             maxLength={DESCRIPTION_MAX_LENGTH}
             name="desc"
+            pattern={DESCRIPTION_REGEX}
           />
         </Field>
         <button disabled={unchanged}>save</button>

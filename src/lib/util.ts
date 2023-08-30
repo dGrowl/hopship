@@ -109,9 +109,15 @@ export const genHexString = (nBytes: number) => {
 export const arrayToFirstString = (a: string | string[] | null) =>
   Array.isArray(a) ? a.slice(0, 1).join() : a
 
-export const randomElement = <T>(a: T[]) =>
-  a[Math.floor(Math.random() * a.length)]
-
-export const doNothing = () => {}
-
 export const objectReducer = <T>(s: T, a: object): T => ({ ...s, ...a })
+
+export const cleanSpaces = (s: string) => {
+  s = s.replaceAll(/ {2,}/g, ' ')
+  if (s[0] === ' ') {
+    s = s.slice(1)
+  }
+  if (s.slice(-1) === ' ') {
+    s = s.slice(0, -1)
+  }
+  return s
+}

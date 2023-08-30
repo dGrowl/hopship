@@ -15,6 +15,7 @@ import Link from 'next/link'
 import { CSRFFormFields, Identity } from '../lib/types'
 import {
   buildProfileURL,
+  cleanSpaces,
   csrfHeaders,
   DECENTRALIZED_NETWORKS,
   PLATFORM_NETWORKS,
@@ -28,6 +29,7 @@ import {
   NETWORK_NAME_REGEX,
 } from '../lib/safety'
 import AntiCSRFForm from './AntiCSRFForm'
+import ValidatedTextArea from './ValidatedTextArea'
 
 import styles from '../styles/IdentityBox.module.css'
 
@@ -67,10 +69,7 @@ const add = async (e: FormEvent) => {
   e.preventDefault()
   const form = e.target as AddFields
   const csrf = form.csrf.value
-  const desc = form.desc.value
-  if (!desc.match(DESCRIPTION_REGEX)) {
-    return
-  }
+  const desc = cleanSpaces(form.desc.value)
   const name = form.name.value
   const platform = form.platform.value
   const network = form.network?.value || PLATFORM_NETWORKS[platform][0]
@@ -122,10 +121,11 @@ export const AddIdentityBox = ({ close }: AddProps) => {
             required
             title={`${platform} IDs can only contain letters, numbers, and underscores.`}
           />
-          <textarea
+          <ValidatedTextArea
             className={styles.descRow}
             maxLength={DESCRIPTION_MAX_LENGTH}
             name="desc"
+            pattern={DESCRIPTION_REGEX}
             placeholder="(optional) A description of what you use this identity for."
           />
           <button>add</button>

@@ -35,7 +35,7 @@ CREATE TABLE public.users (
 	CONSTRAINT email_max_length CHECK (char_length(email) <= 256),
 	CONSTRAINT passhash_proper_algorithm CHECK (passhash LIKE '$argon2id$%'),
 	CONSTRAINT bio_proper_chars CHECK (
-		bio ~ '^[a-zA-Z\d,;:''" \.\+\-\*\/\&%()?!]*$'
+		bio ~ '^(?!\s)(?!.*\s{2})[\u0020-\u007E]*(?<!\s)$'
 	),
 	CONSTRAINT bio_max_length CHECK (char_length(bio) <= 64)
 );
@@ -73,7 +73,7 @@ CREATE TABLE public.identities (
 	CONSTRAINT network_name_min_length CHECK (char_length(name) >= 1),
 	CONSTRAINT network_name_max_length CHECK (char_length(name) <= 64),
 	CONSTRAINT description_proper_chars CHECK (
-		description ~ '^[a-zA-Z\d,;:''" \.\+\-\*\/\&%()?!]*$'
+		description ~ '^(?!\s)(?!.*\s{2})[\u0020-\u007E]*(?<!\s)$'
 	),
 	CONSTRAINT description_max_length CHECK (char_length(description) <= 48)
 );

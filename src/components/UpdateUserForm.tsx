@@ -1,9 +1,10 @@
 import { Dispatch, FormEvent, useReducer, useState } from 'react'
 
 import { CSRFFormFields } from '../lib/types'
-import { csrfHeaders, objectReducer } from '../lib/util'
+import { cleanSpaces, csrfHeaders, objectReducer } from '../lib/util'
 import {
   BIO_MAX_LENGTH,
+  BIO_REGEX,
   EMAIL_MAX_LENGTH,
   EMAIL_MIN_LENGTH,
   EMAIL_REGEX,
@@ -15,6 +16,7 @@ import AntiCSRFForm from './AntiCSRFForm'
 import FallibleInput from './FallibleInput'
 import Field from './Field'
 import Preview from './Preview'
+import ValidatedTextArea from './ValidatedTextArea'
 
 interface Data {
   name?: string
@@ -32,6 +34,7 @@ type Fields = EventTarget &
 const update = async (
   e: FormEvent,
   currentName: string,
+  currentBio: string,
   setBadValues: Dispatch<object>
 ) => {
   e.preventDefault()
@@ -43,8 +46,8 @@ const update = async (
   if (email.defaultValue !== email.value) {
     data.email = email.value
   }
-  if (bio.defaultValue !== bio.value) {
-    data.bio = bio.value
+  if (currentBio !== bio.value) {
+    data.bio = cleanSpaces(bio.value)
   }
   if (Object.keys(data).length !== 0) {
     const response = await fetch(`/api/users/${currentName}`, {
@@ -100,7 +103,7 @@ const UpdateUserForm = ({ name, email, bio }: Props) => {
     <section>
       <AntiCSRFForm
         onChange={(e) => checkUnchanged(e, name, setUnchanged)}
-        onSubmit={(e) => update(e, name, setBadValues)}
+        onSubmit={(e) => update(e, name, bio, setBadValues)}
       >
         <Field name="name">
           <FallibleInput
@@ -138,11 +141,12 @@ const UpdateUserForm = ({ name, email, bio }: Props) => {
           </FallibleInput>
         </Field>
         <Field name="bio">
-          <textarea
+          <ValidatedTextArea
             defaultValue={bio}
             id="bio"
             maxLength={BIO_MAX_LENGTH}
             name="bio"
+            pattern={BIO_REGEX}
             placeholder="A brief description of you who are."
           />
         </Field>
