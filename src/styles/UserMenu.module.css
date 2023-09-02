@@ -50,6 +50,15 @@
 }
 
 @media screen and (max-width: 720px) {
+  #menu {
+    font-size: 1.4rem;
+    width: 140px;
+  }
+
+  #menu a {
+    padding: 12px 8px;
+  }
+
   .hiddenForMobile {
     display: none !important;
   }
