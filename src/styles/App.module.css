@@ -3,8 +3,9 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  justify-content: center;
-  margin: 24px 16px;
+  justify-content: flex-start;
+  margin: 24px 16px 128px 24px;
+  min-height: 400px;
 }
 
 #header {
@@ -14,6 +15,7 @@
   justify-content: center;
   position: sticky;
   top: 0px;
+  z-index: 999;
 }
 
 #headerContent {
@@ -28,7 +30,7 @@
 
 @media screen and (max-width: 720px) {
   .main {
-    margin: 12px 8px;
+    margin: 8px 8px 90px 8px;
   }
 
   .hiddenForMobile {

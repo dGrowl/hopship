@@ -1,8 +1,16 @@
 #container {
   align-items: center;
+  background-color: var(--c-1);
   column-gap: 8px;
   display: none;
   grid-template-columns: auto 1fr;
+  padding: 8px 0;
+  position: sticky;
+  top: 64px;
+}
+
+#container h2 {
+  font-size: 1.4rem;
 }
 
 #container select {

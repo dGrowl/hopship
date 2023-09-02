@@ -21,11 +21,11 @@
   display: flex;
   flex-direction: column;
   font-size: 1.1rem;
-  left: 0px;
   padding: 2px;
   position: absolute;
+  right: 0px;
   row-gap: 2px;
-  top: 42px;
+  top: 44px;
   width: 110px;
 }
 
