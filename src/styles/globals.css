@@ -1,8 +1,18 @@
 html,
 body {
   line-height: 1.2rem;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    Segoe UI,
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    Fira Sans,
+    Droid Sans,
+    Helvetica Neue,
+    sans-serif;
 }
 
 body {
@@ -110,7 +120,13 @@ textarea {
   background-color: var(--c-4);
 }
 
+input {
+  height: 36px;
+}
+
 textarea {
+  height: 72px;
+  min-height: 36px;
   resize: vertical;
 }
 
