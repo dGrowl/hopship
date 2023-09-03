@@ -1,5 +1,9 @@
-import { BsExclamationCircle } from 'react-icons/bs'
-import { Dispatch, FormEvent, ReactNode, useReducer, useState } from 'react'
+import {
+  Dispatch,
+  FormEvent,
+  useReducer,
+  useState,
+} from 'react'
 import { GetServerSidePropsContext } from 'next'
 import { NextRouter, useRouter } from 'next/router'
 import Head from 'next/head'
@@ -10,8 +14,6 @@ import {
   EMAIL_MAX_LENGTH,
   EMAIL_MIN_LENGTH,
   EMAIL_REGEX,
-  PASSWORD_MAX_LENGTH,
-  PASSWORD_MIN_LENGTH,
   USER_NAME_MAX_LENGTH,
   USER_NAME_MIN_LENGTH,
   USER_NAME_REGEX,
@@ -19,6 +21,7 @@ import {
 import AntiCSRFForm from '../components/AntiCSRFForm'
 import FallibleInput from '../components/FallibleInput'
 import Field from '../components/Field'
+import PasswordInput from '../components/PasswordInput'
 import Preview from '../components/Preview'
 
 import styles from '../styles/Login.module.css'
@@ -90,19 +93,15 @@ const LoginForm = () => {
         </FallibleInput>
       </Field>
       <Field name="password">
-        <FallibleInput
+        <PasswordInput
           autoComplete="current-password"
           badValue={badValues.password}
           id="password"
-          maxLength={PASSWORD_MAX_LENGTH}
-          minLength={PASSWORD_MIN_LENGTH}
           name="password"
-          required
-          type="password"
         >
           Password does not match that email. Please enter the correct password
           or register for a new account.
-        </FallibleInput>
+        </PasswordInput>
       </Field>
       <button>auth</button>
     </AntiCSRFForm>
@@ -209,31 +208,23 @@ const RegisterForm = () => {
         <Preview>also.domain/u/{name || 'user'}</Preview>
       </Field>
       <Field name="password">
-        <input
+        <PasswordInput
           autoComplete="new-password"
           id="password"
-          maxLength={PASSWORD_MAX_LENGTH}
-          minLength={PASSWORD_MIN_LENGTH}
           name="password"
           onChange={() => setBadValues({ password: '' })}
-          required
-          type="password"
         />
       </Field>
       <Field name="repassword" label="password (again)">
-        <FallibleInput
+        <PasswordInput
           autoComplete="new-password"
           badValue={badValues.password}
           id="repassword"
-          maxLength={PASSWORD_MAX_LENGTH}
-          minLength={PASSWORD_MIN_LENGTH}
           name="repassword"
-          required
-          type="password"
         >
           Second password does not match the first. Please ensure that they
           match.
-        </FallibleInput>
+        </PasswordInput>
       </Field>
       <button>create</button>
     </AntiCSRFForm>

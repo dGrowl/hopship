@@ -2,10 +2,9 @@ import { Dispatch, FormEvent, useReducer } from 'react'
 
 import { CSRFFormFields } from '../lib/types'
 import { csrfHeaders, objectReducer } from '../lib/util'
-import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '../lib/safety'
 import AntiCSRFForm from './AntiCSRFForm'
-import FallibleInput from './FallibleInput'
 import Field from './Field'
+import PasswordInput from './PasswordInput'
 
 type Fields = EventTarget &
   CSRFFormFields & {
@@ -61,46 +60,34 @@ const UpdatePasswordForm = ({ name }: Props) => {
     <section>
       <AntiCSRFForm onSubmit={(e) => update(e, name, setBadValues)}>
         <Field name="current">
-          <FallibleInput
-            autoComplete="password"
+          <PasswordInput
+            autoComplete="current-password"
             badValue={badValues.current}
             id="current"
-            maxLength={PASSWORD_MAX_LENGTH}
-            minLength={PASSWORD_MIN_LENGTH}
             name="current"
-            required
-            type="password"
           >
-            This doesn't match your current password. Please enter the correct
+            This doesn&apos;t match your current password. Please enter the correct
             password.
-          </FallibleInput>
+          </PasswordInput>
         </Field>
         <Field name="future" label="new">
-          <input
+          <PasswordInput
             autoComplete="new-password"
             id="future"
-            maxLength={PASSWORD_MAX_LENGTH}
-            minLength={PASSWORD_MIN_LENGTH}
             name="future"
             onChange={() => setBadValues({ reFuture: '' })}
-            required
-            type="password"
           />
         </Field>
         <Field name="reFuture" label="new (again)">
-          <FallibleInput
+          <PasswordInput
             autoComplete="new-password"
             badValue={badValues.reFuture}
             id="reFuture"
-            maxLength={PASSWORD_MAX_LENGTH}
-            minLength={PASSWORD_MIN_LENGTH}
             name="reFuture"
-            required
-            type="password"
           >
-            Second password doesn't match the first. Please ensure that they
+            Second password doesn&apos;t match the first. Please ensure that they
             match.
-          </FallibleInput>
+          </PasswordInput>
         </Field>
         <button>change</button>
       </AntiCSRFForm>
