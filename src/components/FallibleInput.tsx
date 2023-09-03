@@ -11,11 +11,17 @@ interface Props
   badValue: string
 }
 
-const FallibleInput = ({ badValue, children, onChange, ...props }: Props) => {
-  const [value, setValue] = useState('')
+const FallibleInput = ({
+  badValue,
+  children,
+  defaultValue,
+  onChange,
+  ...props
+}: Props) => {
+  const [value, setValue] = useState(defaultValue || '')
   const hasError = badValue && value === badValue
   return (
-    <>
+    <div className={styles.container}>
       <input
         {...props}
         className={hasError ? styles.badInput : ''}
@@ -23,6 +29,7 @@ const FallibleInput = ({ badValue, children, onChange, ...props }: Props) => {
           onChange ? onChange(e) : null
           setValue(e.target.value)
         }}
+        value={value}
       />
       {hasError ? (
         <div className={styles.explanation}>
@@ -30,7 +37,7 @@ const FallibleInput = ({ badValue, children, onChange, ...props }: Props) => {
           {children}
         </div>
       ) : null}
-    </>
+    </div>
   )
 }
 

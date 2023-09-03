@@ -1,3 +1,7 @@
+.container {
+  width: 100%;
+}
+
 .badInput {
   border: 2px solid rgb(161 55 48);
 }
