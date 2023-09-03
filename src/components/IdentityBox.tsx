@@ -146,7 +146,7 @@ interface StatusBadgeProps {
 const StatusBadge = ({ settingsURL, status }: StatusBadgeProps) => {
   return (
     <Link href={settingsURL}>
-      <div className={`${styles.statusBadge} ${styles[status]}`}>{status}</div>
+      <div className={styles[status]}>{status}</div>
     </Link>
   )
 }

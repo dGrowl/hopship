@@ -1,7 +1,6 @@
 .container {
   background-color: var(--c-3);
   border-radius: 8px;
-  border: 3px solid var(--c-inverse);
   box-sizing: border-box;
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -9,13 +8,28 @@
 }
 
 .platform {
+  align-content: center;
   align-items: center;
-  display: flex;
-  flex-direction: column;
-  font-weight: bold;
-  justify-content: center;
+  display: grid;
+  grid-template-rows: auto auto;
+  justify-items: center;
   row-gap: 6px;
   width: 100px;
+}
+
+.platform a {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0px 4px;
+  width: 100%;
+}
+
+.platform div {
+  align-items: center;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  padding: 1px 0px;
 }
 
 .container input,
@@ -148,7 +162,6 @@ button.addControl:focus {
   justify-content: center;
   overflow: hidden;
   padding: 10px 4px 10px 10px;
-  row-gap: 2px;
 }
 
 .addFields {
@@ -161,6 +174,7 @@ button.addControl:focus {
 
 .nameRow {
   font-size: 1.2rem;
+  font-weight: 500;
   overflow: hidden visible;
   padding: 4px;
   text-overflow: ellipsis;
@@ -173,15 +187,8 @@ button.addControl:focus {
   padding: 4px;
 }
 
-.statusBadge {
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 1px 4px;
-}
-
 .UNVERIFIED {
-  background-color: rgb(204, 120, 51);
+  background-color: rgb(204, 110, 26);
 }
 
 .PENDING {
@@ -201,7 +208,7 @@ button.addControl:focus {
 }
 
 .buttonColumn svg {
-  border-radius: 3px;
+  border-radius: 7px;
   cursor: pointer;
   padding: 4px;
 }
