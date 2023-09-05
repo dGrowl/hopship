@@ -61,7 +61,7 @@ const NameInput = ({ searching }: NameInputProps) => {
   const nameRef = useRef<HTMLInputElement>(null)
   useEffect(() => {
     const storedName = localStorage.getItem('name')
-    if (storedName && storedName !== name) {
+    if (storedName) {
       setName(storedName)
     }
   }, [])
