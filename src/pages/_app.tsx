@@ -1,6 +1,7 @@
-import { Nunito_Sans } from 'next/font/google'
+import { BsSlash } from 'react-icons/bs'
 import { NextApiRequestCookies } from 'next/dist/server/api-utils'
 import { NextIncomingMessage } from 'next/dist/server/request-meta'
+import { Nunito_Sans } from 'next/font/google'
 import { useState } from 'react'
 import Head from 'next/head'
 import jwt from 'jsonwebtoken'
@@ -47,25 +48,29 @@ type Props = AppProps & HomeBarProps
 export default function App({ Component, pageProps, userName }: Props) {
   return (
     <>
-      <div className={styles.container}>
-        <Head>
-          <title>also</title>
-          <meta
-            name="description"
-            content="A searchable index of user accounts across different web platforms. Come find all of your friends!"
-          />
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0"
-          />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
+      <Head>
+        <title>also</title>
+        <meta
+          name="description"
+          content="A searchable index of user accounts across different web platforms. Come find all of your friends!"
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-        <HomeBar userName={userName} />
-        <main className={styles.main}>
-          <Component {...pageProps} />
-        </main>
-      </div>
+      <HomeBar userName={userName} />
+      <main className={styles.main}>
+        <Component {...pageProps} />
+      </main>
+      <footer id={styles.footer}>
+        <div>
+          <Link href="/about/mission">about</Link>
+          <BsSlash size={48} />
+          <Link href="/about/help">help</Link>
+          <BsSlash size={48} />
+          <Link href="/about/privacy">privacy policy</Link>
+        </div>
+      </footer>
     </>
   )
 }
