@@ -16,7 +16,7 @@ import typesReactDom from '../licenses/types-react-dom'
 import typesReact from '../licenses/types-react'
 import typescript from '../licenses/typescript'
 
-export default [
+const packages = [
   {
     name: '@types/jsonwebtoken',
     license: typesJsonWebToken,
@@ -86,3 +86,5 @@ export default [
     license: prettier,
   },
 ]
+
+export default packages
