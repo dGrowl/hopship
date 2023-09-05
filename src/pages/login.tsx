@@ -1,9 +1,4 @@
-import {
-  Dispatch,
-  FormEvent,
-  useReducer,
-  useState,
-} from 'react'
+import { Dispatch, FormEvent, useReducer, useState } from 'react'
 import { GetServerSidePropsContext } from 'next'
 import { NextRouter, useRouter } from 'next/router'
 import Head from 'next/head'

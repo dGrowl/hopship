@@ -163,8 +163,8 @@ const Instructions = (props: InstructionsProps) => {
 const VerificationPending = () => {
   return (
     <p>
-      You've successfully requested verification for this identity. We'll review
-      your request soon!
+      You&apos;ve successfully requested verification for this identity.
+      We&apos;ll review your request soon!
     </p>
   )
 }
@@ -175,7 +175,7 @@ interface Props {
 }
 
 const VerifyIdentityForm = ({ identity, verification }: Props) => {
-  const { name, platform, status } = identity
+  const { platform, status } = identity
   const { hash, timestampMs } = verification
   const url = `https://also.domain/u/name?v=${hash.substring(0, 16)}`
   return (

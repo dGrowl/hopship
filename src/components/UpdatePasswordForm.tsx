@@ -66,8 +66,8 @@ const UpdatePasswordForm = ({ name }: Props) => {
             id="current"
             name="current"
           >
-            This doesn&apos;t match your current password. Please enter the correct
-            password.
+            This doesn&apos;t match your current password. Please enter the
+            correct password.
           </PasswordInput>
         </Field>
         <Field name="future" label="new">
@@ -85,8 +85,8 @@ const UpdatePasswordForm = ({ name }: Props) => {
             id="reFuture"
             name="reFuture"
           >
-            Second password doesn&apos;t match the first. Please ensure that they
-            match.
+            Second password doesn&apos;t match the first. Please ensure that
+            they match.
           </PasswordInput>
         </Field>
         <button>change</button>

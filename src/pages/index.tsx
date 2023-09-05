@@ -20,7 +20,8 @@ const Home = () => {
             </Link>
           </div>
           <dd>
-            A search engine for netizens. Look up one account to find the rest!
+            A social search engine. Look up one of your friend&apos;s accounts
+            to find their others!
           </dd>
         </section>
         <section>
@@ -32,7 +33,7 @@ const Home = () => {
           </div>
           <dd>
             People over platforms. Our goal is to ease transitions between
-            services.
+            networks.
           </dd>
         </section>
         <section>
