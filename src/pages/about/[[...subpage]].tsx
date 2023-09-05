@@ -1,5 +1,6 @@
 import {
   BsBullseye,
+  BsChatLeftText,
   BsCodeSlash,
   BsGearFill,
   BsPersonAdd,
@@ -11,15 +12,16 @@ import { GetServerSidePropsContext } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 import { useState } from 'react'
 import Head from 'next/head'
+import Link from 'next/link'
 
 import { hasKey } from '../../lib/util'
 import { LinkDatum } from '../../lib/types'
+import ContactForm from '../../components/about/ContactForm'
 import DropNav from '../../components/DropNav'
 import packages from '../../lib/packages'
 import SideNav from '../../components/SideNav'
 
 import styles from '../../styles/About.module.css'
-import Link from 'next/link'
 
 const linkData: { [key: string]: LinkDatum } = {
   help: {
@@ -39,6 +41,12 @@ const linkData: { [key: string]: LinkDatum } = {
     text: 'code',
     title: 'Code',
     url: '/about/code',
+  },
+  contact: {
+    icon: <BsChatLeftText size={24} strokeWidth={0.5} />,
+    text: 'contact',
+    title: 'Contact Us',
+    url: '/about/contact',
   },
 }
 
@@ -68,7 +76,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 }
 
 const Help = (
-  <article id={styles.content}>
+  <article>
     <section>
       <p>
         <b>also</b> is built primarily to serve two types of users:
@@ -85,8 +93,9 @@ const Help = (
     <section>
       <h3>Searcher</h3>
       <p>
-        You'll need to know one of the accounts of the person you're hoping to
-        look up. Using the fields at the top, moving from left to right:
+        You&apos;ll need to know one of the accounts of the person you&apos;re
+        hoping to look up. Using the fields at the top, moving from left to
+        right:
       </p>
       <ol>
         <li>Select the platform of the account from the dropdown.</li>
@@ -109,9 +118,9 @@ const Help = (
       </p>
       <ol>
         <li>
-          If you aren't logged in, create or sign into an account by clicking
-          the <BsPersonAdd strokeWidth={0.65} size={18} /> unknown user icon and
-          following the steps on the{' '}
+          If you aren&apos;t logged in, create or sign into an account by
+          clicking the <BsPersonAdd strokeWidth={0.65} size={18} /> unknown user
+          icon and following the steps on the{' '}
           <Link href="/login" className="underline">
             login
           </Link>{' '}
@@ -128,7 +137,7 @@ const Help = (
       <p>
         <strong>Note:</strong> After adding a new identity to your account, you
         must prove that it belongs to you before it will show up in search
-        results. To verify an identity's authenticity:
+        results. To verify an identity&apos;s authenticity:
       </p>
       <ol>
         <li>
@@ -140,16 +149,16 @@ const Help = (
         </li>
         <li>
           Click the <BsGearFill /> button on the identity to go to the
-          identity's settings.
+          identity&apos;s settings.
         </li>
-        <li>Follow the steps in the "Verify" section.</li>
+        <li>Follow the steps in the &quot;Verify&quot; section.</li>
       </ol>
     </section>
   </article>
 )
 
 const Mission = (
-  <article id={styles.content}>
+  <article>
     <section style={{ rowGap: '20px' }}>
       <p>
         <b>also</b> is a mission is to empower people by fostering genuine
@@ -181,11 +190,11 @@ const Mission = (
 const Code = () => {
   const [current, setCurrent] = useState(0)
   return (
-    <article id={styles.content}>
+    <article>
       <section>
         <h3>Source Code</h3>
         <p>
-          You can find <b>also</b>'s source code{' '}
+          You can find <b>also</b>&apos;s source code{' '}
           <a href="https://github.com/dGrowl/also" className="underline">
             on GitHub
           </a>
@@ -194,9 +203,9 @@ const Code = () => {
             render
           </a>{' '}
           and can be accessed via{' '}
-          <a href="/#placeholder" className="underline">
+          <Link href="/#placeholder" className="underline">
             also.domain
-          </a>
+          </Link>
           .
         </p>
       </section>
@@ -228,6 +237,8 @@ const Content = ({ subpage }: Props) => {
   switch (subpage) {
     case 'code':
       return <Code />
+    case 'contact':
+      return <ContactForm />
     case 'mission':
       return Mission
   }

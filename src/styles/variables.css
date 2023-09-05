@@ -8,6 +8,9 @@
   --c-7: rgb(148, 148, 148);
   --c-inverse: rgb(244, 244, 244);
 
+  --c-bad: rgb(161, 55, 48);
+  --c-good: hsl(145, 54%, 41%);
+
   --c-bluesky-dark: hsl(218, 60%, 21%);
   --c-bluesky-light: hsl(218, 100%, 60%);
   --c-bluesky: hsl(218, 100%, 51%);

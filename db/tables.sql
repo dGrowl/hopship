@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS public.admin_messages;
 DROP TABLE IF EXISTS public.verifications;
 DROP TABLE IF EXISTS public.identities;
 DROP TABLE IF EXISTS public.networks;
@@ -94,3 +95,20 @@ CREATE TABLE public.verifications (
 		REFERENCES public.identities (user_id, network, name)
 		ON DELETE CASCADE
 );
+
+CREATE TABLE public.admin_messages (
+	id INTEGER
+		PRIMARY KEY
+		GENERATED ALWAYS AS IDENTITY,
+	email TEXT,
+	message TEXT
+		NOT NULL,
+	timestamp TIMESTAMP
+		NOT NULL
+		DEFAULT current_timestamp,
+	read BOOLEAN
+		DEFAULT false,
+	CONSTRAINT email_proper_chars CHECK (email ~ '^.+@.+$'),
+	CONSTRAINT message_min_length CHECK (char_length(message) >= 2),
+	CONSTRAINT message_max_length CHECK (char_length(message) <= 2048)
+)

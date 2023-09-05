@@ -17,15 +17,18 @@
   line-height: 1.3rem;
 }
 
-#container div {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 6px 0;
+#container h1 {
+  font-size: 1.45rem;
+}
+
+#container h2 {
+  font-size: 1.2rem;
+  margin-top: 4px;
 }
 
 @media screen and (max-width: 720px) {
   #container {
+    gap: 8px;
     grid-template-columns: auto;
   }
 }

@@ -30,6 +30,9 @@ export const EMAIL_REGEX = `^.+@.+$`
 export const PASSWORD_MAX_LENGTH = 4096
 export const PASSWORD_MIN_LENGTH = 8
 
+export const MESSAGE_MAX_LENGTH = 2048
+export const MESSAGE_MIN_LENGTH = 2
+
 export const BIO_MAX_LENGTH = 64
 export const BIO_REGEX = `^(?!\s)(?!.*\s{2})[\u0020-\u007E]*(?<!\s)$`
 

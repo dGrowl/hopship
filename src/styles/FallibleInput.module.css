@@ -3,12 +3,12 @@
 }
 
 .badInput {
-  border: 2px solid rgb(161 55 48);
+  border: 2px solid var(--c-bad);
 }
 
 .explanation {
   align-items: center;
-  background-color: rgb(161 55 48);
+  background-color: var(--c-bad);
   border-radius: 0px 0px 4px 4px;
   column-gap: 8px;
   display: flex;
