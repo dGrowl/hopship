@@ -7,6 +7,7 @@ import {
   BsPersonCircle,
   BsQuestionLg,
   BsSearch,
+  BsShieldCheck,
 } from 'react-icons/bs'
 import { GetServerSidePropsContext } from 'next'
 import { ParsedUrlQuery } from 'querystring'
@@ -19,6 +20,7 @@ import { LinkDatum } from '../../lib/types'
 import ContactForm from '../../components/about/ContactForm'
 import DropNav from '../../components/DropNav'
 import packages from '../../lib/packages'
+import PrivacyPolicy from '../../components/about/PrivacyPolicy'
 import SideNav from '../../components/SideNav'
 
 import styles from '../../styles/About.module.css'
@@ -41,6 +43,12 @@ const linkData: { [key: string]: LinkDatum } = {
     text: 'code',
     title: 'Code',
     url: '/about/code',
+  },
+  privacy: {
+    icon: <BsShieldCheck size={24} strokeWidth={0.5} />,
+    text: 'privacy',
+    title: 'Privacy Policy',
+    url: '/about/privacy',
   },
   contact: {
     icon: <BsChatLeftText size={24} strokeWidth={0.5} />,
@@ -180,8 +188,13 @@ const Mission = (
         We have a strong commitment to privacy and transparency. We prioritize
         safeguarding user data and ensure that our project adheres to ethical
         principles. Instead of competing with other platforms, we aim to
-        collaborate and complement their services while placing users' needs
-        first.
+        collaborate and complement their services while placing users&apos;
+        needs first.
+      </p>
+
+      <p>
+        Lastly, please note that we are not affiliated with any of the
+        platforms/networks that we index. All of their stuff belongs to them.
       </p>
     </section>
   </article>
@@ -241,6 +254,8 @@ const Content = ({ subpage }: Props) => {
       return <ContactForm />
     case 'mission':
       return Mission
+    case 'privacy':
+      return PrivacyPolicy
   }
   return Help
 }
