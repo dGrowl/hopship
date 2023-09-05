@@ -19,6 +19,7 @@ const PasswordInput = ({ badValue, ...props }: Props) => {
   const [readable, setReadable] = useState(false)
   const inputProps = {
     ...props,
+    style: { paddingRight: '36px' },
     maxLength: PASSWORD_MAX_LENGTH,
     minLength: PASSWORD_MIN_LENGTH,
     required: true,
