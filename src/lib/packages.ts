@@ -16,7 +16,12 @@ import typesReactDom from '../licenses/types-react-dom'
 import typesReact from '../licenses/types-react'
 import typescript from '../licenses/typescript'
 
-const packages = [
+interface PackageData {
+  name: string
+  license: string
+}
+
+const PACKAGES = [
   {
     name: '@types/jsonwebtoken',
     license: typesJsonWebToken,
@@ -85,6 +90,6 @@ const packages = [
     name: 'prettier',
     license: prettier,
   },
-]
+] as readonly PackageData[]
 
-export default packages
+export default PACKAGES
