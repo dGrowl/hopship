@@ -26,7 +26,6 @@
   right: 0px;
   row-gap: 2px;
   top: 44px;
-  width: 110px;
 }
 
 #menu a {
@@ -52,7 +51,6 @@
 @media screen and (max-width: 720px) {
   #menu {
     font-size: 1.4rem;
-    width: 140px;
   }
 
   #menu a {
