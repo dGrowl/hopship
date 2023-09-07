@@ -57,8 +57,13 @@ const authenticate = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email, password } = body
   const user = await getUserData(email, password)
   if (user.valid) {
-    const cookie = genAuthCookie(user.name, email)
-    return res.status(200).setHeader('Set-Cookie', cookie).json({})
+    return res
+      .status(200)
+      .setHeader('Set-Cookie', [
+        genAuthCookie(user.name, email),
+        buildCookie('csrf', 'none', 0),
+      ])
+      .json({})
   }
   return res.status(401).json({
     message: "Provided account credentials don't match any known users",
@@ -67,7 +72,7 @@ const authenticate = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (!checkCSRF(req, res)) return
+  if (!checkCSRF(req, res, false)) return
   switch (req.method) {
     case 'POST':
       return authenticate(req, res)

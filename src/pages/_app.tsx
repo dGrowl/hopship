@@ -104,9 +104,13 @@ App.getInitialProps = async ({ ctx }: AppContext) => {
           throw 'Environment is missing JWT secret'
         }
         const code = genHexString(32)
-        const csrfToken = jwt.sign({ code }, process.env.JWT_AUTH_SECRET, {
-          expiresIn: HALF_HOUR_IN_SECONDS,
-        })
+        const csrfToken = jwt.sign(
+          { code, name: userName },
+          process.env.JWT_AUTH_SECRET,
+          {
+            expiresIn: HALF_HOUR_IN_SECONDS,
+          }
+        )
         ctx.res.setHeader(
           'Set-Cookie',
           buildCookie('csrf', csrfToken, HALF_HOUR_IN_SECONDS)

@@ -51,17 +51,27 @@ export const processAuth = async (
   return null
 }
 
-export const checkCSRF = (req: NextApiRequest, res: NextApiResponse) => {
+export const checkCSRF = (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  checkAuth: boolean = true
+) => {
   if (!process.env.JWT_AUTH_SECRET) {
     res.status(500).json({
       message: 'Server environment missing token secret',
     })
     return false
   }
-  const cookie = req.cookies.csrf
-  if (!cookie) {
+  const { csrf: csrfCookie, auth: authCookie } = req.cookies
+  if (!csrfCookie) {
     res.status(400).json({
       message: 'Missing CSRF protection cookie',
+    })
+    return false
+  }
+  if (checkAuth && !authCookie) {
+    res.status(400).json({
+      message: 'Missing auth cookie',
     })
     return false
   }
@@ -73,8 +83,8 @@ export const checkCSRF = (req: NextApiRequest, res: NextApiResponse) => {
     return false
   }
   try {
-    const { code: cookieCode } = jwt.verify(
-      cookie,
+    const { code: cookieCode, name: csrfName } = jwt.verify(
+      csrfCookie,
       process.env.JWT_AUTH_SECRET
     ) as CSRFPayload
     if (headerCode !== cookieCode) {
@@ -82,6 +92,15 @@ export const checkCSRF = (req: NextApiRequest, res: NextApiResponse) => {
         message: 'Mismatch between CSRF protection codes in cookie and header',
       })
       return false
+    }
+    if (checkAuth) {
+      const { name: authName } = jwt.decode(authCookie || '') as AuthPayload
+      if (!authName || !csrfName || authName !== csrfName) {
+        res.status(400).json({
+          message: 'Mismatch between name in auth and CSRF cookies',
+        })
+        return false
+      }
     }
   } catch (error) {
     console.error(error)

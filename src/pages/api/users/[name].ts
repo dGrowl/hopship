@@ -6,9 +6,9 @@ import {
   buildPostgresErrorJson,
   sanitizeName,
 } from '../../../lib/safety'
+import { buildCookie, hasKey } from '../../../lib/util'
 import { checkCSRF, processAuth } from '../../../lib/helpers'
 import { getUserData, genAuthCookie } from '../login'
-import { hasKey } from '../../../lib/util'
 import db from '../../../lib/db'
 import { PostgresError } from '../../../lib/types'
 
@@ -73,12 +73,16 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
   if (data.name || data.email) {
     const currentSecs = Date.now() / 1000
     const remainingSecs = (payload.exp || currentSecs) - currentSecs
-    const cookie = genAuthCookie(
+    const newAuthCookie = genAuthCookie(
       data.name || currentName,
       data.email || currentEmail,
       remainingSecs
     )
-    return res.status(200).setHeader('Set-Cookie', cookie).json({})
+    const clearCSRFCookie = buildCookie('csrf', 'none', 0)
+    return res
+      .status(200)
+      .setHeader('Set-Cookie', [newAuthCookie, clearCSRFCookie])
+      .json({})
   }
   return res.status(200).json({})
 }
