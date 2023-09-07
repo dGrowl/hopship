@@ -34,7 +34,7 @@ export const MESSAGE_MAX_LENGTH = 2048
 export const MESSAGE_MIN_LENGTH = 2
 
 export const BIO_MAX_LENGTH = 64
-export const BIO_REGEX = `^(?!\s)(?!.*\s{2})[\u0020-\u007E]*(?<!\s)$`
+export const BIO_REGEX = `^[\\u0020-\\u007E]*$`
 
 export const NETWORK_MAX_LENGTH = NETWORKS.reduce(
   (len, p) => (p.length > len ? p.length : len),
