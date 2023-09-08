@@ -7,7 +7,7 @@ import db from '../../../../lib/db'
 const update = async (req: NextApiRequest, res: NextApiResponse) => {
   const payload = await processAuth(req, res)
   if (!payload) return
-  const { name: userName } = payload
+  const { sub: userName } = payload
   const { body, query } = req
   const { network, id: networkName } = query
   if (hasKey(body, 'desc')) {
@@ -34,7 +34,7 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
 const remove = async (req: NextApiRequest, res: NextApiResponse) => {
   const payload = await processAuth(req, res)
   if (!payload) return
-  const { name: userName } = payload
+  const { sub: userName } = payload
   const { query } = req
   const { network, id: networkName } = query
   try {

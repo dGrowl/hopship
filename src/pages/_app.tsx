@@ -93,7 +93,7 @@ App.getInitialProps = async ({ ctx }: AppContext) => {
           authToken,
           process.env.JWT_AUTH_SECRET
         ) as AuthPayload
-        userName = payload.name
+        userName = payload.sub
       } catch (error) {
         console.error(error)
       }
@@ -104,12 +104,14 @@ App.getInitialProps = async ({ ctx }: AppContext) => {
           throw 'Environment is missing JWT secret'
         }
         const code = genHexString(32)
+        const options = { expiresIn: HALF_HOUR_IN_SECONDS } as jwt.SignOptions
+        if (userName) {
+          options.subject = userName
+        }
         const csrfToken = jwt.sign(
-          { code, name: userName },
+          { code },
           process.env.JWT_AUTH_SECRET,
-          {
-            expiresIn: HALF_HOUR_IN_SECONDS,
-          }
+          options
         )
         ctx.res.setHeader(
           'Set-Cookie',

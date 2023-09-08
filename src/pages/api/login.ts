@@ -21,7 +21,8 @@ export const genAuthCookie = (
   }
   expirationSecs = Math.floor(expirationSecs)
   expirationSecs = clamp(expirationSecs, 0, WEEK_IN_SECONDS)
-  const token = jwt.sign({ name, email }, process.env.JWT_AUTH_SECRET, {
+  const token = jwt.sign({ email }, process.env.JWT_AUTH_SECRET, {
+    subject: name,
     expiresIn: expirationSecs,
   })
   return buildCookie('auth', token, expirationSecs)

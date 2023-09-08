@@ -5,7 +5,10 @@ import { AuthPayload, CSRFPayload } from './types'
 import db from './db'
 
 export const validateUserData = async (payload: AuthPayload) => {
-  const { name, email } = payload
+  const { sub: name, email } = payload
+  if (!name || !email) {
+    return false
+  }
   const result = await db.query(
     `
       SELECT true
@@ -83,7 +86,7 @@ export const checkCSRF = (
     return false
   }
   try {
-    const { code: cookieCode, name: csrfName } = jwt.verify(
+    const { code: cookieCode, sub: csrfName } = jwt.verify(
       csrfCookie,
       process.env.JWT_AUTH_SECRET
     ) as CSRFPayload
@@ -94,7 +97,7 @@ export const checkCSRF = (
       return false
     }
     if (checkAuth) {
-      const { name: authName } = jwt.decode(authCookie || '') as AuthPayload
+      const { sub: authName } = jwt.decode(authCookie || '') as AuthPayload
       if (!authName || !csrfName || authName !== csrfName) {
         res.status(400).json({
           message: 'Mismatch between name in auth and CSRF cookies',

@@ -17,11 +17,12 @@ export interface LinkDatum {
 }
 
 export interface AuthPayload extends JwtPayload {
-  name: string
+  sub: string
   email: string
 }
 
 export interface CSRFPayload extends JwtPayload {
+  sub: string
   code: string
 }
 

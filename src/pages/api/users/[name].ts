@@ -24,12 +24,12 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!payload) return
   const { body, query } = req
   const { name: currentName } = query
-  if (currentName !== payload.name) {
+  const { sub: authName, email: currentEmail } = payload
+  if (!authName || currentName !== authName) {
     return res
       .status(401)
       .json({ message: 'Mismatch between path and token name' })
   }
-  const { email: currentEmail } = payload
   const data: Data = {}
   if (hasKey(body, 'name')) {
     data.name = sanitizeName(body.name)
@@ -90,8 +90,9 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
 const remove = async (req: NextApiRequest, res: NextApiResponse) => {
   const payload = await processAuth(req, res)
   if (!payload) return
+  const { sub: authName } = payload
   const { name } = req.query
-  if (name !== payload.name) {
+  if (!authName || name !== authName) {
     return res
       .status(401)
       .json({ message: 'Mismatch between path and token name' })

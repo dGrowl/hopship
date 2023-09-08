@@ -182,16 +182,19 @@ const genVerificationDetails = (userID: string, identity: Identity) => {
   }
 }
 
-interface SettingsData extends AuthPayload {
+interface SettingsData {
   bio: string
+  email: string
   identities: Identity[]
   identity: Identity
+  name: string
   verification: VerificationDetails
 }
 
 const fetchSettingsData = async (subpage: string, auth: AuthPayload) => {
   const user: SettingsData = {
-    ...auth,
+    email: auth.email,
+    name: auth.sub,
     bio: '',
     verification: {
       hash: '',

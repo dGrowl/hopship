@@ -6,7 +6,7 @@ import db from '../../lib/db'
 const verify = async (req: NextApiRequest, res: NextApiResponse) => {
   const payload = await processAuth(req, res)
   if (!payload) return
-  const { name: userName } = payload
+  const { sub: userName } = payload
   const { network, name: networkName, timestampMs, proof } = req.body
   try {
     await db.query(
