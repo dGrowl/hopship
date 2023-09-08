@@ -18,7 +18,7 @@ import '../styles/globals.css'
 import '../styles/variables.css'
 import styles from '../styles/App.module.css'
 
-const HALF_HOUR_IN_SECONDS = 60 * 30
+const SIX_HOURS_IN_SECONDS = 60 /* seconds */ * 60 /* minutes */ * 6 /* hours */
 const TITLE_FONT = Nunito_Sans({ subsets: ['latin'] })
 
 interface HomeBarProps {
@@ -104,7 +104,7 @@ App.getInitialProps = async ({ ctx }: AppContext) => {
           throw 'Environment is missing JWT secret'
         }
         const code = genHexString(32)
-        const options = { expiresIn: HALF_HOUR_IN_SECONDS } as jwt.SignOptions
+        const options = { expiresIn: SIX_HOURS_IN_SECONDS } as jwt.SignOptions
         if (userName) {
           options.subject = userName
         }
@@ -115,7 +115,7 @@ App.getInitialProps = async ({ ctx }: AppContext) => {
         )
         ctx.res.setHeader(
           'Set-Cookie',
-          buildCookie('csrf', csrfToken, HALF_HOUR_IN_SECONDS)
+          buildCookie('csrf', csrfToken, SIX_HOURS_IN_SECONDS)
         )
       } catch (error) {
         console.error(error)
