@@ -121,3 +121,6 @@ export const cleanSpaces = (s: string) => {
   }
   return s
 }
+
+export const secsRemaining = (timestampSecs: number) =>
+  timestampSecs - Date.now() / 1000

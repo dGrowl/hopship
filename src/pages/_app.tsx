@@ -2,14 +2,15 @@ import { BsSlash } from 'react-icons/bs'
 import { NextApiRequestCookies } from 'next/dist/server/api-utils'
 import { NextIncomingMessage } from 'next/dist/server/request-meta'
 import { Nunito_Sans } from 'next/font/google'
+import { ServerResponse } from 'http'
 import { useState } from 'react'
 import Head from 'next/head'
 import jwt from 'jsonwebtoken'
 import Link from 'next/link'
 import type { AppContext, AppProps } from 'next/app'
 
-import { AuthPayload } from '../lib/types'
-import { buildCookie, genHexString } from '../lib/util'
+import { AuthPayload, CSRFPayload } from '../lib/types'
+import { buildCookie, genHexString, secsRemaining } from '../lib/util'
 import SearchBar from '../components/SearchBar'
 import UserMenu from '../components/UserMenu'
 
@@ -18,7 +19,8 @@ import '../styles/globals.css'
 import '../styles/variables.css'
 import styles from '../styles/App.module.css'
 
-const SIX_HOURS_IN_SECONDS = 60 /* seconds */ * 60 /* minutes */ * 6 /* hours */
+const THREE_HOURS_IN_SECONDS = 60 /* secs */ * 60 /* mins */ * 3 /* hrs */
+const SIX_HOURS_IN_SECONDS = THREE_HOURS_IN_SECONDS * 2
 const TITLE_FONT = Nunito_Sans({ subsets: ['latin'] })
 
 interface HomeBarProps {
@@ -75,51 +77,75 @@ export default function App({ Component, pageProps, userName }: Props) {
   )
 }
 
-type ExtendedRequest = NextIncomingMessage & {
+type RequestWithCookies = NextIncomingMessage & {
   cookies: NextApiRequestCookies
 }
 
-App.getInitialProps = async ({ ctx }: AppContext) => {
-  let userName = null
-  if (ctx.req) {
-    const request = ctx.req as ExtendedRequest
-    const authToken = request.cookies.auth
-    if (authToken) {
-      try {
-        if (!process.env.JWT_AUTH_SECRET) {
-          throw 'Environment is missing JWT secret'
-        }
-        const payload = jwt.verify(
-          authToken,
-          process.env.JWT_AUTH_SECRET
-        ) as AuthPayload
-        userName = payload.sub
-      } catch (error) {
-        console.error(error)
+const extractAuthName = (authToken: string | undefined) => {
+  if (!process.env.JWT_AUTH_SECRET) {
+    throw 'Environment is missing JWT secret'
+  }
+  if (!authToken) {
+    return null
+  }
+  const payload = jwt.verify(
+    authToken,
+    process.env.JWT_AUTH_SECRET
+  ) as AuthPayload
+  return payload.sub
+}
+
+const addCSRFCookie = (userName: string | null, response: ServerResponse) => {
+  if (!process.env.JWT_AUTH_SECRET) {
+    throw 'Environment is missing JWT secret'
+  }
+  const code = genHexString(32)
+  const options = { expiresIn: SIX_HOURS_IN_SECONDS } as jwt.SignOptions
+  if (userName) {
+    options.subject = userName
+  }
+  const csrfToken = jwt.sign({ code }, process.env.JWT_AUTH_SECRET, options)
+  response.setHeader(
+    'Set-Cookie',
+    buildCookie('csrf', csrfToken, SIX_HOURS_IN_SECONDS)
+  )
+}
+
+const checkCSRFCookie = (
+  req: RequestWithCookies,
+  res: ServerResponse,
+  userName: string | null
+) => {
+  if (!process.env.JWT_AUTH_SECRET) {
+    throw 'Environment is missing JWT secret'
+  }
+  if (req.cookies.csrf) {
+    try {
+      const payload = jwt.verify(
+        req.cookies.csrf,
+        process.env.JWT_AUTH_SECRET
+      ) as CSRFPayload
+      if (payload.exp && secsRemaining(payload.exp) < THREE_HOURS_IN_SECONDS) {
+        addCSRFCookie(userName, res)
       }
+    } catch (error) {
+      addCSRFCookie(userName, res)
     }
-    if (!request.cookies.csrf && ctx.res) {
-      try {
-        if (!process.env.JWT_AUTH_SECRET) {
-          throw 'Environment is missing JWT secret'
-        }
-        const code = genHexString(32)
-        const options = { expiresIn: SIX_HOURS_IN_SECONDS } as jwt.SignOptions
-        if (userName) {
-          options.subject = userName
-        }
-        const csrfToken = jwt.sign(
-          { code },
-          process.env.JWT_AUTH_SECRET,
-          options
-        )
-        ctx.res.setHeader(
-          'Set-Cookie',
-          buildCookie('csrf', csrfToken, SIX_HOURS_IN_SECONDS)
-        )
-      } catch (error) {
-        console.error(error)
-      }
+  } else {
+    addCSRFCookie(userName, res)
+  }
+}
+
+App.getInitialProps = async ({ ctx }: AppContext) => {
+  const { req, res } = ctx
+  let userName = null
+  if (req && res) {
+    try {
+      const request = req as RequestWithCookies
+      userName = extractAuthName(request.cookies.auth)
+      checkCSRFCookie(request, res, userName)
+    } catch (error) {
+      console.error(error)
     }
   }
   return { userName }
