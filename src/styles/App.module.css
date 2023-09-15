@@ -54,6 +54,10 @@
   padding: 0px 8px;
 }
 
+#footer svg {
+  color: var(--c-2);
+}
+
 @media screen and (max-width: 720px) {
   .main {
     margin: 8px 8px 90px 8px;
