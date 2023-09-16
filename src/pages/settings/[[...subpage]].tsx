@@ -232,7 +232,7 @@ const fetchSettingsData = async (subpage: string, auth: AuthPayload) => {
       platform: identity.platform,
       status: identity.status,
     }
-    if (identity.status === 'UNVERIFIED') {
+    if (identity.status !== 'VERIFIED') {
       user.verification = genVerificationDetails(identity.id, user.identity)
     }
   }
