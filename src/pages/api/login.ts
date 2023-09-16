@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { buildCookie, clamp } from '../../lib/util'
 import { checkCSRF } from '../../lib/helpers'
+import { JWT_AUTH_SECRET } from '../../lib/env'
 import db from '../../lib/db'
 
 const WEEK_IN_SECONDS = 60 * 60 * 24 * 7
@@ -13,15 +14,9 @@ export const genAuthCookie = (
   email: string,
   expirationSecs: number = WEEK_IN_SECONDS
 ) => {
-  if (!process.env.JWT_AUTH_SECRET) {
-    throw {
-      message:
-        'Failed to generate auth cookie (server environment missing auth secret)',
-    }
-  }
   expirationSecs = Math.floor(expirationSecs)
   expirationSecs = clamp(expirationSecs, 0, WEEK_IN_SECONDS)
-  const token = jwt.sign({ email }, process.env.JWT_AUTH_SECRET, {
+  const token = jwt.sign({ email }, JWT_AUTH_SECRET, {
     subject: name,
     expiresIn: expirationSecs,
   })

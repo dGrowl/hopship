@@ -23,6 +23,7 @@ import {
   LinkDatum,
   VerificationDetails,
 } from '../../lib/types'
+import { JWT_AUTH_SECRET, VERIFICATION_SECRET } from '../../lib/env'
 import { NETWORKS, hasKey } from '../../lib/util'
 import { validateUserData } from '../../lib/helpers'
 import db from '../../lib/db'
@@ -166,16 +167,13 @@ const getIdentityData = async (
 }
 
 const genVerificationDetails = (userID: string, identity: Identity) => {
-  if (!process.env.VERIFICATION_SECRET) {
-    throw 'Environment is missing verification secret'
-  }
   const timestampMs = Math.floor(Date.now() / 1000).toString()
   const hash = createHash('sha256')
   hash.update(userID.toString())
   hash.update(identity.platform)
   hash.update(identity.name)
   hash.update(timestampMs)
-  hash.update(process.env.VERIFICATION_SECRET)
+  hash.update(VERIFICATION_SECRET)
   return {
     hash: hash.digest('base64url'),
     timestampMs,
@@ -245,14 +243,8 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const { auth: token } = ctx.req.cookies
 
   try {
-    if (!process.env.JWT_AUTH_SECRET) {
-      throw 'Environment is missing JWT secret'
-    }
     if (token) {
-      const payload = jwt.verify(
-        token,
-        process.env.JWT_AUTH_SECRET
-      ) as AuthPayload
+      const payload = jwt.verify(token, JWT_AUTH_SECRET) as AuthPayload
       if (!(await validateUserData(payload))) {
         return {
           redirect: {

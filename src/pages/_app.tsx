@@ -11,6 +11,7 @@ import type { AppContext, AppProps } from 'next/app'
 
 import { AuthPayload, CSRFPayload } from '../lib/types'
 import { buildCookie, genHexString, secsRemaining } from '../lib/util'
+import { JWT_AUTH_SECRET } from '../lib/env'
 import SearchBar from '../components/SearchBar'
 import UserMenu from '../components/UserMenu'
 
@@ -82,29 +83,20 @@ type RequestWithCookies = NextIncomingMessage & {
 }
 
 const extractAuthName = (authToken: string | undefined) => {
-  if (!process.env.JWT_AUTH_SECRET) {
-    throw 'Environment is missing JWT secret'
-  }
   if (!authToken) {
     return null
   }
-  const payload = jwt.verify(
-    authToken,
-    process.env.JWT_AUTH_SECRET
-  ) as AuthPayload
+  const payload = jwt.verify(authToken, JWT_AUTH_SECRET) as AuthPayload
   return payload.sub
 }
 
 const addCSRFCookie = (userName: string | null, response: ServerResponse) => {
-  if (!process.env.JWT_AUTH_SECRET) {
-    throw 'Environment is missing JWT secret'
-  }
   const code = genHexString(32)
   const options = { expiresIn: SIX_HOURS_IN_SECONDS } as jwt.SignOptions
   if (userName) {
     options.subject = userName
   }
-  const csrfToken = jwt.sign({ code }, process.env.JWT_AUTH_SECRET, options)
+  const csrfToken = jwt.sign({ code }, JWT_AUTH_SECRET, options)
   response.setHeader(
     'Set-Cookie',
     buildCookie('csrf', csrfToken, SIX_HOURS_IN_SECONDS)
@@ -116,14 +108,11 @@ const checkCSRFCookie = (
   res: ServerResponse,
   userName: string | null
 ) => {
-  if (!process.env.JWT_AUTH_SECRET) {
-    throw 'Environment is missing JWT secret'
-  }
   if (req.cookies.csrf) {
     try {
       const payload = jwt.verify(
         req.cookies.csrf,
-        process.env.JWT_AUTH_SECRET
+        JWT_AUTH_SECRET
       ) as CSRFPayload
       if (payload.exp && secsRemaining(payload.exp) < THREE_HOURS_IN_SECONDS) {
         addCSRFCookie(userName, res)

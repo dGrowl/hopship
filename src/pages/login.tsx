@@ -13,6 +13,7 @@ import {
   USER_NAME_MIN_LENGTH,
   USER_NAME_REGEX,
 } from '../lib/safety'
+import { JWT_AUTH_SECRET } from '../lib/env'
 import AntiCSRFForm from '../components/AntiCSRFForm'
 import FallibleInput from '../components/FallibleInput'
 import Field from '../components/Field'
@@ -230,11 +231,8 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const { auth: token } = ctx.req.cookies
 
   try {
-    if (!process.env.JWT_AUTH_SECRET) {
-      throw 'Environment is missing JWT secret'
-    }
     if (token) {
-      jwt.verify(token, process.env.JWT_AUTH_SECRET)
+      jwt.verify(token, JWT_AUTH_SECRET)
       return {
         redirect: {
           destination: '/settings/identities',
