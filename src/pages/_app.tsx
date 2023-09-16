@@ -1,4 +1,4 @@
-import { BsSlash } from 'react-icons/bs'
+import { BsMoonFill, BsRocketFill, BsSlash, BsStars } from 'react-icons/bs'
 import { NextApiRequestCookies } from 'next/dist/server/api-utils'
 import { NextIncomingMessage } from 'next/dist/server/request-meta'
 import { Nunito_Sans } from 'next/font/google'
@@ -46,6 +46,14 @@ const HomeBar = ({ userName }: HomeBarProps) => {
   )
 }
 
+const backdrop = (
+  <div id={styles.backdrop}>
+    <BsMoonFill id={styles.moon} />
+    <BsStars id={styles.stars} />
+    <BsRocketFill id={styles.ship} />
+  </div>
+)
+
 type Props = AppProps & HomeBarProps
 
 export default function App({ Component, pageProps, userName }: Props) {
@@ -60,7 +68,7 @@ export default function App({ Component, pageProps, userName }: Props) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
+      {backdrop}
       <HomeBar userName={userName} />
       <main className={styles.main}>
         <Component {...pageProps} />

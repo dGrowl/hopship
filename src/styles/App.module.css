@@ -58,9 +58,36 @@
   color: var(--c-2);
 }
 
+#backdrop svg {
+  color: var(--c-2);
+  position: absolute;
+  z-index: -1;
+}
+
+#moon {
+  bottom: 390px;
+  height: 80px;
+  left: 16px;
+  width: 80px;
+}
+
+#stars {
+  bottom: 310px;
+  height: 80px;
+  left: 190px;
+  width: 80px;
+}
+
+#ship {
+  bottom: 64px;
+  height: 256px;
+  left: 0px;
+  width: 256px;
+}
+
 @media screen and (max-width: 720px) {
   .main {
-    margin: 8px 8px 90px 8px;
+    margin: 8px 8px 150px;
   }
 
   .hiddenForMobile {
@@ -73,5 +100,28 @@
 
   #headerContent {
     margin: 2px 8px;
+  }
+
+  #moon {
+    bottom: 64px;
+    height: 64px;
+    left: auto;
+    right: 4px;
+    width: 64px;
+  }
+
+  #stars {
+    bottom: 94px;
+    height: 32px;
+    left: auto;
+    right: 4px;
+    width: 32px;
+  }
+
+  #ship {
+    bottom: 64px;
+    height: 64px;
+    left: 4px;
+    width: 64px;
   }
 }
