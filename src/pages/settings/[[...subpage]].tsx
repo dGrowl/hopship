@@ -170,7 +170,7 @@ const genVerificationDetails = (userID: string, identity: Identity) => {
   const timestampMs = Math.floor(Date.now() / 1000).toString()
   const hash = createHash('sha256')
   hash.update(userID.toString())
-  hash.update(identity.platform)
+  hash.update(identity.network)
   hash.update(identity.name)
   hash.update(timestampMs)
   hash.update(VERIFICATION_SECRET)
