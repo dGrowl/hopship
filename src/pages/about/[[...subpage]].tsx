@@ -103,7 +103,7 @@ const About = ({ subpage }: Props) => {
   return (
     <>
       <Head>
-        <title>{`also: About > ${linkDatum.title}`}</title>
+        <title>{`hopship: About > ${linkDatum.title}`}</title>
       </Head>
       <div id={styles.container}>
         <SideNav current={linkDatum.url} linkData={allLinkData} />

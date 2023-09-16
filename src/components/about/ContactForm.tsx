@@ -51,7 +51,7 @@ const getResultElement = (success: boolean | null) => {
           <p>
             Your message couldn&apos;t be sent. Please try again later and, if
             the issue persists, get in touch via{' '}
-            <a href="https://github.com/dGrowl/also" className="underline">
+            <a href="https://github.com/dGrowl/hopship" className="underline">
               GitHub
             </a>
             .
@@ -67,7 +67,7 @@ const ContactForm = () => {
     <article>
       <section>
         <p>
-          If you&apos;d like to contact the <b>also</b> team, enter a message
+          If you&apos;d like to contact the <b>hopship</b> team, enter a message
           below. Make sure to include your email address if you want a response.
         </p>
         <AntiCSRFForm onSubmit={(e) => send(e, setSuccess)}>

@@ -37,7 +37,7 @@ const HomeBar = ({ userName }: HomeBarProps) => {
         id={styles.headerContent}
       >
         <Link href="/" className={searching ? styles.hiddenForMobile : ''}>
-          <h1 className={TITLE_FONT.className}>also</h1>
+          <h1 className={TITLE_FONT.className}>hopship</h1>
         </Link>
         <SearchBar searching={searching} setSearching={setSearching} />
         <UserMenu name={userName} searching={searching} />
@@ -52,7 +52,7 @@ export default function App({ Component, pageProps, userName }: Props) {
   return (
     <>
       <Head>
-        <title>also</title>
+        <title>hopship</title>
         <meta
           name="description"
           content="A searchable index of user accounts across different web platforms. Come find all of your friends!"

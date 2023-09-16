@@ -13,7 +13,7 @@ import {
   USER_NAME_MIN_LENGTH,
   USER_NAME_REGEX,
 } from '../lib/safety'
-import { JWT_AUTH_SECRET } from '../lib/env'
+import { HOME_DOMAIN, JWT_AUTH_SECRET } from '../lib/env'
 import AntiCSRFForm from '../components/AntiCSRFForm'
 import FallibleInput from '../components/FallibleInput'
 import Field from '../components/Field'
@@ -201,7 +201,9 @@ const RegisterForm = () => {
         >
           Name is already in use. Please choose a different one.
         </FallibleInput>
-        <Preview>also.domain/u/{name || 'user'}</Preview>
+        <Preview>
+          {HOME_DOMAIN}/u/{name || 'user'}
+        </Preview>
       </Field>
       <Field name="password">
         <PasswordInput
@@ -254,7 +256,7 @@ const Login = () => {
   return (
     <>
       <Head>
-        <title>also: Login/Register</title>
+        <title>hopship: Login/Register</title>
       </Head>
       <div id={styles.container}>
         <section>

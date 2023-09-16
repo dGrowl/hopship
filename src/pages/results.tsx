@@ -88,7 +88,7 @@ const Results = ({ network, name }: Props) => {
     <>
       <Head>
         <title>
-          {`also: ${
+          {`hopship: ${
             network && name
               ? `${getSpecificNetworkName(network)}/${name}`
               : 'Results'

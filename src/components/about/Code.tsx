@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 
+import { HOME_DOMAIN } from '../../lib/env'
 import PACKAGES from '../../lib/packages'
 
 const Code = () => {
@@ -10,8 +11,8 @@ const Code = () => {
       <section>
         <h3>Source Code</h3>
         <p>
-          You can find <b>also</b>&apos;s source code{' '}
-          <a href="https://github.com/dGrowl/also" className="underline">
+          You can find <b>hopship</b>&apos;s source code{' '}
+          <a href="https://github.com/dGrowl/hopship" className="underline">
             on GitHub
           </a>
           . The canonical version of the website is currently hosted by{' '}
@@ -19,8 +20,8 @@ const Code = () => {
             render
           </a>{' '}
           and can be accessed via{' '}
-          <Link href="/#placeholder" className="underline">
-            also.domain
+          <Link href={`https://${HOME_DOMAIN}`} className="underline">
+            {HOME_DOMAIN}
           </Link>
           .
         </p>
@@ -28,7 +29,7 @@ const Code = () => {
       <section>
         <h3>Third-Party Packages</h3>
         <p>
-          <b>also</b> depends on the following open-source software packages,
+          <b>hopship</b> depends on the following open-source software packages,
           each used under the terms of its accompanying license. They can all be
           found on{' '}
           <a href="https://www.npmjs.com/" className="underline">

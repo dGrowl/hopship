@@ -2,6 +2,7 @@ import { FormEvent, useState } from 'react'
 
 import { buildMessageURL, csrfHeaders } from '../lib/util'
 import { CSRFFormFields, Identity, VerificationDetails } from '../lib/types'
+import { HOME_DOMAIN } from '../lib/env'
 import AntiCSRFForm from './AntiCSRFForm'
 import Preview from './Preview'
 
@@ -177,7 +178,7 @@ interface Props {
 const VerifyIdentityForm = ({ identity, verification }: Props) => {
   const { platform, status } = identity
   const { hash, timestampMs } = verification
-  const url = `https://also.domain/u/name?v=${hash.substring(0, 16)}`
+  const url = `https://${HOME_DOMAIN}/u/name?v=${hash.substring(0, 16)}`
   return (
     <section>
       <h3>Verify</h3>
@@ -194,8 +195,8 @@ const VerifyIdentityForm = ({ identity, verification }: Props) => {
           </ol>
           <div>Example:</div>
           <div className={`${styles.example} ${styles[platform + 'Example']}`}>
-            Hey everyone, I&apos;m linking accounts using Also! Check my other
-            pages out at{' '}
+            Hey everyone, I&apos;m linking accounts using hopship! Check my
+            other pages out at{' '}
             <a href={url} className="underline">
               {url}
             </a>

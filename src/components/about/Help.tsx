@@ -10,7 +10,7 @@ const Help = (
   <article>
     <section>
       <p>
-        <b>also</b> is built primarily to serve two types of users:
+        <b>hopship</b> is built primarily to serve two types of users:
       </p>
       <ul>
         <li>

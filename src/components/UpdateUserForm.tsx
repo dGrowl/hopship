@@ -12,6 +12,7 @@ import {
   USER_NAME_MIN_LENGTH,
   USER_NAME_REGEX,
 } from '../lib/safety'
+import { HOME_DOMAIN } from '../lib/env'
 import AntiCSRFForm from './AntiCSRFForm'
 import FallibleInput from './FallibleInput'
 import Field from './Field'
@@ -122,7 +123,9 @@ const UpdateUserForm = ({ name, email, bio }: Props) => {
           >
             Name is already in use. Please choose a different one.
           </FallibleInput>
-          <Preview>also.domain/u/{userName || 'user'}</Preview>
+          <Preview>
+            {HOME_DOMAIN}/u/{userName || 'user'}
+          </Preview>
         </Field>
         <Field name="email">
           <FallibleInput

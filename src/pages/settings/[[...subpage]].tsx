@@ -327,7 +327,7 @@ const Settings = ({ subpage, data }: Props) => {
   return (
     <>
       <Head>
-        <title>{`also: ${linkDatum.title}`}</title>
+        <title>{`hopship: ${linkDatum.title}`}</title>
       </Head>
       <div id={styles.container}>
         <SideNav current={linkDatum.url} linkData={relevantLinkData} />

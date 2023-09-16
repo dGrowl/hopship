@@ -2,7 +2,7 @@ const Mission = (
   <article>
     <section style={{ rowGap: '20px' }}>
       <p>
-        <b>also</b> is a mission is to empower people by fostering genuine
+        <b>hopship</b> is a mission is to empower people by fostering genuine
         connections and promoting freedom of choice. In a world filled with
         siloed platforms, we aim to break down barriers by providing a
         user-friendly social search engine that respects consent and celebrates

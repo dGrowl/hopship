@@ -45,7 +45,7 @@ const Home = () => {
           </div>
           <dd>
             Built from open-source software, with its own code hosted&nbsp;
-            <a href="https://github.com/dGrowl/also" className="underline">
+            <a href="https://github.com/dGrowl/hopship" className="underline">
               here
             </a>
             . Bring issues!

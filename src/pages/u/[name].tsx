@@ -123,7 +123,7 @@ const UserPage = ({ userName, bio, identities }: Props) => {
   return (
     <>
       <Head>
-        <title>{`also: ${userName}`}</title>
+        <title>{`hopship: ${userName}`}</title>
       </Head>
       <header id={styles.nameContainer}>
         <h2 id={styles.name}>

@@ -1,8 +1,10 @@
+import { HOME_DOMAIN } from '../../lib/env'
+
 const PrivacyPolicy = (
   <article>
     <section>
       <h1>Privacy Policy</h1>
-      <p>Last updated: August 30, 2023</p>
+      <p>Last updated: September 15, 2023</p>
       <p>
         This Privacy Policy describes Our policies and procedures on the
         collection, use and disclosure of Your information when You use the
@@ -53,7 +55,7 @@ const PrivacyPolicy = (
           <p>
             <strong>Company</strong> (referred to as either &quot;the
             Company&quot;, &quot;We&quot;, &quot;Us&quot; or &quot;Our&quot; in
-            this Agreement) refers to also.
+            this Agreement) refers to hopship.
           </p>
         </li>
         <li>
@@ -105,13 +107,13 @@ const PrivacyPolicy = (
         </li>
         <li>
           <p>
-            <strong>Website</strong> refers to also, accessible from{' '}
+            <strong>Website</strong> refers to hopship, accessible from{' '}
             <a
-              href="https://also.domain"
+              href={`https://${HOME_DOMAIN}`}
               rel="external nofollow noopener"
               target="_blank"
             >
-              https://also.domain
+              https://{HOME_DOMAIN}
             </a>
           </p>
         </li>
@@ -512,7 +514,7 @@ const PrivacyPolicy = (
               rel="external nofollow noopener"
               target="_blank"
             >
-              https://also.domain/about/contact
+              https://{HOME_DOMAIN}/about/contact
             </a>
           </p>
         </li>
