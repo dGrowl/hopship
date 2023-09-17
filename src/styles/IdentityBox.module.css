@@ -219,7 +219,7 @@ button.addControl:focus {
   border: 1px solid var(--c-inverse);
   font-size: 0.95rem;
   font-weight: 600;
-  margin: 6px 4px 4px 4px;
+  margin: 6px 4px 4px;
   padding: 1px;
   width: auto;
 }

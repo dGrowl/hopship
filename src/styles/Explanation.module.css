@@ -1,0 +1,26 @@
+.container {
+  align-items: center;
+  border-radius: 4px;
+  column-gap: 12px;
+  display: flex;
+  padding: 8px 12px;
+  width: 100%;
+}
+
+.container svg {
+  height: 24px;
+  stroke-width: 0.75px;
+  width: 24px;
+}
+
+.squaredTop {
+  border-radius: 0px 0px 4px 4px;
+}
+
+.error {
+  background-color: var(--c-bad);
+}
+
+.success {
+  background-color: var(--c-good);
+}

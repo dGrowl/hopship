@@ -1,6 +1,8 @@
 import { BsExclamationCircle } from 'react-icons/bs'
 import { InputHTMLAttributes, DetailedHTMLProps, useState } from 'react'
 
+import Explanation from './Explanation'
+
 import styles from '../styles/FallibleInput.module.css'
 
 interface Props
@@ -32,10 +34,10 @@ const FallibleInput = ({
         value={value}
       />
       {hasError ? (
-        <div className={styles.explanation}>
-          <BsExclamationCircle size={24} strokeWidth={0.75} />
+        <Explanation squaredTop={true} cause="error">
+          <BsExclamationCircle />
           {children}
-        </div>
+        </Explanation>
       ) : null}
     </div>
   )

@@ -1,9 +1,38 @@
-import { useState } from 'react'
+import { BsExclamationCircle } from 'react-icons/bs'
+import { Dispatch, useState } from 'react'
+import Link from 'next/link'
 
 import { Identity } from '../lib/types'
-import IdentityBox, { AddIdentityBox } from '../components/IdentityBox'
+import Explanation from './Explanation'
+import IdentityBox, { AddIdentityBox } from './IdentityBox'
 
 import styles from '../styles/EditableIdentitiesList.module.css'
+
+const getLastElement = (
+  addMode: boolean,
+  setAddMode: Dispatch<boolean>,
+  nIdentities: number
+) => {
+  if (addMode) {
+    if (nIdentities >= 6) {
+      return (
+        <Explanation cause="error">
+          <BsExclamationCircle />
+          <span>
+            Users are currently limited to 6 identities. If you&apos;ve hit this
+            limit, reach out{' '}
+            <Link className="underline" href="/about/contact">
+              here
+            </Link>{' '}
+            and tell us about your needs!
+          </span>
+        </Explanation>
+      )
+    }
+    return <AddIdentityBox close={() => setAddMode(false)} />
+  }
+  return <button onClick={() => setAddMode(true)}>new</button>
+}
 
 interface Props {
   identities: Identity[]
@@ -20,11 +49,7 @@ const EditableIdentitiesList = ({ identities }: Props) => {
         {identities.length === 0
           ? "We don't know about any of your identities yet! Start by adding your first one using the form below."
           : null}
-        {addMode ? (
-          <AddIdentityBox close={() => setAddMode(false)} />
-        ) : (
-          <button onClick={() => setAddMode(true)}>new</button>
-        )}
+        {getLastElement(addMode, setAddMode, identities.length)}
       </div>
     </section>
   )

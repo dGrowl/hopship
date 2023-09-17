@@ -10,9 +10,8 @@ import {
   MESSAGE_MIN_LENGTH,
 } from '../../lib/safety'
 import AntiCSRFForm from '../AntiCSRFForm'
+import Explanation from '../Explanation'
 import Field from '../Field'
-
-import styles from '../../styles/ContactForm.module.css'
 
 interface Fields extends CSRFFormFields, EventTarget {
   email: HTMLInputElement
@@ -39,24 +38,24 @@ const getResultElement = (success: boolean | null) => {
       return <button>send</button>
     case true:
       return (
-        <div className={`${styles.result} ${styles.good}`}>
-          <BsCheckLg size={32} />
-          <p>Your message was successfully submitted. Thank you!</p>
-        </div>
+        <Explanation cause="success">
+          <BsCheckLg />
+          <span>Your message was successfully submitted. Thank you!</span>
+        </Explanation>
       )
     case false:
       return (
-        <div className={`${styles.result} ${styles.bad}`}>
-          <BsXLg size={26} strokeWidth={0.8} style={{ paddingLeft: '4px' }} />
-          <p>
+        <Explanation cause="error">
+          <BsXLg />
+          <span>
             Your message couldn&apos;t be sent. Please try again later and, if
             the issue persists, get in touch via{' '}
             <a href="https://github.com/dGrowl/hopship" className="underline">
               GitHub
             </a>
             .
-          </p>
-        </div>
+          </span>
+        </Explanation>
       )
   }
 }
