@@ -79,7 +79,7 @@ export default function App({ Component, pageProps, userName }: Props) {
           <BsSlash size={48} />
           <Link href="/about/help">help</Link>
           <BsSlash size={48} />
-          <Link href="/about/privacy">privacy policy</Link>
+          <Link href="/about/privacy">privacy</Link>
         </div>
       </footer>
     </>
