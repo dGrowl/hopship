@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 import { LinkDatum } from '../lib/types'
 
@@ -14,7 +15,9 @@ const DropNav = ({ current, linkData, root }: Props) => {
   const router = useRouter()
   return (
     <nav id={styles.container}>
-      <h2>{root} /</h2>
+      <Link href={linkData[0].url}>
+        <h2>{root} /</h2>
+      </Link>
       <select
         defaultValue={current}
         key={current}
