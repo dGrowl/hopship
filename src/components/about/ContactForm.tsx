@@ -89,6 +89,7 @@ const ContactForm = () => {
               minLength={MESSAGE_MIN_LENGTH}
               name="message"
               required
+              style={{ height: '128px' }}
             />
           </Field>
           {getResultElement(success)}
