@@ -16,8 +16,8 @@ const Code = () => {
             on GitHub
           </a>
           . The canonical version of the website is currently hosted by{' '}
-          <a href="https://render.com/" className="underline">
-            render
+          <a href="https://vercel.com/" className="underline">
+            vercel
           </a>{' '}
           and can be accessed via{' '}
           <Link href={`https://${HOME_DOMAIN}`} className="underline">
