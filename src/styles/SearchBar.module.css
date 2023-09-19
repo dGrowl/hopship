@@ -10,11 +10,12 @@
 #container button {
   background-color: transparent;
   border: 0;
-  padding: 6px;
+  height: 36px;
+  width: 36px;
 }
 
-#container button:hover {
-  background-color: var(--c-4);
+#container svg {
+  padding: 8px;
 }
 
 #container input {
@@ -35,16 +36,6 @@
   align-items: center;
   height: 38px;
   justify-content: center;
-}
-
-#toggleContainer svg {
-  border-radius: 6px;
-  cursor: pointer;
-  padding: 6px;
-}
-
-#toggleContainer svg:hover {
-  background-color: var(--c-4);
 }
 
 .hidden {

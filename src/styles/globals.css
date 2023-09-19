@@ -110,6 +110,7 @@ fieldset {
 select,
 input,
 textarea {
+  background-color: var(--c-4);
   border: 2px solid var(--c-5);
   box-sizing: border-box;
   color: var(--c-inverse);
@@ -117,7 +118,6 @@ textarea {
   font-size: 1.1rem;
   padding: 3px;
   width: 100%;
-  background-color: var(--c-4);
 }
 
 input {
@@ -175,4 +175,15 @@ svg {
 
 .underline {
   text-decoration: underline;
+}
+
+.iconLink {
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  padding: 4px;
+}
+
+.iconLink:hover {
+  background-color: var(--c-4);
 }

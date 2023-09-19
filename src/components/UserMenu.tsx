@@ -34,11 +34,11 @@ const UserMenu = ({ name, searching }: Props) => {
     >
       {name === null ? (
         <Link href="/login">
-          <BsPersonAdd id={styles.userBadge} size={32} />
+          <BsPersonAdd className="iconLink" size={32} />
         </Link>
       ) : (
         <BsPersonCircle
-          id={styles.userBadge}
+          className="iconLink"
           onClick={() => setIsOpen((s) => !s)}
           size={32}
         />

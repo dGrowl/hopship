@@ -189,7 +189,7 @@ const IdentityBox = ({
       {editable ? (
         <div className={styles.buttonColumn}>
           <Link href={settingsURL}>
-            <BsGearFill size={24} />
+            <BsGearFill className="iconLink" size={24} />
           </Link>
         </div>
       ) : null}

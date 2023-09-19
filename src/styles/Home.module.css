@@ -20,6 +20,11 @@
   width: 100%;
 }
 
+#questions section {
+  padding: 10px 10px 12px 14px;
+  row-gap: 2px;
+}
+
 #questions dt {
   font-weight: 700;
 }

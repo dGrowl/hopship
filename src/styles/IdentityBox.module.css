@@ -207,12 +207,6 @@ button.addControl:focus {
   padding: 2px;
 }
 
-.buttonColumn svg {
-  border-radius: 7px;
-  cursor: pointer;
-  padding: 4px;
-}
-
 #addSelector {
   background-color: transparent;
   border-radius: 4px;
