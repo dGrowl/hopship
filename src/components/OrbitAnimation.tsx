@@ -4,13 +4,25 @@ import { hasKey } from '../lib/util'
 
 const TWO_PI = 2 * Math.PI
 
-const PLATFORM_COLORS: { [platform: string]: string } = {
-  Bluesky: '#0560ff',
-  Mastodon: '#6363ff',
-  Threads: '#ffffff',
-  Twitch: '#822fff',
-  Twitter: '#3494ff',
-  YouTube: '#ff0000',
+const PLATFORM_COLORS: { [platform: string]: [number, number, number] } = {
+  Bluesky: [218, 90, 50],
+  Mastodon: [240, 90, 69],
+  Threads: [0, 0, 90],
+  Twitch: [263, 90, 59],
+  Twitter: [211, 90, 60],
+  YouTube: [0, 90, 50],
+}
+
+const shiftHSL = (hsl: [number, number, number]) => {
+  let [h, s, l] = hsl
+  h += Math.random() * 24 - 12
+  h %= 360
+  if (h < 0) {
+    h += 360
+  }
+  s += Math.random() * 16 - 8
+  l += Math.random() * 24 - 12
+  return `hsl(${h.toFixed(1)}, ${s.toFixed(1)}%, ${l.toFixed(1)}%)`
 }
 
 class Particle {
@@ -22,18 +34,22 @@ class Particle {
   cy: number
   rx: number
   ry: number
+  color: string
+  colorFaded: string
   size_variance: number
   spin = Math.random() * TWO_PI
   theta = Math.random() * TWO_PI
   speed = Particle.MIN_SPEED + Math.random() * Particle.SPEED_VARIANCE
   length = 0.005 + 0.05 * (this.speed / Particle.MAX_SPEED)
 
-  constructor(x: number, y: number, radius: number) {
+  constructor(x: number, y: number, radius: number, color: string) {
     this.cx = x
     this.cy = y
     this.rx = Math.random() * radius
     this.ry = radius
     this.size_variance = 4 * ((radius - this.rx) / radius)
+    this.color = color
+    this.colorFaded = `${color.slice(0, 3)}a${color.slice(3, -1)}, .25)`
     if (Math.random() >= 0.5) {
       this.size_variance *= -1
     }
@@ -77,8 +93,8 @@ class Animation {
   initialized = false
   playing = true
   lastFrameTimeMs = 0
-  activeColor: string | null = null
-  particles: { [color: string]: Particle[] } = {}
+  activePlatform: string | null = null
+  particles: { [platform: string]: Particle[] } = {}
 
   setCanvas = (canvas: HTMLCanvasElement) => {
     this.ctx = canvas.getContext('2d')
@@ -89,10 +105,10 @@ class Animation {
     const x = this.w / 2
     const y = this.h / 2
     const radius = Math.min(x, y) - 16
-    for (const c of Object.values(PLATFORM_COLORS)) {
-      this.particles[c] = Array.from(
+    for (const [p, c] of Object.entries(PLATFORM_COLORS)) {
+      this.particles[p] = Array.from(
         { length: Animation.N_PARTICLES },
-        () => new Particle(x, y, radius)
+        () => new Particle(x, y, radius, shiftHSL(c))
       )
     }
   }
@@ -103,9 +119,9 @@ class Animation {
       this.playing = true
     }
     if (platform && hasKey(PLATFORM_COLORS, platform)) {
-      this.activeColor = PLATFORM_COLORS[platform]
+      this.activePlatform = platform
     } else {
-      this.activeColor = null
+      this.activePlatform = null
     }
     if (!this.playing || platform !== null) {
       this.start()
@@ -129,13 +145,10 @@ class Animation {
     const timeSinceLastFrameMs = Date.now() - this.lastFrameTimeMs
     const dtUs = timeSinceLastFrameMs / 1000
     this.ctx.clearRect(0, 0, this.w, this.h)
-    for (const [color, particles] of Object.entries(this.particles)) {
-      if (this.activeColor && color !== this.activeColor) {
-        this.ctx.strokeStyle = color + '44'
-      } else {
-        this.ctx.strokeStyle = color
-      }
+    for (const [platform, particles] of Object.entries(this.particles)) {
+      const faded = platform !== this.activePlatform
       for (const p of particles) {
+        this.ctx.strokeStyle = faded ? p.colorFaded : p.color
         p.update(dtUs)
         p.render(this.ctx)
       }
