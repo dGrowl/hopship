@@ -4,7 +4,7 @@ const PrivacyPolicy = (
   <article>
     <section>
       <h1>Privacy Policy</h1>
-      <p>Last updated: September 15, 2023</p>
+      <b>Last updated: September 22, 2023</b>
       <p>
         This Privacy Policy describes Our policies and procedures on the
         collection, use and disclosure of Your information when You use the
@@ -488,12 +488,9 @@ const PrivacyPolicy = (
       <h1>Changes to this Privacy Policy</h1>
       <p>
         We may update Our Privacy Policy from time to time. We will notify You
-        of any changes by posting the new Privacy Policy on this page.
-      </p>
-      <p>
-        We will let You know via email and/or a prominent notice on Our Service,
-        prior to the change becoming effective and update the &quot;Last
-        updated&quot; date at the top of this Privacy Policy.
+        of any changes by posting the new Privacy Policy on this page and
+        updating the &quot;Last updated&quot; date at the top of this Privacy
+        Policy.
       </p>
       <p>
         You are advised to review this Privacy Policy periodically for any
