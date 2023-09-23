@@ -42,21 +42,21 @@ const Help = (
       <h3>Provider</h3>
       <p>
         To make changes to your account, update your user page, or modify your
-        identities, first navigate to the{' '}
+        identities, first navigate to the&nbsp;
         <Link href="/settings/identities" className="underline">
           settings
-        </Link>{' '}
-        page:
+        </Link>
+        &nbsp; page:
       </p>
       <ol>
         <li>
           If you aren&apos;t logged in, create or sign into an account by
           clicking the <BsPersonAdd /> unknown user icon and following the steps
-          on the{' '}
+          on the&nbsp;
           <Link href="/login" className="underline">
             login
-          </Link>{' '}
-          page.
+          </Link>
+          &nbsp; page.
         </li>
         <li>
           Open the user menu by clicking the <BsPersonCircle /> logged in user
@@ -73,11 +73,11 @@ const Help = (
       </p>
       <ol>
         <li>
-          Navigate to the{' '}
+          Navigate to the&nbsp;
           <Link href="/settings/identities" className="underline">
             settings
-          </Link>{' '}
-          page; see above.
+          </Link>
+          &nbsp; page; see above.
         </li>
         <li>
           Click the <BsGearFill /> button on the identity to go to the

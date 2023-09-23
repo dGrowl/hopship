@@ -40,7 +40,7 @@ const errorMessage = (network: string | null, name: string | null) => {
   }
   return (
     <>
-      We don&apos;t know <b>{name}</b> from{' '}
+      We don&apos;t know <b>{name}</b> from&nbsp;
       <b>{getSpecificNetworkName(network)}</b>. If you do, ask them to sign up!
     </>
   )

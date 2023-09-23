@@ -196,7 +196,7 @@ const VerifyIdentityForm = ({ identity, verification }: Props) => {
           <div>Example:</div>
           <div className={`${styles.example} ${styles[platform + 'Example']}`}>
             Hey everyone, I&apos;m linking accounts using hopship! Check my
-            other pages out at{' '}
+            other pages out at&nbsp;
             <a href={url} className="underline">
               {url}
             </a>

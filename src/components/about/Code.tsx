@@ -11,15 +11,15 @@ const Code = () => {
       <section>
         <h3>Source Code</h3>
         <p>
-          You can find <b>hopship</b>&apos;s source code{' '}
+          You can find <b>hopship</b>&apos;s source code&nbsp;
           <a href="https://github.com/dGrowl/hopship" className="underline">
             on GitHub
           </a>
-          . The canonical version of the website is currently hosted by{' '}
+          . The canonical version of the website is currently hosted by&nbsp;
           <a href="https://vercel.com/" className="underline">
             vercel
-          </a>{' '}
-          and can be accessed via{' '}
+          </a>
+          &nbsp; and can be accessed via&nbsp;
           <Link href={`https://${HOME_DOMAIN}`} className="underline">
             {HOME_DOMAIN}
           </Link>
@@ -31,7 +31,7 @@ const Code = () => {
         <p>
           <b>hopship</b> depends on the following open-source software packages,
           each used under the terms of its accompanying license. They can all be
-          found on{' '}
+          found on&nbsp;
           <a href="https://www.npmjs.com/" className="underline">
             npm
           </a>

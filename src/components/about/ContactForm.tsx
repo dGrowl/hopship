@@ -49,7 +49,7 @@ const getResultElement = (success: boolean | null) => {
           <BsXLg />
           <span>
             Your message couldn&apos;t be sent. Please try again later and, if
-            the issue persists, get in touch via{' '}
+            the issue persists, get in touch via&nbsp;
             <a href="https://github.com/dGrowl/hopship" className="underline">
               GitHub
             </a>
