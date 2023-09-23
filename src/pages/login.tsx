@@ -3,6 +3,7 @@ import { GetServerSidePropsContext } from 'next'
 import { NextRouter, useRouter } from 'next/router'
 import Head from 'next/head'
 import jwt from 'jsonwebtoken'
+import Link from 'next/link'
 
 import { csrfHeaders, objectReducer } from '../lib/util'
 import {
@@ -224,6 +225,17 @@ const RegisterForm = () => {
           match.
         </PasswordInput>
       </Field>
+      <p>
+        By registering, you agree to the terms laid out in our{' '}
+        <Link href="/about/privacy" className="underline" target="_blank">
+          Privacy Policy
+        </Link>{' '}
+        and{' '}
+        <Link href="/about/terms" className="underline" target="_blank">
+          Terms of Service
+        </Link>
+        .
+      </p>
       <button>create</button>
     </AntiCSRFForm>
   )
