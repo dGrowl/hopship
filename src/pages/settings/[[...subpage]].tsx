@@ -40,35 +40,35 @@ import styles from '../../styles/Settings.module.css'
 const isIdentitySubpage = (subpage: string) => subpage.includes('/')
 
 const PLATFORM_ICONS: { [key: string]: ReactElement } = {
-  Bluesky: <BsCloudSunFill size={24} className={styles.Bluesky} />,
-  Mastodon: <BsMastodon size={24} className={styles.Mastodon} />,
-  Threads: <BsHurricane size={24} className={styles.Threads} />,
-  Twitch: <BsTwitch size={24} className={styles.Twitch} />,
-  Twitter: <BsTwitter size={24} className={styles.Twitter} />,
-  YouTube: <BsYoutube size={24} className={styles.YouTube} />,
+  Bluesky: <BsCloudSunFill className={styles.Bluesky} />,
+  Mastodon: <BsMastodon className={styles.Mastodon} />,
+  Threads: <BsHurricane className={styles.Threads} />,
+  Twitch: <BsTwitch className={styles.Twitch} />,
+  Twitter: <BsTwitter className={styles.Twitter} />,
+  YouTube: <BsYoutube className={styles.YouTube} />,
 }
 
 const LINK_DATA: { [key: string]: LinkDatum } = {
   identities: {
-    icon: <BsPersonVcard size={24} />,
+    icon: <BsPersonVcard />,
     text: 'identities',
     title: 'Manage Identities',
     url: '/settings/identities',
   },
   user: {
-    icon: <BsPersonCheckFill size={24} />,
+    icon: <BsPersonCheckFill />,
     text: 'user',
     title: 'Update User Details',
     url: '/settings/user',
   },
   password: {
-    icon: <BsKeyFill size={24} />,
+    icon: <BsKeyFill />,
     text: 'password',
     title: 'Change Password',
     url: '/settings/password',
   },
   delete: {
-    icon: <BsTrash3Fill size={24} />,
+    icon: <BsTrash3Fill />,
     text: 'delete',
     title: 'Delete Account',
     url: '/settings/delete',

@@ -204,7 +204,13 @@ button.addControl:focus {
 }
 
 .buttonColumn {
-  padding: 2px;
+  padding: 4px;
+}
+
+.buttonColumn svg {
+  height: 24px;
+  stroke-width: 0.75;
+  width: 24px;
 }
 
 #addSelector {

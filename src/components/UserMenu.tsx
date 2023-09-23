@@ -34,25 +34,24 @@ const UserMenu = ({ name, searching }: Props) => {
     >
       {name === null ? (
         <Link href="/login">
-          <BsPersonAdd className="iconLink" size={32} />
+          <BsPersonAdd className="iconLink" />
         </Link>
       ) : (
         <BsPersonCircle
           className="iconLink"
           onClick={() => setIsOpen((s) => !s)}
-          size={32}
         />
       )}
       {isOpen ? (
         <nav id={styles.menu} onClick={() => setIsOpen(false)}>
           <Link href={`/u/${name}`}>
-            <BsPersonCheckFill strokeWidth={0.75} /> {name}
+            <BsPersonCheckFill /> {name}
           </Link>
           <Link href="/settings/identities">
-            <BsGearFill strokeWidth={0.75} /> settings
+            <BsGearFill /> settings
           </Link>
           <Link href="/logout">
-            <BsSlashCircle strokeWidth={0.75} /> logout
+            <BsSlashCircle /> logout
           </Link>
         </nav>
       ) : null}

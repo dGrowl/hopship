@@ -6,8 +6,10 @@ import {
 } from 'react-icons/bs'
 import Link from 'next/link'
 
+import styles from '../../styles/About.module.css'
+
 const Help = (
-  <article>
+  <article id={styles.content}>
     <section>
       <p>
         <b>hopship</b> is built primarily to serve two types of users:
@@ -32,8 +34,7 @@ const Help = (
         <li>Select the platform of the account from the dropdown.</li>
         <li>Type their ID/name on that platform into the text field.</li>
         <li>
-          Click the <BsSearch strokeWidth={0.85} /> magnifying glass to run the
-          search.
+          Click the <BsSearch /> magnifying glass to run the search.
         </li>
       </ol>
     </section>
@@ -50,16 +51,16 @@ const Help = (
       <ol>
         <li>
           If you aren&apos;t logged in, create or sign into an account by
-          clicking the <BsPersonAdd strokeWidth={0.65} size={18} /> unknown user
-          icon and following the steps on the{' '}
+          clicking the <BsPersonAdd /> unknown user icon and following the steps
+          on the{' '}
           <Link href="/login" className="underline">
             login
           </Link>{' '}
           page.
         </li>
         <li>
-          Open the user menu by clicking the{' '}
-          <BsPersonCircle strokeWidth={0.35} size={18} /> logged in user icon.
+          Open the user menu by clicking the <BsPersonCircle /> logged in user
+          icon.
         </li>
         <li>
           Click the <BsGearFill /> settings link.

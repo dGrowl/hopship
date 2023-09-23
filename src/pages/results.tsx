@@ -96,7 +96,7 @@ const Results = ({ network, name }: Props) => {
         </title>
       </Head>
       <section id={styles.content}>
-        <BsEmojiFrownFill size={48} />
+        <BsEmojiFrownFill />
         <p>{errorMessage(network, name)}</p>
       </section>
     </>

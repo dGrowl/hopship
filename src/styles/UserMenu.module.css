@@ -5,6 +5,11 @@
   position: relative;
 }
 
+#container svg {
+  width: 32px;
+  height: 32px;
+}
+
 #menu {
   background-color: var(--c-4);
   border-radius: 6px;
@@ -38,9 +43,20 @@
   border-radius: 0px 0px 4px 4px;
 }
 
+#menu svg {
+  height: 20px;
+  stroke-width: 0.75;
+  width: 20px;
+}
+
 @media screen and (max-width: 720px) {
   #menu {
     font-size: 1.4rem;
+  }
+
+  #menu svg {
+    height: 24px;
+    width: 24px;
   }
 
   #menu a {

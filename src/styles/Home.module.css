@@ -29,6 +29,12 @@
   font-weight: 700;
 }
 
+#questions svg {
+  height: 24px;
+  stroke-width: 0.35;
+  width: 24px;
+}
+
 @media screen and (max-width: 720px) {
   #questions {
     grid-template-columns: 1fr;

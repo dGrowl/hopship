@@ -13,6 +13,7 @@ import { FormEvent, useState } from 'react'
 import Link from 'next/link'
 
 import { CSRFFormFields, Identity } from '../lib/types'
+import { IconContext } from 'react-icons/lib'
 import {
   buildProfileURL,
   cleanSpaces,
@@ -33,28 +34,22 @@ import ValidatedTextArea from './ValidatedTextArea'
 
 import styles from '../styles/IdentityBox.module.css'
 
-interface PlatformBadgeProps {
-  editable: boolean
-  platform: string
-}
-
-const PlatformBadge = ({ editable, platform }: PlatformBadgeProps) => {
-  const size = editable ? 36 : 44
+const getPlatformBadge = (platform: string) => {
   switch (platform) {
     case 'Bluesky':
-      return <BsCloudSunFill size={size} />
+      return <BsCloudSunFill />
     case 'Mastodon':
-      return <BsMastodon size={size} />
+      return <BsMastodon />
     case 'Threads':
-      return <BsHurricane size={size} />
+      return <BsHurricane />
     case 'Twitter':
-      return <BsTwitter size={size} />
+      return <BsTwitter />
     case 'Twitch':
-      return <BsTwitch size={size} />
+      return <BsTwitch />
     case 'YouTube':
-      return <BsYoutube size={size} />
+      return <BsYoutube />
   }
-  return <BsQuestionCircle size={size} />
+  return <BsQuestionCircle />
 }
 
 type AddFields = EventTarget &
@@ -93,7 +88,9 @@ export const AddIdentityBox = ({ close }: AddProps) => {
     <div className={`${styles.container} ${styles[platform]}`}>
       <AntiCSRFForm onSubmit={add}>
         <div className={styles.platform}>
-          <PlatformBadge editable={true} platform={platform} />
+          <IconContext.Provider value={{ size: '36px' }}>
+            {getPlatformBadge(platform)}
+          </IconContext.Provider>
           <select
             id={styles.addSelector}
             name="platform"
@@ -132,7 +129,7 @@ export const AddIdentityBox = ({ close }: AddProps) => {
         </div>
       </AntiCSRFForm>
       <div className={styles.buttonColumn}>
-        <BsXLg onClick={close} size={24} strokeWidth={0.75} />
+        <BsXLg className="iconLink" onClick={close} />
       </div>
     </div>
   )
@@ -167,7 +164,9 @@ const IdentityBox = ({
   return (
     <div className={`${styles.container} ${styles[platform]}`}>
       <div className={styles.platform}>
-        <PlatformBadge editable={!!editable} platform={platform} />
+        <IconContext.Provider value={{ size: editable ? '36px' : '44px' }}>
+          {getPlatformBadge(platform)}
+        </IconContext.Provider>
         {editable ? (
           <StatusBadge settingsURL={settingsURL} status={status} />
         ) : null}
@@ -189,7 +188,7 @@ const IdentityBox = ({
       {editable ? (
         <div className={styles.buttonColumn}>
           <Link href={settingsURL}>
-            <BsGearFill className="iconLink" size={24} />
+            <BsGearFill className="iconLink" />
           </Link>
         </div>
       ) : null}

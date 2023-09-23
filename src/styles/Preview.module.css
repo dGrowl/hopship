@@ -14,3 +14,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.preview svg {
+  stroke-width: 1;
+}

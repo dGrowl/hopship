@@ -23,6 +23,12 @@
   text-overflow: ellipsis;
 }
 
+#container svg {
+  height: 24px;
+  stroke-width: 0.4;
+  width: 24px;
+}
+
 .current {
   background-color: var(--c-2);
   font-weight: 600;

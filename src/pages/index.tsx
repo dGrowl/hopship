@@ -17,7 +17,7 @@ const Question = ({ children, prompt, url }: QuestionProps) => (
     <div>
       <dt>{prompt}</dt>
       <Link href={url}>
-        <BsArrowRightCircle className="iconLink" size={24} strokeWidth={0.35} />
+        <BsArrowRightCircle className="iconLink" />
       </Link>
     </div>
     <dd>{children}</dd>

@@ -9,7 +9,7 @@ interface Props {
 
 const Preview = ({ children }: Props) => (
   <div className={styles.preview}>
-    <BsArrowReturnRight strokeWidth={1} />
+    <BsArrowReturnRight />
     <span>{children}</span>
   </div>
 )

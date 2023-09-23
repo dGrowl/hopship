@@ -76,9 +76,9 @@ export default function App({ Component, pageProps, userName }: Props) {
       <footer id={styles.footer}>
         <div>
           <Link href="/about/mission">about</Link>
-          <BsSlash size={48} />
+          <BsSlash />
           <Link href="/about/help">help</Link>
-          <BsSlash size={48} />
+          <BsSlash />
           <Link href="/about/privacy">privacy</Link>
         </div>
       </footer>

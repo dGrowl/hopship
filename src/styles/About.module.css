@@ -26,6 +26,12 @@
   margin-top: 4px;
 }
 
+#content svg {
+  height: 20px;
+  stroke-width: 0.75;
+  width: 20px;
+}
+
 @media screen and (max-width: 720px) {
   #container {
     gap: 8px;

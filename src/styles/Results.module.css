@@ -1,3 +1,8 @@
 #content {
   margin: 0 8px;
 }
+
+#content svg {
+  height: 48px;
+  width: 48px;
+}

@@ -121,12 +121,12 @@ const SearchBar = ({ searching, setSearching }: Props) => {
               onClick={() => setSearching(false)}
               type="button"
             >
-              <BsArrowLeft className="iconLink" size={22} strokeWidth={0.75} />
+              <BsArrowLeft className="iconLink" />
             </button>
             <NetworkSelect />
             <NameInput searching={searching} />
             <button>
-              <BsSearch className="iconLink" size={22} strokeWidth={0.75} />
+              <BsSearch className="iconLink" />
             </button>
           </nav>
         </fieldset>
@@ -135,11 +135,7 @@ const SearchBar = ({ searching, setSearching }: Props) => {
         className={searching ? styles.hidden : styles.shownForMobile}
         id={styles.toggleContainer}
       >
-        <BsSearch
-          onClick={() => setSearching(true)}
-          size={24}
-          strokeWidth={0.75}
-        />
+        <BsSearch onClick={() => setSearching(true)} />
       </div>
     </>
   )

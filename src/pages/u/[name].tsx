@@ -5,6 +5,7 @@ import {
   BsPersonVcard,
 } from 'react-icons/bs'
 import { GetServerSidePropsContext } from 'next'
+import { IconContext } from 'react-icons/lib'
 import { ParsedUrlQuery } from 'querystring'
 import Head from 'next/head'
 
@@ -103,13 +104,12 @@ interface NoIdentitiesProps {
 
 const NoIdentities = ({ userName }: NoIdentitiesProps) => {
   return (
-    <>
+    <div id={styles.noIdentities}>
       <p>
-        {userName} hasn&apos;t verified any identities yet.{' '}
-        <BsEmojiFrownFill size={18} />
+        {userName} hasn&apos;t verified any identities yet. <BsEmojiFrownFill />
       </p>
       <p>If you know them, tell them that they should!</p>
-    </>
+    </div>
   )
 }
 
@@ -132,28 +132,30 @@ const UserPage = ({ userName, bio, identities }: Props) => {
         </h2>
       </header>
       <dl id={styles.container}>
-        {bio ? (
-          <>
-            <dt className={styles.label}>
-              <BsBookHalf size={24} />
-              biography
-            </dt>
-            <dd id={styles.bio}>{bio}</dd>
-          </>
-        ) : null}
-        <dt className={`${styles.label} ${styles.wide}`}>
-          <BsPersonVcard size={24} />
-          identities
-        </dt>
-        <dd className={styles.wide}>
-          {identities.length > 0 ? (
-            <section>
-              <div id={styles.identities}>{buildRows(identities)}</div>
-            </section>
-          ) : (
-            <NoIdentities userName={userName} />
-          )}
-        </dd>
+        <IconContext.Provider value={{ size: '24px' }}>
+          {bio ? (
+            <>
+              <dt className={styles.label}>
+                <BsBookHalf />
+                biography
+              </dt>
+              <dd id={styles.bio}>{bio}</dd>
+            </>
+          ) : null}
+          <dt className={`${styles.label} ${styles.wide}`}>
+            <BsPersonVcard />
+            identities
+          </dt>
+          <dd className={styles.wide}>
+            {identities.length > 0 ? (
+              <section>
+                <div id={styles.identities}>{buildRows(identities)}</div>
+              </section>
+            ) : (
+              <NoIdentities userName={userName} />
+            )}
+          </dd>
+        </IconContext.Provider>
       </dl>
     </>
   )

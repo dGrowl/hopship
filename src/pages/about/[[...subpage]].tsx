@@ -23,31 +23,31 @@ import styles from '../../styles/About.module.css'
 
 const linkData: { [key: string]: LinkDatum } = {
   help: {
-    icon: <BsQuestionLg size={24} strokeWidth={0.5} />,
+    icon: <BsQuestionLg />,
     text: 'help',
     title: 'Help',
     url: '/about/help',
   },
   mission: {
-    icon: <BsBullseye size={24} strokeWidth={0.5} />,
+    icon: <BsBullseye />,
     text: 'mission',
     title: 'Mission',
     url: '/about/mission',
   },
   code: {
-    icon: <BsCodeSlash size={24} strokeWidth={0.5} />,
+    icon: <BsCodeSlash />,
     text: 'code',
     title: 'Code',
     url: '/about/code',
   },
   privacy: {
-    icon: <BsShieldCheck size={24} strokeWidth={0.5} />,
+    icon: <BsShieldCheck />,
     text: 'privacy',
     title: 'Privacy Policy',
     url: '/about/privacy',
   },
   contact: {
-    icon: <BsChatLeftText size={24} strokeWidth={0.5} />,
+    icon: <BsChatLeftText />,
     text: 'contact',
     title: 'Contact Us',
     url: '/about/contact',
