@@ -80,6 +80,8 @@ export default function App({ Component, pageProps, userName }: Props) {
           <Link href="/about/help">help</Link>
           <BsSlash />
           <Link href="/about/privacy">privacy</Link>
+          <BsSlash />
+          <Link href="/about/terms">terms</Link>
         </div>
       </footer>
     </>

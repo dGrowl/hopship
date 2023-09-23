@@ -1,6 +1,7 @@
 import {
   BsBullseye,
   BsChatLeftText,
+  BsClipboard2Check,
   BsCodeSlash,
   BsQuestionLg,
   BsShieldCheck,
@@ -18,6 +19,7 @@ import Help from '../../components/about/Help'
 import Mission from '../../components/about/Mission'
 import PrivacyPolicy from '../../components/about/PrivacyPolicy'
 import SideNav from '../../components/SideNav'
+import TermsOfService from '../../components/about/TermsOfService'
 
 import styles from '../../styles/About.module.css'
 
@@ -45,6 +47,12 @@ const linkData: { [key: string]: LinkDatum } = {
     text: 'privacy',
     title: 'Privacy Policy',
     url: '/about/privacy',
+  },
+  terms: {
+    icon: <BsClipboard2Check />,
+    text: 'terms',
+    title: 'Terms of Service',
+    url: '/about/terms',
   },
   contact: {
     icon: <BsChatLeftText />,
@@ -89,6 +97,8 @@ const Content = ({ subpage }: Props) => {
       return Mission
     case 'privacy':
       return PrivacyPolicy
+    case 'terms':
+      return TermsOfService
   }
   return Help
 }
