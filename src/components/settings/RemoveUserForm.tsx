@@ -1,8 +1,8 @@
 import { FormEvent, useState } from 'react'
 
-import { CSRFFormFields } from '../lib/types'
-import { csrfHeaders } from '../lib/util'
-import AntiCSRFForm from '../components/AntiCSRFForm'
+import { CSRFFormFields } from '../../lib/types'
+import { csrfHeaders } from '../../lib/util'
+import AntiCSRFForm from '../AntiCSRFForm'
 
 type Fields = EventTarget &
   CSRFFormFields & {

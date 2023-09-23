@@ -1,10 +1,10 @@
 import { Dispatch, FormEvent, useReducer } from 'react'
 
-import { CSRFFormFields } from '../lib/types'
-import { csrfHeaders, objectReducer } from '../lib/util'
-import AntiCSRFForm from './AntiCSRFForm'
-import Field from './Field'
-import PasswordInput from './PasswordInput'
+import { CSRFFormFields } from '../../lib/types'
+import { csrfHeaders, objectReducer } from '../../lib/util'
+import AntiCSRFForm from '../AntiCSRFForm'
+import Field from '../Field'
+import PasswordInput from '../PasswordInput'
 
 type Fields = EventTarget &
   CSRFFormFields & {

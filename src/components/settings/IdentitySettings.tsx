@@ -1,4 +1,4 @@
-import { Identity, VerificationDetails } from '../lib/types'
+import { Identity, VerificationDetails } from '../../lib/types'
 import RemoveIdentityForm from './RemoveIdentityForm'
 import UpdateIdentityForm from './UpdateIdentityForm'
 import VerifyIdentityForm from './VerifyIdentityForm'

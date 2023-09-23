@@ -2,9 +2,9 @@ import { BsExclamationCircle } from 'react-icons/bs'
 import { Dispatch, useState } from 'react'
 import Link from 'next/link'
 
-import { Identity } from '../lib/types'
-import Explanation from './Explanation'
-import IdentityBox, { AddIdentityBox } from './IdentityBox'
+import { Identity } from '../../lib/types'
+import Explanation from '../Explanation'
+import IdentityBox, { AddIdentityBox } from '../IdentityBox'
 
 import styles from '../styles/EditableIdentitiesList.module.css'
 
