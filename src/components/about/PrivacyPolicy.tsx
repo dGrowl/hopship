@@ -15,7 +15,7 @@ const PrivacyPolicy = (
         We use Your Personal data to provide and improve the Service. By using
         the Service, You agree to the collection and use of information in
         accordance with this Privacy Policy. This Privacy Policy has been
-        created with the help of the&nbsp;
+        created with the help of the{' '}
         <a
           className="underline"
           href="https://www.termsfeed.com/privacy-policy-generator/"
@@ -107,7 +107,7 @@ const PrivacyPolicy = (
         </li>
         <li>
           <p>
-            <strong>Website</strong> refers to hopship, accessible from&nbsp;
+            <strong>Website</strong> refers to hopship, accessible from{' '}
             <a
               href={`https://${HOME_DOMAIN}`}
               rel="external nofollow noopener"
@@ -194,14 +194,14 @@ const PrivacyPolicy = (
         Cookies can be &quot;Persistent&quot; or &quot;Session&quot; Cookies.
         Persistent Cookies remain on Your personal computer or mobile device
         when You go offline, while Session Cookies are deleted as soon as You
-        close Your web browser. You can learn more about cookies on&nbsp;
+        close Your web browser. You can learn more about cookies on{' '}
         <a
           href="https://www.termsfeed.com/blog/cookies/#What_Are_Cookies"
           target="_blank"
         >
           TermsFeed website
-        </a>
-        &nbsp; article.
+        </a>{' '}
+        article.
       </p>
       <p>
         We use both Session and Persistent Cookies for the purposes set out
@@ -504,7 +504,7 @@ const PrivacyPolicy = (
       <ul>
         <li>
           <p>
-            By visiting this page on our website:&nbsp;
+            By visiting this page on our website:{' '}
             <a
               className="underline"
               href="/about/contact"

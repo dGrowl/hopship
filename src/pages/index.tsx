@@ -40,7 +40,7 @@ const Home = () => {
           networks.
         </Question>
         <Question prompt="How?" url="/about/code">
-          Built from open-source software, with its own code hosted&nbsp;
+          Built from open-source software, with its own code hosted{' '}
           <a href="https://github.com/dGrowl/hopship" className="underline">
             here
           </a>

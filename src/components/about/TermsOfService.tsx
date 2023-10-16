@@ -6,8 +6,7 @@ const TermsOfService = (
       <h1>Terms of Service</h1>
       <b>Last updated: September 22, 2023</b>
       <p>
-        Welcome to <b>hopship</b>, an online platform created and maintained
-        by&nbsp;
+        Welcome to <b>hopship</b>, an online platform created and maintained by{' '}
         <a href="https://github.com/dGrowl" className="underline">
           Derek
         </a>
@@ -19,7 +18,7 @@ const TermsOfService = (
       <p>
         Throughout these Terms, &quot;we,&quot; &quot;us,&quot; or
         &quot;our&quot; refers to Derek, the operator of hopship. If you have
-        any questions or concerns about these Terms, feel free to&nbsp;
+        any questions or concerns about these Terms, feel free to{' '}
         <a href="#contact" className="underline">
           contact us
         </a>
@@ -41,8 +40,7 @@ const TermsOfService = (
       <h3>Account Usage</h3>
       <p>
         You are solely responsible for all activities that occur under your
-        account. If you suspect any unauthorized access to your account,
-        please&nbsp;
+        account. If you suspect any unauthorized access to your account, please{' '}
         <a href="#contact" className="underline">
           contact us
         </a>
@@ -155,7 +153,7 @@ const TermsOfService = (
       </p>
       <h2 id="contact">Contact Us</h2>
       <p>
-        If you need to contact us, please use our&nbsp;
+        If you need to contact us, please use our{' '}
         <Link href="/about/contact" className="underline">
           contact form
         </Link>

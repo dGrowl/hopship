@@ -34,7 +34,7 @@ const Help = (
         <li>Select the platform of the account from the dropdown.</li>
         <li>Type their ID/name on that platform into the text field.</li>
         <li>
-          Click the <BsSearch /> magnifying glass to run the search.
+          Click the <BsSearch title="Magnifying glass" /> to run the search.
         </li>
       </ol>
     </section>
@@ -42,28 +42,28 @@ const Help = (
       <h3>Provider</h3>
       <p>
         To make changes to your account, update your user page, or modify your
-        identities, first navigate to the&nbsp;
+        identities, first navigate to the{' '}
         <Link href="/settings/identities" className="underline">
           settings
-        </Link>
-        &nbsp; page:
+        </Link>{' '}
+        page:
       </p>
       <ol>
         <li>
           If you aren&apos;t logged in, create or sign into an account by
-          clicking the <BsPersonAdd /> unknown user icon and following the steps
-          on the&nbsp;
+          clicking the <BsPersonAdd title="Person with a plus" /> and following
+          the steps on the{' '}
           <Link href="/login" className="underline">
             login
-          </Link>
-          &nbsp; page.
+          </Link>{' '}
+          page.
         </li>
         <li>
-          Open the user menu by clicking the <BsPersonCircle /> logged in user
-          icon.
+          Open the user menu by clicking the{' '}
+          <BsPersonCircle title="Person inside a circle" />.
         </li>
         <li>
-          Click the <BsGearFill /> settings link.
+          Click the <BsGearFill title="Gear" /> settings link.
         </li>
       </ol>
       <p>
@@ -73,15 +73,15 @@ const Help = (
       </p>
       <ol>
         <li>
-          Navigate to the&nbsp;
+          Navigate to the{' '}
           <Link href="/settings/identities" className="underline">
             settings
-          </Link>
-          &nbsp; page; see above.
+          </Link>{' '}
+          page; see above.
         </li>
         <li>
-          Click the <BsGearFill /> button on the identity to go to the
-          identity&apos;s settings.
+          Click the <BsGearFill title="Gear" /> button on the identity to go to
+          the identity&apos;s settings.
         </li>
         <li>Follow the steps in the &quot;Verify&quot; section.</li>
       </ol>

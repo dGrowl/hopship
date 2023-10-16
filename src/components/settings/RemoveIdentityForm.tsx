@@ -43,8 +43,8 @@ const RemoveIdentityForm = ({ identity }: Props) => {
     <section>
       <h3>Remove</h3>
       <p>
-        If you want to remove this identity from your account, type <b>{key}</b>
-        &nbsp; in the field below, then click the delete button.
+        If you want to remove this identity from your account, type <b>{key}</b>{' '}
+        in the field below, then click the delete button.
       </p>
       <AntiCSRFForm
         onChange={(e) => checkInvalid(e, key, setInvalid)}

@@ -20,11 +20,11 @@ const getLastElement = (
           <BsExclamationCircle />
           <span>
             Users are currently limited to 6 identities. If you&apos;ve hit this
-            limit, reach out&nbsp;
+            limit, reach out{' '}
             <Link className="underline" href="/about/contact">
               here
-            </Link>
-            &nbsp; and tell us about your needs!
+            </Link>{' '}
+            and tell us about your needs!
           </span>
         </Explanation>
       )
