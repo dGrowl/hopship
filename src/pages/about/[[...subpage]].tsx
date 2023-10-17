@@ -6,7 +6,7 @@ import {
   BsQuestionLg,
   BsShieldCheck,
 } from 'react-icons/bs'
-import { GetServerSidePropsContext } from 'next'
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 import Head from 'next/head'
 
@@ -87,7 +87,11 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       }
 }
 
-const Content = ({ subpage }: Props) => {
+interface ContentProps {
+  subpage: string
+}
+
+const Content = ({ subpage }: ContentProps) => {
   switch (subpage) {
     case 'code':
       return <Code />
@@ -103,11 +107,9 @@ const Content = ({ subpage }: Props) => {
   return Help
 }
 
-interface Props {
-  subpage: string
-}
-
-const About = ({ subpage }: Props) => {
+const About = ({
+  subpage,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const linkDatum = linkData[subpage]
   const allLinkData = Object.values(linkData)
   return (

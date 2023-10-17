@@ -11,7 +11,7 @@ import {
   BsYoutube,
 } from 'react-icons/bs'
 import { createHash } from 'crypto'
-import { GetServerSidePropsContext } from 'next'
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 import { ReactElement } from 'react'
 import Head from 'next/head'
@@ -289,12 +289,12 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   }
 }
 
-interface Props {
+interface ContentProps {
   subpage: string
   data: SettingsData
 }
 
-const Content = ({ subpage, data }: Props) => {
+const Content = ({ subpage, data }: ContentProps) => {
   switch (subpage) {
     case 'identities':
       return <EditableIdentitiesList {...data} />
@@ -317,7 +317,10 @@ const buildIdentityLinkDatum = (subpage: string, identity: Identity) => {
   }
 }
 
-const Settings = ({ subpage, data }: Props) => {
+const Settings = ({
+  subpage,
+  data,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   let relevantLinkData = Object.values(LINK_DATA)
   const linkDatum =
     LINK_DATA[subpage] || buildIdentityLinkDatum(subpage, data.identity)

@@ -4,7 +4,7 @@ import {
   BsPersonHeart,
   BsPersonVcard,
 } from 'react-icons/bs'
-import { GetServerSidePropsContext } from 'next'
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next'
 import { IconContext } from 'react-icons/lib'
 import { ParsedUrlQuery } from 'querystring'
 import Head from 'next/head'
@@ -113,13 +113,11 @@ const NoIdentities = ({ userName }: NoIdentitiesProps) => {
   )
 }
 
-interface Props {
-  userName: string
-  bio: string
-  identities: Identity[]
-}
-
-const UserPage = ({ userName, bio, identities }: Props) => {
+const UserPage = ({
+  userName,
+  bio,
+  identities,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <>
       <Head>

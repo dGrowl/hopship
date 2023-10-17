@@ -1,5 +1,5 @@
 import { BsEmojiFrownFill } from 'react-icons/bs'
-import { GetServerSidePropsContext } from 'next'
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 import Head from 'next/head'
 
@@ -78,12 +78,10 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   }
 }
 
-interface Props {
-  network: string | null
-  name: string | null
-}
-
-const Results = ({ network, name }: Props) => {
+const Results = ({
+  network,
+  name,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <>
       <Head>
