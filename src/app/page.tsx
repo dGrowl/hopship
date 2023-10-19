@@ -2,7 +2,7 @@ import { BsArrowRightCircle } from 'react-icons/bs'
 import { ReactNode } from 'react'
 import Link from 'next/link'
 
-import OrbitAnimation from '../components/OrbitAnimation'
+import OrbitAnimation from './home/OrbitAnimation'
 
 import styles from '../styles/Home.module.css'
 
@@ -23,8 +23,6 @@ const Question = ({ children, prompt, url }: QuestionProps) => (
     <dd>{children}</dd>
   </section>
 )
-
-export const getServerSideProps = async () => ({ props: {} })
 
 const Home = () => {
   return (

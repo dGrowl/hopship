@@ -1,10 +1,12 @@
+'use client'
+
 import { useCallback, useEffect } from 'react'
 
-import { hasKey } from '../lib/util'
+import { hasKey } from '../../lib/util'
 
 const TWO_PI = 2 * Math.PI
 
-const PLATFORM_COLORS: { [platform: string]: [number, number, number] } = {
+const PLATFORM_COLORS: Record<string, [number, number, number]> = {
   Bluesky: [218, 90, 50],
   Mastodon: [240, 90, 69],
   Threads: [0, 0, 90],
@@ -94,7 +96,7 @@ class Animation {
   playing = true
   lastFrameTimeMs = 0
   activePlatform: string | null = null
-  particles: { [platform: string]: Particle[] } = {}
+  particles: Record<string, Particle[]> = {}
 
   setCanvas = (canvas: HTMLCanvasElement) => {
     this.ctx = canvas.getContext('2d')

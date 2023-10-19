@@ -8,7 +8,7 @@ import {
   NETWORK_NAME_REGEX,
 } from '../../lib/safety'
 import { NETWORK_PLATFORM, PLATFORM_NETWORKS } from '../../lib/util'
-import { setAnimationPlatform } from '../../components/OrbitAnimation'
+import { setAnimationPlatform } from '../home/OrbitAnimation'
 
 import styles from '../../styles/SearchBar.module.css'
 
