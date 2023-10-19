@@ -1,6 +1,5 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import * as jose from 'jose'
-import type { NextRequest } from 'next/server'
 
 import { genHexString, secsRemaining } from './lib/util'
 import { JWT_AUTH_SECRET } from './lib/env'

@@ -248,7 +248,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       if (!(await validateUserData(payload))) {
         return {
           redirect: {
-            destination: '/logout',
+            destination: '/api/logout',
             permanent: false,
           },
         }
@@ -268,7 +268,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
           redirect: {
             destination: isIdentitySubpage(subpage)
               ? '/settings/identities'
-              : '/logout',
+              : '/api/logout',
             permanent: false,
           },
         }

@@ -50,7 +50,7 @@ const UserMenu = ({ name, searching }: Props) => {
           <Link href="/settings/identities">
             <BsGearFill /> settings
           </Link>
-          <Link href="/logout">
+          <Link href="/api/logout">
             <BsSlashCircle /> logout
           </Link>
         </nav>
