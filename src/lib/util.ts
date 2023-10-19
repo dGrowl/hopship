@@ -1,5 +1,3 @@
-import crypto from 'crypto'
-
 export const jsonHeaders = new Headers({ 'Content-Type': 'application/json' })
 
 export const csrfHeaders = (code: string) =>
@@ -99,7 +97,8 @@ export const clamp = (x: number, lower: number, upper: number) =>
   Math.min(Math.max(x, lower), upper)
 
 export const genHexString = (nBytes: number) => {
-  const bytes = crypto.randomBytes(nBytes)
+  const bytes = new Uint8Array(nBytes)
+  self.crypto.getRandomValues(bytes)
   const bytestrings = Array.from(bytes).map((b) =>
     b.toString(16).padStart(2, '0')
   )

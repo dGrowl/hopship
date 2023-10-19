@@ -9,6 +9,8 @@ const load = (variable: string) => {
 }
 
 export const HOME_DOMAIN = 'hopship.social'
-export const JWT_AUTH_SECRET = load('JWT_AUTH_SECRET')
+export const JWT_AUTH_SECRET = new TextEncoder().encode(load('JWT_AUTH_SECRET'))
 export const PG_CONN = load('PG_CONN')
-export const VERIFICATION_SECRET = load('VERIFICATION_SECRET')
+export const VERIFICATION_SECRET = new TextEncoder().encode(
+  load('VERIFICATION_SECRET')
+)

@@ -8,7 +8,7 @@ import {
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
-import styles from '../styles/UserMenu.module.css'
+import styles from '../../styles/UserMenu.module.css'
 
 interface Props {
   name: string | null
