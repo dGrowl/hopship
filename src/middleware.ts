@@ -15,6 +15,7 @@ interface AuthState {
 const processAuth = async (req: NextRequest, authState: AuthState) => {
   if (authState.processed) return
   const authCookie = req.cookies.get('auth')
+  authState.processed = true
   if (authCookie) {
     try {
       const { payload } = await jose.jwtVerify(
@@ -22,7 +23,6 @@ const processAuth = async (req: NextRequest, authState: AuthState) => {
         JWT_AUTH_SECRET
       )
       authState.name = payload.sub || null
-      authState.processed = true
     } catch (error) {
       console.error(error)
     }
@@ -34,9 +34,7 @@ const addCSRFCookie = async (
   res: NextResponse,
   authState: AuthState
 ) => {
-  if (!authState.processed) {
-    await processAuth(req, authState)
-  }
+  await processAuth(req, authState)
   const code = genHexString(32)
   const claims = { code } as jose.JWTPayload
   if (authState.name) {
@@ -54,7 +52,7 @@ const addCSRFCookie = async (
       secure: process.env.NODE_ENV !== 'development',
     })
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 
@@ -79,18 +77,18 @@ const checkCSRFCookie = async (
 }
 
 interface RedirectRule {
-  auth: boolean
+  whenAuthed: boolean
   path: string
 }
 
 const redirects: Record<string, RedirectRule | undefined> = {
   settings: {
-    auth: true,
+    whenAuthed: false,
     path: '/login',
   },
   login: {
-    auth: false,
-    path: '/settings',
+    whenAuthed: true,
+    path: '/settings/identities',
   },
 } as const
 
@@ -101,7 +99,7 @@ const checkAuthRedirect = async (req: NextRequest, authState: AuthState) => {
   const rule = redirects[page]
   if (rule) {
     await processAuth(req, authState)
-    if (rule.auth !== !!authState.name) {
+    if (rule.whenAuthed === !!authState.name) {
       const url = req.nextUrl.clone()
       url.pathname = rule.path
       return NextResponse.redirect(url)
@@ -110,7 +108,22 @@ const checkAuthRedirect = async (req: NextRequest, authState: AuthState) => {
   return NextResponse.next()
 }
 
+const handleLogout = async (req: NextRequest) => {
+  const res = NextResponse.next()
+  res.cookies.set('auth', 'none', {
+    expires: new Date(0),
+    path: '/',
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV !== 'development',
+  })
+  await addCSRFCookie(req, res, { name: null, processed: true })
+  return res
+}
+
 export const middleware = async (req: NextRequest) => {
+  if (req.nextUrl.pathname.startsWith('/logout')) {
+    return handleLogout(req)
+  }
   const authState = { name: null, processed: false }
   const res = await checkAuthRedirect(req, authState)
   await checkCSRFCookie(req, res, authState)

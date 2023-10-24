@@ -6,7 +6,10 @@ import {
   BsSlashCircle,
 } from 'react-icons/bs'
 import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+
+import { extractAuth } from '../../lib/cookies'
 
 import styles from '../../styles/UserMenu.module.css'
 
@@ -16,7 +19,18 @@ interface Props {
 }
 
 const UserMenu = ({ name, searching }: Props) => {
+  const [userName, setUserName] = useState(name)
   const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname()
+  useEffect(() => {
+    const checkAuth = async () => {
+      const auth = await extractAuth()
+      if (!auth || userName !== auth.name) {
+        setUserName(auth?.name || null)
+      }
+    }
+    checkAuth()
+  }, [userName, setUserName, pathname])
   useEffect(() => {
     const closeMenu = (e: MouseEvent) => {
       const element = e.target as Element
@@ -32,7 +46,7 @@ const UserMenu = ({ name, searching }: Props) => {
       className={searching ? styles.hiddenForMobile : ''}
       id={styles.container}
     >
-      {name === null ? (
+      {userName === null ? (
         <Link href="/login">
           <BsPersonAdd className="iconLink" />
         </Link>
@@ -44,13 +58,13 @@ const UserMenu = ({ name, searching }: Props) => {
       )}
       {isOpen ? (
         <nav id={styles.menu} onClick={() => setIsOpen(false)}>
-          <Link href={`/u/${name}`}>
-            <BsPersonCheckFill /> {name}
+          <Link href={`/u/${userName}`}>
+            <BsPersonCheckFill /> {userName}
           </Link>
           <Link href="/settings/identities">
             <BsGearFill /> settings
           </Link>
-          <Link href="/api/logout">
+          <Link href={'/logout' + pathname}>
             <BsSlashCircle /> logout
           </Link>
         </nav>

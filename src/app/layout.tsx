@@ -1,10 +1,8 @@
 import { BsSlash } from 'react-icons/bs'
-import { cookies } from 'next/headers'
 import { ReactNode } from 'react'
-import * as jose from 'jose'
 import Link from 'next/link'
 
-import { JWT_AUTH_SECRET } from '../lib/env'
+import { extractAuth } from '../lib/cookies'
 import backdrop from './base/Backdrop'
 import HomeBar from './base/HomeBar'
 
@@ -20,32 +18,17 @@ export const metadata = {
   viewport: 'width=device-width, initial-scale=1.0',
 }
 
-const extractAuthName = async () => {
-  const cookieStore = cookies()
-  const authCookie = cookieStore.get('auth')
-  if (!authCookie) {
-    return null
-  }
-  try {
-    const { payload } = await jose.jwtVerify(authCookie.value, JWT_AUTH_SECRET)
-    return payload.sub || null
-  } catch (error) {
-    console.error(error)
-  }
-  return null
-}
-
 interface Props {
   children: ReactNode
 }
 
 const RootLayout = async ({ children }: Props) => {
-  const userName = await extractAuthName()
+  const auth = await extractAuth()
   return (
     <html lang="en">
       <body>
         {backdrop}
-        <HomeBar userName={userName} />
+        <HomeBar userName={auth?.name || null} />
         <main className={styles.main}>{children}</main>
         <footer id={styles.footer}>
           <div>
