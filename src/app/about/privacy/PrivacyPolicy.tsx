@@ -1,4 +1,4 @@
-import { HOME_DOMAIN } from '../../lib/env'
+import { HOME_DOMAIN } from '../../../lib/env'
 
 const PrivacyPolicy = (
   <article>

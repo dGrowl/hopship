@@ -1,8 +1,10 @@
+'use client'
+
 import { useState } from 'react'
 import Link from 'next/link'
 
-import { HOME_DOMAIN } from '../../lib/env'
-import PACKAGES from '../../lib/packages'
+import { HOME_DOMAIN } from '../../../lib/env'
+import PACKAGES from './packages'
 
 const Code = () => {
   const [current, setCurrent] = useState(0)

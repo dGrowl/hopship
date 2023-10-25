@@ -9,7 +9,7 @@ import styles from '../styles/DropNav.module.css'
 
 interface Props {
   current: string
-  linkData: LinkDatum[]
+  linkData: readonly LinkDatum[]
   root: string
 }
 

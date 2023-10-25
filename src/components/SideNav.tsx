@@ -6,7 +6,7 @@ import styles from '../styles/SideNav.module.css'
 
 interface Props {
   current: string
-  linkData: LinkDatum[]
+  linkData: readonly LinkDatum[]
 }
 
 const SideNav = ({ current, linkData }: Props) => {
