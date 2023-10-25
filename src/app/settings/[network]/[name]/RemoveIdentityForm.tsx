@@ -1,8 +1,10 @@
+'use client'
+
 import { Dispatch, FormEvent, useState } from 'react'
 
-import { CSRFFormFields, Identity } from '../../lib/types'
-import { DECENTRALIZED_NETWORKS, csrfHeaders } from '../../lib/util'
-import AntiCSRFForm from '../AntiCSRFForm'
+import { CSRFFormFields, Identity } from '../../../../lib/types'
+import { DECENTRALIZED_NETWORKS, csrfHeaders } from '../../../../lib/util'
+import AntiCSRFForm from '../../../../components/AntiCSRFForm'
 
 type Fields = EventTarget &
   CSRFFormFields & {

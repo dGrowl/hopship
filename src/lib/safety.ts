@@ -40,6 +40,7 @@ export const NETWORK_MAX_LENGTH = NETWORKS.reduce(
   (len, p) => (p.length > len ? p.length : len),
   0
 )
+export const NETWORK_REGEX = `[a-zA-Z]+\.[a-zA-Z]+`
 
 export const NETWORK_NAME_MAX_LENGTH = 64
 export const NETWORK_NAME_MIN_LENGTH = 1

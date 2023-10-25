@@ -1,12 +1,18 @@
+'use client'
+
 import { FormEvent, useState } from 'react'
 
-import { buildMessageURL, csrfHeaders } from '../../lib/util'
-import { CSRFFormFields, Identity, VerificationDetails } from '../../lib/types'
-import { HOME_DOMAIN } from '../../lib/env'
-import AntiCSRFForm from '../AntiCSRFForm'
-import Preview from '../Preview'
+import { buildMessageURL, csrfHeaders } from '../../../../lib/util'
+import {
+  CSRFFormFields,
+  Identity,
+  VerificationDetails,
+} from '../../../../lib/types'
+import { HOME_DOMAIN } from '../../../../lib/env'
+import AntiCSRFForm from '../../../../components/AntiCSRFForm'
+import Preview from '../../../../components/Preview'
 
-import styles from '../styles/VerifyIdentityForm.module.css'
+import styles from '../../../../styles/VerifyIdentityForm.module.css'
 
 type Fields = EventTarget &
   CSRFFormFields & {

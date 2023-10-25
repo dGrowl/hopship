@@ -13,7 +13,6 @@ export interface Identity {
 export interface LinkDatum {
   icon: ReactElement
   text: string
-  title: string
   url: string
 }
 

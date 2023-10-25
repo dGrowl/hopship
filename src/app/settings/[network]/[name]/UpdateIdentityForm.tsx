@@ -1,11 +1,16 @@
+'use client'
+
 import { Dispatch, FormEvent, useState } from 'react'
 
-import { CSRFFormFields, Identity } from '../../lib/types'
-import { cleanSpaces, csrfHeaders } from '../../lib/util'
-import { DESCRIPTION_MAX_LENGTH, DESCRIPTION_REGEX } from '../../lib/safety'
-import AntiCSRFForm from '../AntiCSRFForm'
-import Field from '../Field'
-import ValidatedTextArea from '../ValidatedTextArea'
+import { cleanSpaces, csrfHeaders } from '../../../../lib/util'
+import { CSRFFormFields, Identity } from '../../../../lib/types'
+import {
+  DESCRIPTION_MAX_LENGTH,
+  DESCRIPTION_REGEX,
+} from '../../../../lib/safety'
+import AntiCSRFForm from '../../../../components/AntiCSRFForm'
+import Field from '../../../../components/Field'
+import ValidatedTextArea from '../../../../components/ValidatedTextArea'
 
 type Fields = EventTarget &
   CSRFFormFields & {
