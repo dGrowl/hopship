@@ -2,6 +2,7 @@ import { Dispatch, FormEvent, useReducer, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
+import { AppRouter } from '../../lib/types'
 import { csrfHeaders, objectReducer } from '../../lib/util'
 import {
   EMAIL_MAX_LENGTH,
@@ -28,7 +29,7 @@ interface RegisterFormFields extends EventTarget {
 
 const register = async (
   e: FormEvent,
-  router: ReturnType<typeof useRouter>,
+  router: AppRouter,
   setBadValues: Dispatch<object>
 ) => {
   e.preventDefault()

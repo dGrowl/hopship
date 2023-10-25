@@ -1,5 +1,6 @@
 import { JwtPayload } from 'jsonwebtoken'
 import { ReactElement } from 'react'
+import { useRouter } from 'next/navigation'
 
 export interface Identity {
   desc: string
@@ -54,3 +55,5 @@ export interface PostgresError {
   line: string
   routine: string
 }
+
+export type AppRouter = ReturnType<typeof useRouter>

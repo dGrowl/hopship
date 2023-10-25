@@ -7,6 +7,7 @@ import {
   NETWORK_NAME_MIN_LENGTH,
   NETWORK_NAME_REGEX,
 } from '../../lib/safety'
+import { AppRouter } from '../../lib/types'
 import { NETWORK_PLATFORM, PLATFORM_NETWORKS } from '../../lib/util'
 import { setAnimationPlatform } from '../home/OrbitAnimation'
 
@@ -81,7 +82,7 @@ const NameInput = ({ searching }: NameInputProps) => {
   )
 }
 
-const submit = (e: FormEvent, router: ReturnType<typeof useRouter>) => {
+const submit = (e: FormEvent, router: AppRouter) => {
   e.preventDefault()
   const form = e.target as Fields
   const network = form.network.value

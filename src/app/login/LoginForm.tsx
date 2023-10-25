@@ -1,6 +1,7 @@
 import { Dispatch, FormEvent, useReducer } from 'react'
 import { useRouter } from 'next/navigation'
 
+import { AppRouter } from '../../lib/types'
 import { csrfHeaders, objectReducer } from '../../lib/util'
 import {
   EMAIL_MAX_LENGTH,
@@ -20,7 +21,7 @@ interface LoginFormFields extends EventTarget {
 
 const login = async (
   e: FormEvent,
-  router: ReturnType<typeof useRouter>,
+  router: AppRouter,
   setBadValues: Dispatch<object>
 ) => {
   e.preventDefault()
