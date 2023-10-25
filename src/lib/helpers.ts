@@ -3,24 +3,7 @@ import jwt from 'jsonwebtoken'
 
 import { AuthPayload, CSRFPayload } from './types'
 import { JWT_AUTH_SECRET } from './env'
-import db from './db'
-
-export const validateUserData = async (payload: AuthPayload) => {
-  const { sub: name, email } = payload
-  if (!name || !email) {
-    return false
-  }
-  const result = await db.query(
-    `
-      SELECT true
-      FROM public.users
-      WHERE name = $1
-        AND email = $2;
-    `,
-    [name, email]
-  )
-  return result.rowCount === 1
-}
+import { validateUserData } from './db'
 
 export const processAuth = async (
   req: NextApiRequest,
