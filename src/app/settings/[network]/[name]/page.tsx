@@ -82,7 +82,11 @@ const load = async (network: string, networkName: string) => {
   return identity
 }
 
-const IdentitySettings = async ({ params }: { params: Record<string, string> }) => {
+const IdentitySettings = async ({
+  params,
+}: {
+  params: Record<string, string>
+}) => {
   const data = await load(params.network, params.name)
   if (!data) {
     return redirect('/logout/login')

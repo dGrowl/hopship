@@ -93,11 +93,7 @@ const submit = (e: FormEvent, router: AppRouter) => {
   if (name) {
     localStorage.setItem('name', name)
   }
-  const params = new URLSearchParams({
-    network,
-    id: name,
-  })
-  router.push('/results?' + params.toString())
+  router.push(`/results/${network}/${name}`)
 }
 
 interface Props extends NameInputProps {

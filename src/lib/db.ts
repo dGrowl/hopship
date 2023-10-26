@@ -27,4 +27,23 @@ export const validateUserData = async (
   return result.rowCount === 1
 }
 
+export const fetchBio = async (name: string) => {
+  try {
+    const result = await connection.query(
+      `
+        SELECT u.bio
+        FROM public.users u
+        WHERE u.name = $1;
+      `,
+      [name]
+    )
+    if (result.rowCount === 1) {
+      return result.rows[0].bio
+    }
+  } catch (error) {
+    console.error(error)
+  }
+  return null
+}
+
 export default connection

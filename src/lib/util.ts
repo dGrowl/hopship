@@ -105,9 +105,6 @@ export const genHexString = (nBytes: number) => {
   return bytestrings.join('')
 }
 
-export const arrayToFirstString = (a: string | string[] | null) =>
-  Array.isArray(a) ? a.slice(0, 1).join() : a
-
 export const objectReducer = <T>(s: T, a: object): T => ({ ...s, ...a })
 
 export const cleanSpaces = (s: string) => {

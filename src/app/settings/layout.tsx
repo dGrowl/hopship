@@ -32,28 +32,28 @@ const PLATFORM_ICONS: Record<string, ReactElement> = {
   YouTube: <BsYoutube className={styles.YouTube} />,
 } as const
 
-const LINK_DATA: Record<string, LinkDatum> = {
-  identities: {
+const LINK_DATA = [
+  {
     icon: <BsPersonVcard />,
     text: 'identities',
     url: '/settings/identities',
   },
-  user: {
+  {
     icon: <BsPersonCheckFill />,
     text: 'user',
     url: '/settings/user',
   },
-  password: {
+  {
     icon: <BsKeyFill />,
     text: 'password',
     url: '/settings/password',
   },
-  delete: {
+  {
     icon: <BsTrash3Fill />,
     text: 'delete',
     url: '/settings/delete',
   },
-} as const
+] as readonly LinkDatum[]
 
 const buildIdentityLinkDatum = (
   url: string,
@@ -82,7 +82,7 @@ const SettingsLayout = ({ children }: Props) => {
     return redirect('/')
   }
   const [current, network, networkName] = route
-  const linkData = Object.values(LINK_DATA)
+  const linkData = [...LINK_DATA]
   if (networkName) {
     linkData.splice(1, 0, buildIdentityLinkDatum(current, network, networkName))
   }
