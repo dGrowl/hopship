@@ -1,5 +1,5 @@
+import * as jose from 'jose'
 import argon2 from 'argon2'
-import jwt from 'jsonwebtoken'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { buildCookie, clamp } from '../../lib/util'
@@ -9,17 +9,18 @@ import db from '../../lib/db'
 
 const WEEK_IN_SECONDS = 60 * 60 * 24 * 7
 
-export const genAuthCookie = (
+export const genAuthCookie = async (
   name: string,
   email: string,
   expirationSecs: number = WEEK_IN_SECONDS
 ) => {
   expirationSecs = Math.floor(expirationSecs)
   expirationSecs = clamp(expirationSecs, 0, WEEK_IN_SECONDS)
-  const token = jwt.sign({ email }, JWT_AUTH_SECRET, {
-    subject: name,
-    expiresIn: expirationSecs,
-  })
+  const claims = { sub: name, email }
+  const token = await new jose.SignJWT(claims)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime(Date.now() / 1000 + expirationSecs)
+    .sign(JWT_AUTH_SECRET)
   return buildCookie('auth', token, expirationSecs)
 }
 
@@ -56,7 +57,7 @@ const authenticate = async (req: NextApiRequest, res: NextApiResponse) => {
     return res
       .status(200)
       .setHeader('Set-Cookie', [
-        genAuthCookie(user.name, email),
+        await genAuthCookie(user.name, email),
         buildCookie('csrf', 'none', 0),
       ])
       .json({})
@@ -68,7 +69,7 @@ const authenticate = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (!checkCSRF(req, res, false)) return
+  if (!(await checkCSRF(req, res, false))) return
   switch (req.method) {
     case 'POST':
       return authenticate(req, res)

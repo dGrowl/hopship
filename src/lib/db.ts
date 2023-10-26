@@ -1,16 +1,13 @@
 import { Pool } from 'pg'
 import * as jose from 'jose'
 
-import { AuthPayload } from './types'
 import { PG_CONN } from './env'
 
 const connection = new Pool({
   connectionString: PG_CONN,
 })
 
-export const validateUserData = async (
-  payload: AuthPayload | jose.JWTPayload
-) => {
+export const validateUserData = async (payload: jose.JWTPayload) => {
   const { sub: name, email } = payload
   if (!name || !email) {
     return false

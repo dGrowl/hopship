@@ -4,9 +4,7 @@ import {
   useEffect,
   useState,
 } from 'react'
-import jwt from 'jsonwebtoken'
-
-import { CSRFPayload } from '../lib/types'
+import * as jose from 'jose'
 
 const csrfCookieRegex = /csrf=([a-zA-Z0-9-_.]+)/
 
@@ -17,8 +15,8 @@ const useCSRFCode = () => {
     const token = match ? match[1] : null
     if (!token) return
     try {
-      const payload = jwt.decode(token) as CSRFPayload | null
-      setCode(payload?.code || '')
+      const payload = jose.decodeJwt(token)
+      setCode((payload.code as string) || '')
     } catch (error) {
       console.error('Failed to decode CSRF token')
     }

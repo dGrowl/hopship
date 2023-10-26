@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import jwt from 'jsonwebtoken'
+import * as jose from 'jose'
 
-import { AuthPayload, CSRFPayload } from './types'
 import { JWT_AUTH_SECRET } from './env'
 import { validateUserData } from './db'
 
@@ -17,7 +16,7 @@ export const processAuth = async (
     return null
   }
   try {
-    const payload = jwt.verify(token, JWT_AUTH_SECRET) as AuthPayload
+    const { payload } = await jose.jwtVerify(token, JWT_AUTH_SECRET)
     if (!(await validateUserData(payload))) {
       throw 'Auth cookie contained inaccurate user data'
     }
@@ -31,7 +30,7 @@ export const processAuth = async (
   return null
 }
 
-export const checkCSRF = (
+export const checkCSRF = async (
   req: NextApiRequest,
   res: NextApiResponse,
   checkAuth: boolean = true
@@ -57,10 +56,8 @@ export const checkCSRF = (
     return false
   }
   try {
-    const { code: cookieCode, sub: csrfName } = jwt.verify(
-      csrfCookie,
-      JWT_AUTH_SECRET
-    ) as CSRFPayload
+    const { payload } = await jose.jwtVerify(csrfCookie, JWT_AUTH_SECRET)
+    const { code: cookieCode, sub: csrfName } = payload
     if (headerCode !== cookieCode) {
       res.status(400).json({
         message: 'Mismatch between CSRF protection codes in cookie and header',
@@ -68,7 +65,7 @@ export const checkCSRF = (
       return false
     }
     if (checkAuth) {
-      const { sub: authName } = jwt.decode(authCookie || '') as AuthPayload
+      const { sub: authName } = jose.decodeJwt(authCookie || '')
       if (!authName || !csrfName || authName !== csrfName) {
         res.status(400).json({
           message: 'Mismatch between name in auth and CSRF cookies',

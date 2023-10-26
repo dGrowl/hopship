@@ -9,8 +9,8 @@ import {
 import { buildCookie, hasKey } from '../../../lib/util'
 import { checkCSRF, processAuth } from '../../../lib/helpers'
 import { getUserData, genAuthCookie } from '../login'
-import db from '../../../lib/db'
 import { PostgresError } from '../../../lib/types'
+import db from '../../../lib/db'
 
 interface Data {
   name?: string
@@ -41,7 +41,7 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
     data.bio = body.bio
   }
   if (hasKey(body, 'currentPassword')) {
-    const user = await getUserData(currentEmail, body.currentPassword)
+    const user = await getUserData(currentEmail as string, body.currentPassword)
     if (user.valid) {
       data.passhash = await argon2.hash(body.futurePassword, ARGON_OPTIONS)
     } else {
@@ -73,9 +73,9 @@ const update = async (req: NextApiRequest, res: NextApiResponse) => {
   if (data.name || data.email) {
     const currentSecs = Date.now() / 1000
     const remainingSecs = (payload.exp || currentSecs) - currentSecs
-    const newAuthCookie = genAuthCookie(
+    const newAuthCookie = await genAuthCookie(
       data.name || currentName,
-      data.email || currentEmail,
+      data.email || (currentEmail as string),
       remainingSecs
     )
     const clearCSRFCookie = buildCookie('csrf', 'none', 0)
@@ -111,7 +111,7 @@ const remove = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (!checkCSRF(req, res)) return
+  if (!(await checkCSRF(req, res))) return
   switch (req.method) {
     case 'PATCH':
       return update(req, res)

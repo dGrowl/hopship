@@ -55,7 +55,7 @@ const remove = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (!checkCSRF(req, res)) return
+  if (!(await checkCSRF(req, res))) return
   switch (req.method) {
     case 'PATCH':
       return update(req, res)

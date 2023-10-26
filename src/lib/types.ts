@@ -16,16 +16,6 @@ export interface LinkDatum {
   url: string
 }
 
-export interface AuthPayload extends JwtPayload {
-  sub: string
-  email: string
-}
-
-export interface CSRFPayload extends JwtPayload {
-  sub: string
-  code: string
-}
-
 export interface CSRFFormFields {
   csrf: HTMLInputElement
 }
