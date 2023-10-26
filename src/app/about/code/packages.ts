@@ -1,18 +1,19 @@
 import argon2 from './licenses/argon2'
 import bootstrapIcons from './licenses/bootstrap-icons'
-import eslintConfigNext from './licenses/eslint-config-next'
 import eslint from './licenses/eslint'
+import eslintConfigNext from './licenses/eslint-config-next'
+import jose from './licenses/jose'
 import next from './licenses/next'
 import pg from './licenses/pg'
 import prettier from './licenses/prettier'
+import react from './licenses/react'
 import reactDom from './licenses/react-dom'
 import reactIcons from './licenses/react-icons'
-import react from './licenses/react'
+import typescript from './licenses/typescript'
 import typesNode from './licenses/types-node'
 import typesPg from './licenses/types-pg'
-import typesReactDom from './licenses/types-react-dom'
 import typesReact from './licenses/types-react'
-import typescript from './licenses/typescript'
+import typesReactDom from './licenses/types-react-dom'
 
 interface PackageData {
   name: string
@@ -47,6 +48,10 @@ const PACKAGES = [
   {
     name: 'eslint-config-next',
     license: eslintConfigNext,
+  },
+  {
+    name: 'jose',
+    license: jose,
   },
   {
     name: 'next',
