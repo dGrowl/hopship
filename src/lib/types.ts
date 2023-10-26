@@ -1,4 +1,3 @@
-import { JwtPayload } from 'jsonwebtoken'
 import { ReactElement } from 'react'
 import { useRouter } from 'next/navigation'
 
