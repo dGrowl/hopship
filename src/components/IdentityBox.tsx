@@ -1,3 +1,5 @@
+'use client'
+
 import {
   BsCloudSunFill,
   BsGearFill,
@@ -13,7 +15,6 @@ import { FormEvent, useState } from 'react'
 import Link from 'next/link'
 
 import { CSRFFormFields, Identity } from '../lib/types'
-import { IconContext } from 'react-icons/lib'
 import {
   buildProfileURL,
   cleanSpaces,
@@ -34,22 +35,22 @@ import ValidatedTextArea from './ValidatedTextArea'
 
 import styles from '../styles/IdentityBox.module.css'
 
-const getPlatformBadge = (platform: string) => {
+const getPlatformBadge = (platform: string, size: string) => {
   switch (platform) {
     case 'Bluesky':
-      return <BsCloudSunFill />
+      return <BsCloudSunFill size={size} />
     case 'Mastodon':
-      return <BsMastodon />
+      return <BsMastodon size={size} />
     case 'Threads':
-      return <BsHurricane />
+      return <BsHurricane size={size} />
     case 'Twitter':
-      return <BsTwitter />
+      return <BsTwitter size={size} />
     case 'Twitch':
-      return <BsTwitch />
+      return <BsTwitch size={size} />
     case 'YouTube':
-      return <BsYoutube />
+      return <BsYoutube size={size} />
   }
-  return <BsQuestionCircle />
+  return <BsQuestionCircle size={size} />
 }
 
 type AddFields = EventTarget &
@@ -88,9 +89,7 @@ export const AddIdentityBox = ({ close }: AddProps) => {
     <div className={`${styles.container} ${styles[platform]}`}>
       <AntiCSRFForm onSubmit={add}>
         <div className={styles.platform}>
-          <IconContext.Provider value={{ size: '36px' }}>
-            {getPlatformBadge(platform)}
-          </IconContext.Provider>
+          {getPlatformBadge(platform, '36px')}
           <select
             id={styles.addSelector}
             name="platform"
@@ -164,9 +163,7 @@ const IdentityBox = ({
   return (
     <div className={`${styles.container} ${styles[platform]}`}>
       <div className={styles.platform}>
-        <IconContext.Provider value={{ size: editable ? '36px' : '44px' }}>
-          {getPlatformBadge(platform)}
-        </IconContext.Provider>
+        {getPlatformBadge(platform, editable ? '36px' : '44px')}
         {editable ? (
           <StatusBadge settingsURL={settingsURL} status={status} />
         ) : null}
