@@ -36,24 +36,23 @@ type Fields = EventTarget &
 
 const update = async (
   e: FormEvent,
-  currentName: string,
-  currentBio: string,
+  user: Props,
   setBadValues: Dispatch<object>
 ) => {
   e.preventDefault()
   const { csrf, name, email, bio } = e.target as Fields
   const data: Data = {}
-  if (currentName !== name.value) {
+  if (user.name !== name.value) {
     data.name = name.value
   }
-  if (email.defaultValue !== email.value) {
+  if (user.email !== email.value) {
     data.email = email.value
   }
-  if (currentBio !== bio.value) {
+  if (user.bio !== bio.value) {
     data.bio = cleanSpaces(bio.value)
   }
   if (Object.keys(data).length !== 0) {
-    const response = await fetch(`/api/users/${currentName}`, {
+    const response = await fetch(`/api/users/${user.name}`, {
       method: 'PATCH',
       headers: csrfHeaders(csrf.value),
       body: JSON.stringify(data),
@@ -95,7 +94,8 @@ interface Props extends FallibleValues {
   bio: string
 }
 
-const UpdateUserForm = ({ name, email, bio }: Props) => {
+const UpdateUserForm = (user: Props) => {
+  const { name, email, bio } = user
   const [badValues, setBadValues] = useReducer(objectReducer<FallibleValues>, {
     email: '',
     name: '',
@@ -106,7 +106,7 @@ const UpdateUserForm = ({ name, email, bio }: Props) => {
     <section>
       <AntiCSRFForm
         onChange={(e) => checkUnchanged(e, name, setUnchanged)}
-        onSubmit={(e) => update(e, name, bio, setBadValues)}
+        onSubmit={(e) => update(e, user, setBadValues)}
       >
         <Field name="name">
           <FallibleInput
