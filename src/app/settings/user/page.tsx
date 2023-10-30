@@ -33,7 +33,7 @@ const load = async () => {
     return null
   }
   const bio = await fetchBio(auth.name)
-  if (!bio) {
+  if (bio === null) {
     return null
   }
   return { ...auth, bio }
