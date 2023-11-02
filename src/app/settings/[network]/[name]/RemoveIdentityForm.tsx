@@ -1,9 +1,11 @@
 'use client'
 
 import { Dispatch, FormEvent, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
-import { CSRFFormFields, Identity } from '../../../../lib/types'
+import { AppRouter, CSRFFormFields, Identity } from '../../../../lib/types'
 import { DECENTRALIZED_NETWORKS, csrfHeaders } from '../../../../lib/util'
+import { invalidatePath } from '../../../../lib/actions'
 import AntiCSRFForm from '../../../../components/AntiCSRFForm'
 
 type Fields = EventTarget &
@@ -11,14 +13,20 @@ type Fields = EventTarget &
     consent: HTMLInputElement
   }
 
-const remove = async (e: FormEvent, network: string, name: string) => {
+const remove = async (e: FormEvent, router: AppRouter, identity: Identity) => {
   e.preventDefault()
   const { csrf } = e.target as Fields
-  await fetch(`/api/identities/${network}/${name}`, {
+  const { network, name } = identity
+  const res = await fetch(`/api/identities/${network}/${name}`, {
     method: 'DELETE',
     headers: csrfHeaders(csrf.value),
   })
-  window.location.reload()
+  if (res.status === 200) {
+    await invalidatePath('/settings/identities')
+    router.push('/settings/identities')
+  } else {
+    router.refresh()
+  }
 }
 
 const checkInvalid = (
@@ -38,6 +46,7 @@ interface Props {
 const RemoveIdentityForm = ({ identity }: Props) => {
   const [invalid, setInvalid] = useState(true)
   const { platform, network, name } = identity
+  const router = useRouter()
   const key = DECENTRALIZED_NETWORKS.includes(network)
     ? `${network}/${name}`
     : `${platform}/${name}`
@@ -50,7 +59,7 @@ const RemoveIdentityForm = ({ identity }: Props) => {
       </p>
       <AntiCSRFForm
         onChange={(e) => checkInvalid(e, key, setInvalid)}
-        onSubmit={(e) => remove(e, network, name)}
+        onSubmit={(e) => remove(e, router, identity)}
       >
         <input name="consent" placeholder={key} />
         <button disabled={invalid}>delete</button>
