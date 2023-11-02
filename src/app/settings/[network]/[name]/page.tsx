@@ -89,7 +89,7 @@ const IdentitySettings = async ({
 }) => {
   const data = await load(params.network, params.name)
   if (!data) {
-    return redirect('/logout/login')
+    return redirect('/settings/identities')
   }
   const { user_id: userID, ...identity } = data
   return (
