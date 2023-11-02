@@ -27,7 +27,7 @@ interface Props {
   params: Params
 }
 
-export const generateMetadata = ({ params, searchParams }: Props) => {
+export const generateMetadata = ({ params }: Props) => {
   const { network, name } = processQuery(params)
   return {
     title:
