@@ -6,15 +6,6 @@ export const csrfHeaders = (code: string) =>
     'X-CSRF-TOKEN': code,
   })
 
-export const buildCookie = (k: string, v: string, age: number) =>
-  [
-    `${k}=${v}`,
-    `Max-Age=${age}`,
-    'Path=/',
-    'SameSite=Lax',
-    process.env.NODE_ENV !== 'development' ? 'Secure' : null,
-  ].join('; ')
-
 export const PLATFORM_NETWORKS: { [platform: string]: string[] } = {
   Bluesky: ['bsky.social'],
   Mastodon: ['mastodon.social', 'mstdn.social'],
@@ -92,9 +83,6 @@ export const buildMessageURL = (
 
 export const hasKey = (o: object, key: string) =>
   Object.prototype.hasOwnProperty.call(o, key)
-
-export const clamp = (x: number, lower: number, upper: number) =>
-  Math.min(Math.max(x, lower), upper)
 
 export const genHexString = (nBytes: number) => {
   const bytes = new Uint8Array(nBytes)

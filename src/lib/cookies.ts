@@ -1,6 +1,7 @@
 'use server'
 
 import { cookies } from 'next/headers'
+import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import * as jose from 'jose'
 
 import { JWT_AUTH_SECRET } from './env'
@@ -24,4 +25,24 @@ export const extractAuth = async () => {
     console.error(error)
   }
   return null
+}
+
+export const genAuthCookie = async (
+  name: string,
+  email: string,
+  expirationSecs: number
+) => {
+  const claims = { sub: name, email }
+  const token = await new jose.SignJWT(claims)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime(expirationSecs)
+    .sign(JWT_AUTH_SECRET)
+  return {
+    name: 'auth',
+    value: token,
+    expires: expirationSecs * 1000, // ms
+    path: '/',
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV !== 'development',
+  } as ResponseCookie
 }
