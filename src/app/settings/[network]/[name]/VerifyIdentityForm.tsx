@@ -1,13 +1,15 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
-import { buildMessageURL, csrfHeaders } from '../../../../lib/util'
 import {
+  AppRouter,
   CSRFFormFields,
   Identity,
   VerificationDetails,
 } from '../../../../lib/types'
+import { buildMessageURL, csrfHeaders } from '../../../../lib/util'
 import { HOME_DOMAIN } from '../../../../lib/env'
 import AntiCSRFForm from '../../../../components/AntiCSRFForm'
 import Preview from '../../../../components/Preview'
@@ -29,7 +31,7 @@ const buildProof = (platform: string, fields: Fields) => {
   const proof: Proof = {
     url: fields.url.value,
   }
-  if (platform === 'Twitter' && fields.messageID) {
+  if (fields.messageID) {
     proof.messageID = fields.messageID.value
   }
   return proof
@@ -37,6 +39,7 @@ const buildProof = (platform: string, fields: Fields) => {
 
 const verify = async (
   e: FormEvent,
+  router: AppRouter,
   identity: Identity,
   timestampMs: string
 ) => {
@@ -55,7 +58,7 @@ const verify = async (
     headers: csrfHeaders(csrf),
     body: JSON.stringify(data),
   })
-  window.location.reload()
+  router.refresh()
 }
 
 interface PlatformDetails {
@@ -182,6 +185,7 @@ interface Props {
 }
 
 const VerifyIdentityForm = ({ identity, verification }: Props) => {
+  const router = useRouter()
   const { platform, status } = identity
   const { hash, timestampMs } = verification
   const url = `https://${HOME_DOMAIN}/u/name?v=${hash.substring(0, 16)}`
@@ -191,7 +195,9 @@ const VerifyIdentityForm = ({ identity, verification }: Props) => {
       {status === 'PENDING' ? (
         <VerificationPending />
       ) : (
-        <AntiCSRFForm onSubmit={(e) => verify(e, identity, timestampMs)}>
+        <AntiCSRFForm
+          onSubmit={(e) => verify(e, router, identity, timestampMs)}
+        >
           To verify that this {platform} account belongs to you:
           <ol className={styles.instructions}>
             <Instructions {...identity} url={url} />
