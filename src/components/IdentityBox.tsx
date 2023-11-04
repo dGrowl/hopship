@@ -3,7 +3,6 @@
 import {
   BsCloudSunFill,
   BsGearFill,
-  BsHurricane,
   BsMastodon,
   BsQuestionCircle,
   BsTwitch,
@@ -14,7 +13,7 @@ import {
 import { FormEvent, useState } from 'react'
 import Link from 'next/link'
 
-import { CSRFFormFields, Identity } from '../lib/types'
+import { BsThreads } from './additionalIcons'
 import {
   buildProfileURL,
   cleanSpaces,
@@ -23,6 +22,7 @@ import {
   PLATFORM_NETWORKS,
   PLATFORMS,
 } from '../lib/util'
+import { CSRFFormFields, Identity } from '../lib/types'
 import {
   DESCRIPTION_MAX_LENGTH,
   DESCRIPTION_REGEX,
@@ -42,7 +42,7 @@ const getPlatformBadge = (platform: string, size: string) => {
     case 'Mastodon':
       return <BsMastodon size={size} />
     case 'Threads':
-      return <BsHurricane size={size} />
+      return <BsThreads size={size} />
     case 'Twitter':
       return <BsTwitter size={size} />
     case 'Twitch':

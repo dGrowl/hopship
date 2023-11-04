@@ -2,7 +2,6 @@
 
 import {
   BsCloudSunFill,
-  BsHurricane,
   BsKeyFill,
   BsMastodon,
   BsPersonCheckFill,
@@ -15,6 +14,7 @@ import {
 import { ReactElement, ReactNode } from 'react'
 import { redirect, usePathname } from 'next/navigation'
 
+import { BsThreads } from '../../components/additionalIcons'
 import { LinkDatum } from '../../lib/types'
 import { NETWORK_NAME_REGEX, NETWORK_REGEX } from '../../lib/safety'
 import { NETWORK_PLATFORM } from '../../lib/util'
@@ -26,7 +26,7 @@ import styles from '../../styles/Settings.module.css'
 const PLATFORM_ICONS: Record<string, ReactElement> = {
   Bluesky: <BsCloudSunFill className={styles.Bluesky} />,
   Mastodon: <BsMastodon className={styles.Mastodon} />,
-  Threads: <BsHurricane className={styles.Threads} />,
+  Threads: <BsThreads className={styles.Threads} />,
   Twitch: <BsTwitch className={styles.Twitch} />,
   Twitter: <BsTwitter className={styles.Twitter} />,
   YouTube: <BsYoutube className={styles.YouTube} />,
