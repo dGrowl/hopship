@@ -1,3 +1,4 @@
+import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
 import { extractAuth } from '../../../lib/cookies'
@@ -5,7 +6,7 @@ import { Identity } from '../../../lib/types'
 import db from '../../../lib/db'
 import EditableIdentitiesList from './EditableIdentitiesList'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'hopship: Manage Identities',
 }
 

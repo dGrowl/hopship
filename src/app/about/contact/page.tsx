@@ -1,6 +1,8 @@
+import { Metadata } from 'next'
+
 import ContactForm from './ContactForm'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'hopship: Contact Us',
 }
 

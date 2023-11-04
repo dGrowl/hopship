@@ -1,5 +1,6 @@
 import { createHash } from 'crypto'
 
+import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
 import { extractAuth } from '../../../../lib/cookies'
@@ -19,7 +20,7 @@ interface MetaProps {
   }
 }
 
-export const generateMetadata = ({ params }: MetaProps) => ({
+export const generateMetadata = ({ params }: MetaProps): Metadata => ({
   title: `hopship: ${params.network}/${params.name} Settings`,
 })
 

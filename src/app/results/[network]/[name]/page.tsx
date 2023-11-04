@@ -1,4 +1,5 @@
 import { BsEmojiFrownFill } from 'react-icons/bs'
+import { Metadata } from 'next'
 
 import { getSpecificNetworkName, NETWORKS } from '../../../../lib/util'
 import {
@@ -30,7 +31,7 @@ interface Props {
   params: Params
 }
 
-export const generateMetadata = ({ params }: Props) => {
+export const generateMetadata = ({ params }: Props): Metadata => {
   const { network, name } = processParams(params)
   return {
     title:

@@ -1,6 +1,8 @@
+import { Metadata } from 'next'
+
 import Help from './Help'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'hopship: Help',
 }
 

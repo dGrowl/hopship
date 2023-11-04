@@ -1,4 +1,5 @@
 import { BsSlash } from 'react-icons/bs'
+import { Metadata, Viewport } from 'next'
 import { ReactNode } from 'react'
 import Link from 'next/link'
 
@@ -11,11 +12,16 @@ import '../styles/globals.css'
 import '../styles/variables.css'
 import styles from '../styles/App.module.css'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'hopship',
   description:
     'A searchable index of user accounts across different web platforms. Come find all of your friends!',
-  viewport: 'width=device-width, initial-scale=1.0',
+}
+
+export const viewport: Viewport = {
+  initialScale: 1.0,
+  themeColor: 'rgb(22, 22, 22)',
+  width: 'device-width',
 }
 
 interface Props {

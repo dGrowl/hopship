@@ -6,6 +6,8 @@ import {
 } from 'react'
 import * as jose from 'jose'
 
+import { CSRFPayload } from '../lib/api'
+
 const csrfCookieRegex = /csrf=([a-zA-Z0-9-_.]+)/
 
 const useCSRFCode = () => {
@@ -15,8 +17,8 @@ const useCSRFCode = () => {
     const token = match ? match[1] : null
     if (!token) return
     try {
-      const payload = jose.decodeJwt(token)
-      setCode((payload.code as string) || '')
+      const payload = jose.decodeJwt<CSRFPayload>(token)
+      setCode(payload.code || '')
     } catch (error) {
       console.error('Failed to decode CSRF token')
     }

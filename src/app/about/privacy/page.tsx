@@ -1,6 +1,8 @@
+import { Metadata } from 'next'
+
 import PrivacyPolicy from './PrivacyPolicy'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'hopship: Privacy Policy',
 }
 

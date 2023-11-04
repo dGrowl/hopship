@@ -4,6 +4,7 @@ import { cookies } from 'next/headers'
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import * as jose from 'jose'
 
+import { AuthPayload } from './api'
 import { JWT_AUTH_SECRET } from './env'
 import { validateUserData } from './db'
 
@@ -14,11 +15,14 @@ export const extractAuth = async () => {
     return null
   }
   try {
-    const { payload } = await jose.jwtVerify(authToken.value, JWT_AUTH_SECRET)
+    const { payload } = await jose.jwtVerify<AuthPayload>(
+      authToken.value,
+      JWT_AUTH_SECRET
+    )
     if (await validateUserData(payload)) {
       return {
-        name: payload.sub as string,
-        email: payload.email as string,
+        name: payload.sub,
+        email: payload.email,
       }
     }
   } catch (error) {

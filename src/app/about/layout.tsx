@@ -21,37 +21,31 @@ const LINK_DATA = [
   {
     icon: <BsQuestionLg />,
     text: 'help',
-    // title: 'Help',
     url: '/about/help',
   },
   {
     icon: <BsBullseye />,
     text: 'mission',
-    // title: 'Mission',
     url: '/about/mission',
   },
   {
     icon: <BsCodeSlash />,
     text: 'code',
-    // title: 'Code',
     url: '/about/code',
   },
   {
     icon: <BsShieldCheck />,
     text: 'privacy',
-    // title: 'Privacy Policy',
     url: '/about/privacy',
   },
   {
     icon: <BsClipboard2Check />,
     text: 'terms',
-    // title: 'Terms of Service',
     url: '/about/terms',
   },
   {
     icon: <BsChatLeftText />,
     text: 'contact',
-    // title: 'Contact Us',
     url: '/about/contact',
   },
 ] as readonly LinkDatum[]

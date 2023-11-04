@@ -6,9 +6,13 @@ import { JWT_AUTH_SECRET } from './env'
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import db, { validateUserData } from '../lib/db'
 
-interface AuthPayload extends jose.JWTPayload {
+export interface AuthPayload extends jose.JWTPayload {
   sub: string
   email: string
+}
+
+export interface CSRFPayload extends jose.JWTPayload {
+  code: string
 }
 
 export interface APIExtras {
@@ -81,7 +85,10 @@ export const checkCSRF = async (
     if (!headerCode) {
       throw 'Missing CSRF protection header'
     }
-    const { payload } = await jose.jwtVerify(cookie.value, JWT_AUTH_SECRET)
+    const { payload } = await jose.jwtVerify<AuthPayload>(
+      cookie.value,
+      JWT_AUTH_SECRET
+    )
     const { code: cookieCode, sub: csrfName } = payload
     if (headerCode !== cookieCode) {
       throw 'Mismatch between CSRF protection codes in cookie and header'
@@ -110,11 +117,14 @@ export const checkAuth = async (
     if (!cookie) {
       throw 'Request did not contain required auth cookie'
     }
-    const { payload } = await jose.jwtVerify(cookie.value, JWT_AUTH_SECRET)
+    const { payload } = await jose.jwtVerify<AuthPayload>(
+      cookie.value,
+      JWT_AUTH_SECRET
+    )
     if (!(await validateUserData(payload))) {
       throw 'Auth cookie contained inaccurate user data'
     }
-    extras.auth = payload as AuthPayload
+    extras.auth = payload
   } catch (error) {
     console.error(error)
     res.body = { message: error as string }

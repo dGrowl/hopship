@@ -1,10 +1,11 @@
+import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
 import { extractAuth } from '../../../lib/cookies'
 import db from '../../../lib/db'
 import UpdateUserForm from './UpdateUserForm'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'hopship: Update User Details',
 }
 

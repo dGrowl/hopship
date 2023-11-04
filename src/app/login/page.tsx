@@ -1,8 +1,10 @@
+import { Metadata } from 'next'
+
 import Switcher from './Switcher'
 
 import styles from '../../styles/Login.module.css'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'hopship: Login/Register',
 }
 

@@ -1,6 +1,8 @@
+import { Metadata } from 'next'
+
 import Code from './Code'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'hopship: Help',
 }
 

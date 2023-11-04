@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server'
 import * as jose from 'jose'
 
+import { AuthPayload, CSRFPayload } from './lib/api'
 import { genHexString, secsRemaining } from './lib/util'
 import { JWT_AUTH_SECRET } from './lib/env'
 
@@ -18,7 +19,7 @@ const processAuth = async (req: NextRequest, authState: AuthState) => {
   authState.processed = true
   if (authCookie) {
     try {
-      const { payload } = await jose.jwtVerify(
+      const { payload } = await jose.jwtVerify<AuthPayload>(
         authCookie.value,
         JWT_AUTH_SECRET
       )
@@ -66,7 +67,10 @@ const checkCSRFCookie = async (
     return addCSRFCookie(req, res, authState)
   }
   try {
-    const { payload } = await jose.jwtVerify(csrfCookie.value, JWT_AUTH_SECRET)
+    const { payload } = await jose.jwtVerify<CSRFPayload>(
+      csrfCookie.value,
+      JWT_AUTH_SECRET
+    )
     if (payload.exp && secsRemaining(payload.exp) < THREE_HOURS_IN_SECONDS) {
       return addCSRFCookie(req, res, authState)
     }
