@@ -3,13 +3,12 @@ import db from '../../../lib/db'
 
 export const POST = chain(checkAuth, checkCSRF, async (req, res, { auth }) => {
   const { sub: userName } = auth!
-  const { platform, network, name: networkName, desc } = await req.json()
+  const { network, name: networkName, desc } = await req.json()
   try {
     await db.query(
       `
         INSERT INTO public.identities (
           user_id,
-          platform,
           network,
           name,
           description
@@ -18,11 +17,10 @@ export const POST = chain(checkAuth, checkCSRF, async (req, res, { auth }) => {
           (SELECT id FROM public.users WHERE name = $1),
           $2,
           $3,
-          $4,
-          $5
+          $4
         );
       `,
-      [userName, platform, network, networkName, desc]
+      [userName, network, networkName, desc]
     )
   } catch (error) {
     console.error(error)

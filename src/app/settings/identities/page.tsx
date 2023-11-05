@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 
 import { extractAuth } from '../../../lib/cookies'
 import { Identity } from '../../../lib/types'
+import { NETWORK_PLATFORM } from '../../../lib/util'
 import db from '../../../lib/db'
 import EditableIdentitiesList from './EditableIdentitiesList'
 
@@ -20,7 +21,6 @@ const fetchIdentities = async (
     const result = await db.query(
       `
         SELECT
-          i.platform,
           i.network,
           i.name,
           i.description AS desc,
@@ -32,7 +32,10 @@ const fetchIdentities = async (
       `,
       [userName]
     )
-    return result.rows
+    return result.rows.map((i) => ({
+      ...i,
+      platform: NETWORK_PLATFORM[i.network],
+    }))
   } catch (error) {
     console.error(error)
   }

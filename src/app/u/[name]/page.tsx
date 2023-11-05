@@ -7,6 +7,7 @@ import {
 import { redirect } from 'next/navigation'
 
 import { Identity } from '../../../lib/types'
+import { NETWORK_PLATFORM } from '../../../lib/util'
 import { USER_NAME_MAX_LENGTH } from '../../../lib/safety'
 import db, { fetchBio } from '../../../lib/db'
 import IdentityBox from '../../../components/IdentityBox'
@@ -22,7 +23,6 @@ const fetchVerifiedIdentities = async (userName: string) => {
     const result = await db.query(
       `
         SELECT
-          i.platform,
           i.network,
           i.name,
           i.description AS desc,
@@ -32,11 +32,11 @@ const fetchVerifiedIdentities = async (userName: string) => {
             ON u.id = i.user_id
         WHERE u.name = $1
           AND i.status = 'VERIFIED'
-        ORDER BY platform ASC, name ASC;
+        ORDER BY network ASC, name ASC;
       `,
       [userName]
     )
-    return result.rows
+    return result.rows.map((i) => ({ ...i, platform: NETWORK_PLATFORM[i] }))
   } catch (error) {
     console.error(error)
   }

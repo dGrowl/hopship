@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 
 import { extractAuth } from '../../../../lib/cookies'
 import { Identity } from '../../../../lib/types'
+import { NETWORK_PLATFORM } from '../../../../lib/util'
 import { VERIFICATION_SECRET } from '../../../../lib/env'
 import db from '../../../../lib/db'
 import RemoveIdentityForm from './RemoveIdentityForm'
@@ -49,7 +50,6 @@ const fetchIdentity = async (
         SELECT
           u.id AS user_id,
           i.description AS desc,
-          i.platform,
           i.network,
           i.name,
           i.status
@@ -63,7 +63,10 @@ const fetchIdentity = async (
       [userName, network, networkName]
     )
     if (result.rowCount === 1) {
-      return result.rows[0]
+      return {
+        ...result.rows[0],
+        platform: NETWORK_PLATFORM[network],
+      }
     }
   } catch (error) {
     console.error(error)

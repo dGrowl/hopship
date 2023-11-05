@@ -58,9 +58,6 @@ CREATE TABLE public.identities (
 	user_id INTEGER
 		REFERENCES public.users (id)
 		ON DELETE CASCADE,
-	platform TEXT
-		REFERENCES public.platforms (name)
-		ON DELETE CASCADE,
 	network TEXT
 		REFERENCES public.networks (name)
 		ON DELETE CASCADE,
