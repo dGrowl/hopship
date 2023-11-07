@@ -9,6 +9,7 @@ import prettier from './licenses/prettier'
 import react from './licenses/react'
 import reactDom from './licenses/react-dom'
 import reactIcons from './licenses/react-icons'
+import typebox from './licenses/typebox'
 import typescript from './licenses/typescript'
 import typesNode from './licenses/types-node'
 import typesPg from './licenses/types-pg'
@@ -16,8 +17,8 @@ import typesReact from './licenses/types-react'
 import typesReactDom from './licenses/types-react-dom'
 
 interface PackageData {
-  name: string
-  license: string
+  readonly name: string
+  readonly license: string
 }
 
 const PACKAGES = [
@@ -76,6 +77,10 @@ const PACKAGES = [
   {
     name: 'bootstrap-icons',
     license: bootstrapIcons,
+  },
+  {
+    name: 'typebox',
+    license: typebox,
   },
   {
     name: 'typescript',
