@@ -1,12 +1,41 @@
-import { chain, checkAuth, checkCSRF } from '../../../lib/api'
+import { Static, Type } from '@sinclair/typebox'
+
+import {
+  chain,
+  checkAuth,
+  checkCSRF,
+  validateRequestBody,
+} from '../../../lib/api'
+import { NetworkNameType, NetworkType } from '../../../lib/safety'
 import db from '../../../lib/db'
 
-export const POST = chain(checkAuth, checkCSRF, async (req, res, { auth }) => {
-  const { sub: userName } = auth!
-  const { network, name: networkName, timestampMs, proof } = await req.json()
-  try {
-    await db.query(
-      `
+const reqBody = Type.Object({
+  network: NetworkType,
+  name: NetworkNameType,
+  timestampMs: Type.String({ pattern: '\\d+' }),
+  proof: Type.Object({
+    url: Type.String(),
+    messageID: Type.Optional(Type.String()),
+  }),
+})
+
+type RequestBody = Static<typeof reqBody>
+
+export const POST = chain(
+  validateRequestBody(reqBody),
+  checkAuth,
+  checkCSRF,
+  async (_, res, { auth, body }) => {
+    const { sub: userName } = auth!
+    const {
+      network,
+      name: networkName,
+      timestampMs,
+      proof,
+    } = body as RequestBody
+    try {
+      await db.query(
+        `
           WITH v as (
             INSERT INTO public.verifications (user_id, network, name, requested_at, proof)
             VALUES (
@@ -28,11 +57,12 @@ export const POST = chain(checkAuth, checkCSRF, async (req, res, { auth }) => {
               OR status = 'REJECTED'
             );
         `,
-      [userName, network, networkName, timestampMs, JSON.stringify(proof)]
-    )
-  } catch (error) {
-    console.error(error)
-    res.options = { status: 500 }
+        [userName, network, networkName, timestampMs, JSON.stringify(proof)]
+      )
+    } catch (error) {
+      console.error(error)
+      res.options = { status: 500 }
+    }
+    return res.send()
   }
-  return res.send()
-})
+)

@@ -1,3 +1,4 @@
+import { Static, Type } from '@sinclair/typebox'
 import argon2 from 'argon2'
 
 import {
@@ -7,19 +8,34 @@ import {
   checkCSRF,
   getUserData,
   ResponseState,
+  validateRequestBody,
 } from '../../../../lib/api'
 import {
   ARGON_OPTIONS,
   buildPostgresErrorJson,
+  PasswordType,
   sanitizeName,
 } from '../../../../lib/safety'
 import { genAuthCookie } from '../../../../lib/cookies'
-import { hasKey } from '../../../../lib/util'
 import { NextRequest } from 'next/server'
 import { PostgresError } from '../../../../lib/types'
 import db from '../../../../lib/db'
 
-interface Data {
+const patchReqBody = Type.Object({
+  name: Type.Optional(Type.String()),
+  email: Type.Optional(Type.String()),
+  bio: Type.Optional(Type.String()),
+  password: Type.Optional(
+    Type.Object({
+      current: PasswordType,
+      future: PasswordType,
+    })
+  ),
+})
+
+type PatchRequestBody = Static<typeof patchReqBody>
+
+interface UpdateData {
   name?: string
   email?: string
   bio?: string
@@ -41,43 +57,41 @@ const compareRouteWithAuth = async (
 }
 
 export const PATCH = chain(
+  validateRequestBody(patchReqBody),
   checkAuth,
   checkCSRF,
   compareRouteWithAuth,
-  async (req, res, { auth }) => {
+  async (_, res, { auth, body }) => {
     const { sub: currentName, email: currentEmail } = auth!
-    const data: Data = {}
-    const body = await req.json()
-    if (hasKey(body, 'name')) {
-      data.name = sanitizeName(body.name)
+    const { name, email, bio, password } = body as PatchRequestBody
+    const updateData: UpdateData = {}
+    if (name !== undefined) {
+      updateData.name = sanitizeName(name)
     }
-    if (hasKey(body, 'email')) {
-      data.email = body.email
+    if (email !== undefined) {
+      updateData.email = email
     }
-    if (hasKey(body, 'bio')) {
-      data.bio = body.bio
+    if (bio !== undefined) {
+      updateData.bio = bio
     }
-    if (hasKey(body, 'currentPassword')) {
-      const user = await getUserData(
-        currentEmail as string,
-        body.currentPassword
-      )
+    if (password !== undefined) {
+      const user = await getUserData(currentEmail, password.current)
       if (user.valid) {
-        data.passhash = await argon2.hash(body.futurePassword, ARGON_OPTIONS)
+        updateData.passhash = await argon2.hash(password.future, ARGON_OPTIONS)
       } else {
         res.body = { error: 'WRONG_PASSWORD' }
         res.options = { status: 400 }
         return res.send()
       }
     }
-    if (Object.keys(data).length === 0) {
+    if (Object.keys(updateData).length === 0) {
       res.body = {
         message: 'No valid updates could be made with the provided data',
       }
       res.options = { status: 400 }
       return res.send()
     }
-    const updates = Object.keys(data).map(
+    const updates = Object.keys(updateData).map(
       (column, i) => `${column} = $${i + 1}`
     )
     try {
@@ -87,7 +101,7 @@ export const PATCH = chain(
         SET ${updates.join(',')}
         WHERE name = $${updates.length + 1};
       `,
-        [...Object.values(data), currentName]
+        [...Object.values(updateData), currentName]
       )
       if (result.rowCount === 0) {
         res.body = { error: 'UNKNOWN_USER' }
@@ -100,10 +114,10 @@ export const PATCH = chain(
       res.options = { status: 400 }
       return res.send()
     }
-    if (data.name || data.email) {
+    if (updateData.name || updateData.email) {
       res.cookies.auth = await genAuthCookie(
-        data.name || currentName,
-        data.email || (currentEmail as string),
+        updateData.name || currentName,
+        updateData.email || (currentEmail as string),
         auth!.exp!
       )
       res.cookies.csrf = {

@@ -1,15 +1,29 @@
-import { chain, checkAuth, checkCSRF } from '../../../../../lib/api'
-import { hasKey } from '../../../../../lib/util'
-import db from '../../../../../lib/db'
+import { Static, Type } from '@sinclair/typebox'
 
-export const PATCH = chain(
+import {
+  chain,
   checkAuth,
   checkCSRF,
-  async (req, res, { auth, params }) => {
+  validateRequestBody,
+} from '../../../../../lib/api'
+import { DescriptionType } from '../../../../../lib/safety'
+import db from '../../../../../lib/db'
+
+const patchReqBody = Type.Object({
+  desc: Type.Optional(DescriptionType),
+})
+
+type PatchRequestBody = Static<typeof patchReqBody>
+
+export const PATCH = chain(
+  validateRequestBody(patchReqBody),
+  checkAuth,
+  checkCSRF,
+  async (_, res, { auth, body, params }) => {
     const { network, id: networkName } = params!
     const { sub: userName } = auth!
-    const body = await req.json()
-    if (hasKey(body, 'desc')) {
+    const { desc } = body as PatchRequestBody
+    if (desc !== undefined) {
       try {
         await db.query(
           `
@@ -19,7 +33,7 @@ export const PATCH = chain(
               AND network = $2
               AND name = $3;
           `,
-          [userName, network, networkName, body.desc]
+          [userName, network, networkName, desc]
         )
       } catch (error) {
         console.error(error)
@@ -27,6 +41,7 @@ export const PATCH = chain(
       }
     } else {
       res.options = { status: 400 }
+      res.body = { message: 'Body missing update properties' }
     }
     return res.send()
   }

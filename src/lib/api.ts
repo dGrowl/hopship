@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { TObject } from '@sinclair/typebox'
+import { TypeCompiler } from '@sinclair/typebox/compiler'
 import * as jose from 'jose'
 import argon2 from 'argon2'
 
+import { hasKey } from './util'
 import { JWT_AUTH_SECRET } from './env'
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import db, { validateUserData } from '../lib/db'
@@ -15,9 +18,14 @@ export interface CSRFPayload extends jose.JWTPayload {
   code: string
 }
 
+type JsonObject = { [key: string]: JsonValue }
+
+type JsonValue = boolean | number | string | JsonObject | Array<JsonValue>
+
 export interface APIExtras {
-  params?: Record<string, string>
   auth?: AuthPayload
+  body?: JsonObject
+  params?: Record<string, string>
 }
 
 type ChainedRouteHandler = (
@@ -26,19 +34,11 @@ type ChainedRouteHandler = (
   extras: APIExtras
 ) => Promise<void>
 
-type JsonObject = { [key: string]: JsonValue }
-
-type JsonValue = boolean | number | string | JsonObject | Array<JsonValue>
-
-interface APICookies {
-  [name: string]: ResponseCookie
-}
-
 export class ResponseState {
   body: JsonObject
   done: boolean
   options: ResponseInit
-  cookies: APICookies
+  cookies: Record<string, ResponseCookie>
 
   constructor() {
     this.done = false
@@ -133,7 +133,21 @@ export const checkAuth = async (
   }
 }
 
-export const getUserData = async (email: string, password: string) => {
+type UserResult =
+  | {
+      valid: true
+      name: string
+      passhash: string
+    }
+  | {
+      valid: false
+      error: 'WRONG_PASSWORD' | 'UNKNOWN_EMAIL'
+    }
+
+export const getUserData = async (
+  email: string,
+  password: string
+): Promise<UserResult> => {
   const result = await db.query(
     `
       SELECT TRUE as valid, u.name, u.passhash
@@ -156,4 +170,36 @@ export const getUserData = async (email: string, password: string) => {
     }
   }
   return { valid: false, error: 'UNKNOWN_EMAIL' }
+}
+
+export const validateRequestBody = <T extends TObject>(structure: T) => {
+  const validator = TypeCompiler.Compile(structure)
+  return async (req: NextRequest, res: ResponseState, extras: APIExtras) => {
+    let body = null
+    try {
+      body = (await req.json()) as T
+      extras.body = body
+    } catch (error) {
+      res.body = { message: 'Body not valid JSON' }
+      res.options = { status: 400 }
+      return res.send()
+    }
+    const error = validator.Errors(body).First()
+    if (error) {
+      res.body = { message: error.message, path: error.path }
+      res.options = { status: 400 }
+      return res.send()
+    }
+    const unexpectedProperties = Object.keys(body).filter(
+      (k) => !hasKey(structure.properties, k)
+    )
+    if (unexpectedProperties.length !== 0) {
+      res.body = {
+        message: 'Body contains unexpected properties',
+        properties: unexpectedProperties,
+      }
+      res.options = { status: 400 }
+      return res.send()
+    }
+  }
 }

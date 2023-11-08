@@ -26,8 +26,10 @@ const update = async (
     return setBadValues({ reFuture: reFuture.value })
   }
   const data = {
-    currentPassword: current.value,
-    futurePassword: future.value,
+    password: {
+      current: current.value,
+      future: future.value,
+    },
   }
   const response = await fetch(`/api/users/${name}`, {
     method: 'PATCH',
