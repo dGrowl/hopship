@@ -45,7 +45,9 @@ const fetchIdentity = async (
   networkName: string
 ) => {
   try {
-    const result = await db.query(
+    const result = await db.query<
+      Omit<Identity, 'platform'> & { user_id: number }
+    >(
       `
         SELECT
           u.id AS user_id,

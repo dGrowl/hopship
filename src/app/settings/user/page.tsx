@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 const fetchBio = async (name: string) => {
   try {
-    const result = await db.query(
+    const result = await db.query<{ bio: string }>(
       `
         SELECT u.bio
         FROM public.users u

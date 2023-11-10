@@ -162,7 +162,6 @@ type UserResult =
   | {
       valid: true
       name: string
-      passhash: string
     }
   | {
       valid: false
@@ -173,26 +172,24 @@ export const getUserData = async (
   email: string,
   password: string
 ): Promise<UserResult> => {
-  const result = await db.query(
+  const result = await db.query<{ name: string; passhash: string }>(
     `
-      SELECT TRUE as valid, u.name, u.passhash
+      SELECT u.name, u.passhash
       FROM public.users u
       WHERE u.email = $1;
     `,
     [email]
   )
   if (result.rowCount === 1) {
-    const data = result.rows[0]
-    if (data.passhash !== null) {
-      try {
-        if (await argon2.verify(data.passhash, password)) {
-          return data
-        }
-      } catch (error) {
-        console.error(error)
+    const { name, passhash } = result.rows[0]
+    try {
+      if (await argon2.verify(passhash, password)) {
+        return { valid: true, name }
       }
-      return { valid: false, error: 'WRONG_PASSWORD' }
+    } catch (error) {
+      console.error(error)
     }
+    return { valid: false, error: 'WRONG_PASSWORD' }
   }
   return { valid: false, error: 'UNKNOWN_EMAIL' }
 }

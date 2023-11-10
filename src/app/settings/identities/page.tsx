@@ -18,7 +18,7 @@ const fetchIdentities = async (
     return null
   }
   try {
-    const result = await db.query(
+    const result = await db.query<Omit<Identity, 'platform'>>(
       `
         SELECT
           i.network,

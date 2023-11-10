@@ -18,9 +18,11 @@ export const generateMetadata = ({ params }: Props) => ({
   title: 'hopship: ' + params.name,
 })
 
-const fetchVerifiedIdentities = async (userName: string) => {
+const fetchVerifiedIdentities = async (
+  userName: string
+): Promise<Identity[] | null> => {
   try {
-    const result = await db.query(
+    const result = await db.query<Omit<Identity, 'platform'>>(
       `
         SELECT
           i.network,
@@ -36,7 +38,10 @@ const fetchVerifiedIdentities = async (userName: string) => {
       `,
       [userName]
     )
-    return result.rows.map((i) => ({ ...i, platform: NETWORK_PLATFORM[i] }))
+    return result.rows.map((i) => ({
+      ...i,
+      platform: NETWORK_PLATFORM[i.network],
+    }))
   } catch (error) {
     console.error(error)
   }

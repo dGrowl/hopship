@@ -59,12 +59,12 @@ const errorMessage = (network: string | null, name: string | null) => {
   )
 }
 
-const fetchUser = async (network: string | null, name: string) => {
-  if (!network || !name) {
+const fetchUser = async (network: string | null, networkName: string) => {
+  if (!network || !networkName) {
     return null
   }
   try {
-    const result = await db.query(
+    const result = await db.query<{ user_name: string }>(
       `
         SELECT u.name AS user_name
         FROM public.users u
@@ -74,7 +74,7 @@ const fetchUser = async (network: string | null, name: string) => {
           AND i.network = $1
           AND i.name = $2;
       `,
-      [network, name]
+      [network, networkName]
     )
     if (result.rowCount === 1) {
       const userName = result.rows[0]['user_name']
