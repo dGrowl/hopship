@@ -1,6 +1,7 @@
+import { Type } from '@sinclair/typebox'
+
 import { NETWORKS } from './util'
 import { PostgresError } from './types'
-import { Type } from '@sinclair/typebox'
 
 export const sanitizeName = (name: string) => name.toLowerCase()
 
@@ -9,33 +10,33 @@ export const ARGON_OPTIONS = {
   timeCost: 64,
 } as const
 
-export const buildPostgresErrorJson = (error: PostgresError) => {
+export const parsePostgresError = (error: PostgresError) => {
   switch (error.constraint) {
     case 'users_email_key':
-      return { error: 'DUPLICATE_EMAIL' }
+      return 'PG_DUPLICATE_EMAIL'
     case 'users_name_key':
-      return { error: 'DUPLICATE_NAME' }
+      return 'PG_DUPLICATE_USER_NAME'
     default:
-      return { error: 'UNKNOWN' }
+      return 'PG_UNKNOWN'
   }
 }
 
 export const USER_NAME_MAX_LENGTH = 24
 export const USER_NAME_MIN_LENGTH = 1
-export const USER_NAME_REGEX = `^\\w+$`
+export const USER_NAME_REGEX = `\\w+`
 export const UserNameType = Type.String({
   maxLength: USER_NAME_MAX_LENGTH,
   minLength: USER_NAME_MIN_LENGTH,
-  pattern: USER_NAME_REGEX,
+  pattern: `^${USER_NAME_REGEX}$`,
 })
 
 export const EMAIL_MAX_LENGTH = 256
 export const EMAIL_MIN_LENGTH = 3
-export const EMAIL_REGEX = `^.+@.+$`
+export const EMAIL_REGEX = `.+@.+`
 export const EmailType = Type.String({
   maxLength: EMAIL_MAX_LENGTH,
   minLength: EMAIL_MIN_LENGTH,
-  pattern: EMAIL_REGEX,
+  pattern: `^${EMAIL_REGEX}$`,
 })
 
 export const PASSWORD_MAX_LENGTH = 4096
@@ -49,13 +50,13 @@ export const MESSAGE_MAX_LENGTH = 2048
 export const MESSAGE_MIN_LENGTH = 2
 
 export const BIO_MAX_LENGTH = 64
-export const BIO_REGEX = `^[\\u0020-\\u007E]*$`
+export const BIO_REGEX = `[\\u0020-\\u007E]*`
 
 export const NETWORK_MAX_LENGTH = NETWORKS.reduce(
   (len, p) => (p.length > len ? p.length : len),
   0
 )
-export const NETWORK_REGEX = `^[a-zA-Z]+\.[a-zA-Z]+$`
+export const NETWORK_REGEX = `[a-zA-Z]+\.[a-zA-Z]+`
 export const NetworkType = Type.Union([
   Type.Literal('bsky.social'),
   Type.Literal('mastodon.social'),
@@ -68,16 +69,16 @@ export const NetworkType = Type.Union([
 
 export const NETWORK_NAME_MAX_LENGTH = 64
 export const NETWORK_NAME_MIN_LENGTH = 1
-export const NETWORK_NAME_REGEX = `^\\w+$`
+export const NETWORK_NAME_REGEX = `\\w+`
 export const NetworkNameType = Type.String({
   maxLength: NETWORK_NAME_MAX_LENGTH,
   minLength: NETWORK_NAME_MIN_LENGTH,
-  pattern: NETWORK_NAME_REGEX,
+  pattern: `^${NETWORK_NAME_REGEX}$`,
 })
 
 export const DESCRIPTION_MAX_LENGTH = 48
 export const DESCRIPTION_REGEX = BIO_REGEX
 export const DescriptionType = Type.String({
   maxLength: DESCRIPTION_MAX_LENGTH,
-  pattern: DESCRIPTION_REGEX,
+  pattern: `^${DESCRIPTION_REGEX}$`,
 })

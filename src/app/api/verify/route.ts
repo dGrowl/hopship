@@ -6,7 +6,12 @@ import {
   checkCSRF,
   validateRequestBody,
 } from '../../../lib/api'
-import { NetworkNameType, NetworkType } from '../../../lib/safety'
+import {
+  NetworkNameType,
+  NetworkType,
+  parsePostgresError,
+} from '../../../lib/safety'
+import { PostgresError } from '../../../lib/types'
 import db from '../../../lib/db'
 
 const reqBody = Type.Object({
@@ -61,8 +66,10 @@ export const POST = chain(
       )
     } catch (error) {
       console.error(error)
-      res.options = { status: 500 }
+      res
+        .status(500)
+        .send({ error: parsePostgresError(error as PostgresError) })
     }
-    return res.send()
+    return res.status(201).send()
   }
 )

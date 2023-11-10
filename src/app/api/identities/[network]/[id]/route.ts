@@ -6,7 +6,8 @@ import {
   checkCSRF,
   validateRequestBody,
 } from '../../../../../lib/api'
-import { DescriptionType } from '../../../../../lib/safety'
+import { DescriptionType, parsePostgresError } from '../../../../../lib/safety'
+import { PostgresError } from '../../../../../lib/types'
 import db from '../../../../../lib/db'
 
 const patchReqBody = Type.Object({
@@ -37,13 +38,13 @@ export const PATCH = chain(
         )
       } catch (error) {
         console.error(error)
-        res.options = { status: 500 }
+        return res
+          .status(500)
+          .send({ error: parsePostgresError(error as PostgresError) })
       }
     } else {
-      res.options = { status: 400 }
-      res.body = { message: 'Body missing update properties' }
+      return res.status(400).send({ error: 'NO_UPDATE_PROPERTIES' })
     }
-    return res.send()
   }
 )
 
@@ -65,8 +66,9 @@ export const DELETE = chain(
       )
     } catch (error) {
       console.error(error)
-      res.options = { status: 500 }
+      return res
+        .status(500)
+        .send({ error: parsePostgresError(error as PostgresError) })
     }
-    return res.send()
   }
 )

@@ -12,7 +12,7 @@ import {
 } from '../../../../lib/api'
 import {
   ARGON_OPTIONS,
-  buildPostgresErrorJson,
+  parsePostgresError,
   PasswordType,
   sanitizeName,
 } from '../../../../lib/safety'
@@ -50,9 +50,7 @@ const compareRouteWithAuth = async (
   const { name: routeName } = params!
   const { sub: authName } = auth!
   if (routeName !== authName) {
-    res.options = { status: 401 }
-    res.body = { message: 'Mismatch between path and token name' }
-    return res.send()
+    return res.status(401).send({ error: 'AUTH_PARAM_MISMATCH' })
   }
 }
 
@@ -79,17 +77,13 @@ export const PATCH = chain(
       if (user.valid) {
         updateData.passhash = await argon2.hash(password.future, ARGON_OPTIONS)
       } else {
-        res.body = { error: 'WRONG_PASSWORD' }
-        res.options = { status: 400 }
-        return res.send()
+        return res.status(400).send({ error: 'WRONG_PASSWORD' })
       }
     }
     if (Object.keys(updateData).length === 0) {
-      res.body = {
-        message: 'No valid updates could be made with the provided data',
-      }
-      res.options = { status: 400 }
-      return res.send()
+      return res.status(400).send({
+        error: 'NO_UPDATE_PROPERTIES',
+      })
     }
     const updates = Object.keys(updateData).map(
       (column, i) => `${column} = $${i + 1}`
@@ -104,32 +98,32 @@ export const PATCH = chain(
         [...Object.values(updateData), currentName]
       )
       if (result.rowCount === 0) {
-        res.body = { error: 'UNKNOWN_USER' }
-        res.options = { status: 400 }
-        return res.send()
+        return res.status(400).send({ error: 'UNKNOWN_USER' })
       }
     } catch (error) {
       console.error(error)
-      res.body = buildPostgresErrorJson(error as PostgresError)
-      res.options = { status: 400 }
-      return res.send()
+      return res
+        .status(500)
+        .send({ error: parsePostgresError(error as PostgresError) })
     }
     if (updateData.name || updateData.email) {
-      res.cookies.auth = await genAuthCookie(
-        updateData.name || currentName,
-        updateData.email || (currentEmail as string),
-        auth!.exp!
+      res.cookie(
+        'auth',
+        await genAuthCookie(
+          updateData.name || currentName,
+          updateData.email || currentEmail,
+          auth!.exp!
+        )
       )
-      res.cookies.csrf = {
+      res.cookie('csrf', {
         name: 'csrf',
         value: 'none',
         expires: new Date(0),
         path: '/',
         sameSite: 'lax',
         secure: process.env.NODE_ENV !== 'development',
-      }
+      })
     }
-    return res.send()
   }
 )
 
@@ -148,13 +142,13 @@ export const DELETE = chain(
         [routeName]
       )
       if (result.rowCount === 0) {
-        res.body = { message: 'Invalid authenticated user' }
-        res.options = { status: 400 }
+        res.status(400).send({ error: 'USER_NAME_NOT_FOUND' })
       }
     } catch (error) {
       console.error(error)
-      res.options = { status: 500 }
+      res
+        .status(500)
+        .send({ error: parsePostgresError(error as PostgresError) })
     }
-    return res.send()
   }
 )

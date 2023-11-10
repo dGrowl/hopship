@@ -69,7 +69,7 @@ const add = async (e: FormEvent) => {
   const name = form.name.value
   const platform = form.platform.value
   const network = form.network?.value || PLATFORM_NETWORKS[platform][0]
-  const data = { platform, network, name, desc }
+  const data = { network, name, desc }
   await fetch('/api/identities', {
     method: 'POST',
     headers: csrfHeaders(csrf),

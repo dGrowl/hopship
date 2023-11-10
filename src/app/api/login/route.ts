@@ -25,19 +25,19 @@ export const POST = chain(
     const { email, password } = body as RequestBody
     const user = await getUserData(email, password)
     if (user.valid) {
-      res.cookies.auth = await genAuthCookie(
-        user.name,
-        email,
-        Date.now() / 1000 + WEEK_IN_SECONDS
+      res.cookie(
+        'auth',
+        await genAuthCookie(
+          user.name,
+          email,
+          Date.now() / 1000 + WEEK_IN_SECONDS
+        )
       )
-      res.cookies.csrf = { name: 'csrf', value: 'none', expires: 0 }
+      res.cookie('csrf', { name: 'csrf', value: 'none', expires: 0 })
     } else {
-      res.body = {
-        message: "Provided account credentials don't match any known users",
+      res.status(401).send({
         error: user.error,
-      }
-      res.options = { status: 401 }
+      })
     }
-    return res.send()
   }
 )

@@ -59,10 +59,10 @@ const update = async (
     })
     if (response.status !== 200) {
       const body = await response.json()
-      if (body.error === 'DUPLICATE_NAME') {
+      if (body.error === 'PG_DUPLICATE_USER_NAME') {
         return setBadValues({ name: name.value })
       }
-      if (body.error === 'DUPLICATE_EMAIL') {
+      if (body.error === 'PG_DUPLICATE_EMAIL') {
         return setBadValues({ email: email.value })
       }
     } else {

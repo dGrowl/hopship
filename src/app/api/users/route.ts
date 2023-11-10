@@ -3,8 +3,8 @@ import argon2 from 'argon2'
 
 import {
   ARGON_OPTIONS,
-  buildPostgresErrorJson,
   EmailType,
+  parsePostgresError,
   PasswordType,
   sanitizeName,
   UserNameType,
@@ -29,22 +29,20 @@ export const POST = chain(
     const name = sanitizeName(untrustedName)
     const passhash = await argon2.hash(password, ARGON_OPTIONS)
     try {
-      const result = await db.query(
+      await db.query(
         `
           INSERT INTO public.users (email, name, passhash)
           VALUES ($1, $2, $3);
         `,
         [email, name, passhash]
       )
-      if (result.rowCount !== 1) {
-        res.options = { status: 500 }
-        return res.send()
-      }
     } catch (error) {
       console.error(error)
-      res.body = buildPostgresErrorJson(error as PostgresError)
-      res.options = { status: 500 }
+      const reason = parsePostgresError(error as PostgresError)
+      return res
+        .status(reason.includes('DUPLICATE') ? 409 : 500)
+        .send({ error: reason })
     }
-    return res.send()
+    return res.status(201).header('Location', `/users/${name}`).send()
   }
 )
