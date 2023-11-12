@@ -27,7 +27,7 @@ interface Proof {
   messageID?: string
 }
 
-const buildProof = (platform: string, fields: Fields) => {
+const buildProof = (fields: Fields) => {
   const proof: Proof = {
     url: fields.url.value,
   }
@@ -46,12 +46,12 @@ const verify = async (
   e.preventDefault()
   const fields = e.target as Fields
   const csrf = fields.csrf.value
-  const { platform, network, name } = identity
+  const { network, name } = identity
   const data = {
     network,
     name,
     timestampMs,
-    proof: buildProof(platform, fields),
+    proof: buildProof(fields),
   }
   await fetch('/api/verify', {
     method: 'POST',
