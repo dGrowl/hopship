@@ -27,7 +27,7 @@ const send = async (e: FormEvent, setSuccess: Dispatch<boolean | null>) => {
     method: 'POST',
     headers: csrfHeaders(csrf.value),
     body: JSON.stringify({
-      email: email.value,
+      email: email.value || undefined,
       message: message.value,
     }),
   })
