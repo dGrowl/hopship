@@ -48,7 +48,7 @@ const register = async (
     headers: csrfHeaders(csrf),
     body: JSON.stringify(data),
   })
-  if (response.status !== 200) {
+  if (response.status !== 201) {
     const body = await response.json()
     if (body.error === 'PG_DUPLICATE_EMAIL') {
       return setBadValues({ email })

@@ -31,7 +31,7 @@ const send = async (e: FormEvent, setSuccess: Dispatch<boolean | null>) => {
       message: message.value,
     }),
   })
-  setSuccess(response.status === 200)
+  setSuccess(response.status === 201)
 }
 
 const getResultElement = (success: boolean | null) => {
