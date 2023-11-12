@@ -15,6 +15,7 @@ import typesNode from './licenses/types-node'
 import typesPg from './licenses/types-pg'
 import typesReact from './licenses/types-react'
 import typesReactDom from './licenses/types-react-dom'
+import vitest from './licenses/vitest'
 
 interface PackageData {
   readonly name: string
@@ -89,6 +90,10 @@ const PACKAGES = [
   {
     name: 'prettier',
     license: prettier,
+  },
+  {
+    name: 'vitest',
+    license: vitest,
   },
 ] as readonly PackageData[]
 
