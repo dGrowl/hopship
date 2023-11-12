@@ -48,6 +48,10 @@ export const PasswordType = Type.String({
 
 export const MESSAGE_MAX_LENGTH = 2048
 export const MESSAGE_MIN_LENGTH = 2
+export const MessageType = Type.String({
+  maxLength: MESSAGE_MAX_LENGTH,
+  minLength: MESSAGE_MIN_LENGTH,
+})
 
 export const BIO_MAX_LENGTH = 64
 export const BIO_REGEX = `[\\u0020-\\u007E]*`

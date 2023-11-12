@@ -1,21 +1,13 @@
 import { Static, Type } from '@sinclair/typebox'
 
 import { chain, checkCSRF, validateRequestBody } from '../../../lib/api'
-import {
-  EmailType,
-  MESSAGE_MAX_LENGTH,
-  MESSAGE_MIN_LENGTH,
-  parsePostgresError,
-} from '../../../lib/safety'
+import { EmailType, MessageType, parsePostgresError } from '../../../lib/safety'
 import { PostgresError } from '../../../lib/types'
 import db from '../../../lib/db'
 
 const reqBody = Type.Object({
   email: Type.Optional(EmailType),
-  message: Type.String({
-    maxLength: MESSAGE_MAX_LENGTH,
-    minLength: MESSAGE_MIN_LENGTH,
-  }),
+  message: MessageType,
 })
 
 type RequestBody = Static<typeof reqBody>

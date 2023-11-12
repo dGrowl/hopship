@@ -5,6 +5,7 @@ import * as jose from 'jose'
 import argon2 from 'argon2'
 
 import { hasKey } from './util'
+import { JsonObject } from './types'
 import { JWT_AUTH_SECRET } from './env'
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import db, { validateUserData } from '../lib/db'
@@ -17,10 +18,6 @@ export interface AuthPayload extends jose.JWTPayload {
 export interface CSRFPayload extends jose.JWTPayload {
   code: string
 }
-
-type JsonObject = { [key: string]: JsonValue }
-
-type JsonValue = boolean | number | string | JsonObject | Array<JsonValue>
 
 export interface APIExtras {
   auth?: AuthPayload
@@ -86,7 +83,7 @@ export class ResponseState {
 }
 
 export const chain = (...handlers: Array<ChainedRouteHandler>) => {
-  return async (req: NextRequest, extras: APIExtras) => {
+  return async (req: NextRequest, extras: APIExtras = {}) => {
     const res = new ResponseState()
     for (const handler of handlers) {
       if (res.isDone()) {
@@ -98,11 +95,7 @@ export const chain = (...handlers: Array<ChainedRouteHandler>) => {
   }
 }
 
-export const checkCSRF = async (
-  req: NextRequest,
-  res: ResponseState,
-  { auth }: APIExtras
-) => {
+export const checkCSRF: ChainedRouteHandler = async (req, res, { auth }) => {
   const cookie = req.cookies.get('csrf')
   if (!cookie) {
     return res.status(400).send({ error: 'CSRF_NO_COOKIE' })
@@ -123,6 +116,9 @@ export const checkCSRF = async (
     console.error(error)
     return res.status(400).send({ error: 'CSRF_VERIFY_FAILED' })
   }
+  if (!cookieCode) {
+    return res.status(400).send({ error: 'CSRF_COOKIE_MISSING_CODE' })
+  }
   if (headerCode !== cookieCode) {
     return res.status(400).send({ error: 'CSRF_COOKIE_HEADER_MISMATCH' })
   }
@@ -134,11 +130,7 @@ export const checkCSRF = async (
   }
 }
 
-export const checkAuth = async (
-  req: NextRequest,
-  res: ResponseState,
-  extras: APIExtras
-) => {
+export const checkAuth: ChainedRouteHandler = async (req, res, extras) => {
   const cookie = req.cookies.get('auth')
   if (!cookie) {
     return res.status(401).send({ error: 'AUTH_NO_COOKIE' })

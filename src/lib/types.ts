@@ -45,3 +45,13 @@ export interface PostgresError {
 }
 
 export type AppRouter = ReturnType<typeof useRouter>
+
+export type JsonObject = { [key: string]: JsonValue }
+
+export type JsonValue =
+  | boolean
+  | number
+  | string
+  | JsonObject
+  | Array<JsonValue>
+  | null
