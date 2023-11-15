@@ -1,7 +1,7 @@
 import { BsArrowReturnRight } from 'react-icons/bs'
 import { ReactNode } from 'react'
 
-import styles from '../styles/Preview.module.css'
+import styles from 'styles/Preview.module.css'
 
 interface Props {
   children: ReactNode

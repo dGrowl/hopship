@@ -4,10 +4,10 @@ import { Nunito_Sans } from 'next/font/google'
 import { useState } from 'react'
 import Link from 'next/link'
 
-import SearchBar from '../base/SearchBar'
+import SearchBar from './SearchBar'
 import UserMenu from './UserMenu'
 
-import styles from '../../styles/App.module.css'
+import styles from 'styles/App.module.css'
 
 const TITLE_FONT = Nunito_Sans({ subsets: ['latin'] })
 

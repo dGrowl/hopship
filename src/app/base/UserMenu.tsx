@@ -9,9 +9,9 @@ import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
-import { extractAuth } from '../../lib/cookies'
+import { extractAuth } from 'lib/cookies'
 
-import styles from '../../styles/UserMenu.module.css'
+import styles from 'styles/UserMenu.module.css'
 
 interface Props {
   name: string | null

@@ -6,12 +6,12 @@ import {
   NETWORK_NAME_MAX_LENGTH,
   NETWORK_NAME_MIN_LENGTH,
   NETWORK_NAME_REGEX,
-} from '../../lib/safety'
-import { AppRouter } from '../../lib/types'
-import { NETWORK_PLATFORM, PLATFORM_NETWORKS } from '../../lib/util'
-import { setAnimationPlatform } from '../home/OrbitAnimation'
+} from 'lib/safety'
+import { AppRouter } from 'lib/types'
+import { NETWORK_PLATFORM, PLATFORM_NETWORKS } from 'lib/util'
+import { setAnimationPlatform } from '@/home/OrbitAnimation'
 
-import styles from '../../styles/SearchBar.module.css'
+import styles from 'styles/SearchBar.module.css'
 
 const NetworkSelect = () => {
   const [network, setNetwork] = useState<string | null>(null)

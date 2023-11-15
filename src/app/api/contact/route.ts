@@ -1,9 +1,9 @@
 import { Static, Type } from '@sinclair/typebox'
 
-import { chain, checkCSRF, validateRequestBody } from '../../../lib/api'
-import { EmailType, MessageType, parsePostgresError } from '../../../lib/safety'
-import { PostgresError } from '../../../lib/types'
-import db from '../../../lib/db'
+import { chain, checkCSRF, validateRequestBody } from 'lib/api'
+import { EmailType, MessageType, parsePostgresError } from 'lib/safety'
+import { PostgresError } from 'lib/types'
+import db from 'lib/db'
 
 const reqBody = Type.Object({
   email: Type.Optional(EmailType),

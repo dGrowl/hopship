@@ -1,10 +1,10 @@
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
-import { extractAuth } from '../../../lib/cookies'
-import { Identity } from '../../../lib/types'
-import { NETWORK_PLATFORM } from '../../../lib/util'
-import db from '../../../lib/db'
+import { extractAuth } from 'lib/cookies'
+import { Identity } from 'lib/types'
+import { NETWORK_PLATFORM } from 'lib/util'
+import db from 'lib/db'
 import EditableIdentitiesList from './EditableIdentitiesList'
 
 export const metadata: Metadata = {

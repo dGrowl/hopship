@@ -3,16 +3,16 @@ import { createHash } from 'crypto'
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
-import { extractAuth } from '../../../../lib/cookies'
-import { Identity } from '../../../../lib/types'
-import { NETWORK_PLATFORM } from '../../../../lib/util'
-import { VERIFICATION_SECRET } from '../../../../lib/env'
-import db from '../../../../lib/db'
+import { extractAuth } from 'lib/cookies'
+import { Identity } from 'lib/types'
+import { NETWORK_PLATFORM } from 'lib/util'
+import { VERIFICATION_SECRET } from 'lib/env'
+import db from 'lib/db'
 import RemoveIdentityForm from './RemoveIdentityForm'
 import UpdateIdentityForm from './UpdateIdentityForm'
 import VerifyIdentityForm from './VerifyIdentityForm'
 
-import styles from '../../../../styles/IdentitySettings.module.css'
+import styles from 'styles/IdentitySettings.module.css'
 
 interface MetaProps {
   params: {

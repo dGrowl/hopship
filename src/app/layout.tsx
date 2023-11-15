@@ -3,14 +3,14 @@ import { Metadata, Viewport } from 'next'
 import { ReactNode } from 'react'
 import Link from 'next/link'
 
-import { extractAuth } from '../lib/cookies'
+import { extractAuth } from 'lib/cookies'
 import backdrop from './base/Backdrop'
 import HomeBar from './base/HomeBar'
 
-import '../styles/reset.css'
-import '../styles/globals.css'
-import '../styles/variables.css'
-import styles from '../styles/App.module.css'
+import 'styles/reset.css'
+import 'styles/globals.css'
+import 'styles/variables.css'
+import styles from 'styles/App.module.css'
 
 export const metadata: Metadata = {
   title: 'hopship',

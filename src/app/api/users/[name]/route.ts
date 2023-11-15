@@ -1,3 +1,4 @@
+import { NextRequest } from 'next/server'
 import { Static, Type } from '@sinclair/typebox'
 import argon2 from 'argon2'
 
@@ -9,17 +10,16 @@ import {
   getUserData,
   ResponseState,
   validateRequestBody,
-} from '../../../../lib/api'
+} from 'lib/api'
 import {
   ARGON_OPTIONS,
   parsePostgresError,
   PasswordType,
   sanitizeName,
-} from '../../../../lib/safety'
-import { genAuthCookie } from '../../../../lib/cookies'
-import { NextRequest } from 'next/server'
-import { PostgresError } from '../../../../lib/types'
-import db from '../../../../lib/db'
+} from 'lib/safety'
+import { genAuthCookie } from 'lib/cookies'
+import { PostgresError } from 'lib/types'
+import db from 'lib/db'
 
 const patchReqBody = Type.Object({
   name: Type.Optional(Type.String()),

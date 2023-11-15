@@ -4,11 +4,11 @@ import { BsExclamationCircle } from 'react-icons/bs'
 import { Dispatch, useState } from 'react'
 import Link from 'next/link'
 
-import { Identity } from '../../../lib/types'
-import Explanation from '../../../components/Explanation'
-import IdentityBox, { AddIdentityBox } from '../../../components/IdentityBox'
+import { Identity } from 'lib/types'
+import Explanation from 'components/Explanation'
+import IdentityBox, { AddIdentityBox } from 'components/IdentityBox'
 
-import styles from '../../../styles/EditableIdentitiesList.module.css'
+import styles from 'styles/EditableIdentitiesList.module.css'
 
 const getLastElement = (
   addMode: boolean,

@@ -14,14 +14,14 @@ import {
 import { ReactElement, ReactNode } from 'react'
 import { redirect, usePathname } from 'next/navigation'
 
-import { BsThreads } from '../../components/additionalIcons'
-import { LinkDatum } from '../../lib/types'
-import { NETWORK_NAME_REGEX, NETWORK_REGEX } from '../../lib/safety'
-import { NETWORK_PLATFORM } from '../../lib/util'
-import DropNav from '../../components/DropNav'
-import SideNav from '../../components/SideNav'
+import { BsThreads } from 'components/additionalIcons'
+import { LinkDatum } from 'lib/types'
+import { NETWORK_NAME_REGEX, NETWORK_REGEX } from 'lib/safety'
+import { NETWORK_PLATFORM } from 'lib/util'
+import DropNav from 'components/DropNav'
+import SideNav from 'components/SideNav'
 
-import styles from '../../styles/Settings.module.css'
+import styles from 'styles/Settings.module.css'
 
 const PLATFORM_ICONS: Record<string, ReactElement> = {
   Bluesky: <BsCloudSunFill className={styles.Bluesky} />,

@@ -2,8 +2,8 @@
 
 import { Dispatch, FormEvent, useReducer, useState } from 'react'
 
-import { cleanSpaces, csrfHeaders, objectReducer } from '../../../lib/util'
-import { CSRFFormFields } from '../../../lib/types'
+import { cleanSpaces, csrfHeaders, objectReducer } from 'lib/util'
+import { CSRFFormFields } from 'lib/types'
 import {
   BIO_MAX_LENGTH,
   BIO_REGEX,
@@ -13,13 +13,13 @@ import {
   USER_NAME_MAX_LENGTH,
   USER_NAME_MIN_LENGTH,
   USER_NAME_REGEX,
-} from '../../../lib/safety'
-import { HOME_DOMAIN } from '../../../lib/env'
-import AntiCSRFForm from '../../../components/AntiCSRFForm'
-import FallibleInput from '../../../components/FallibleInput'
-import Field from '../../../components/Field'
-import Preview from '../../../components/Preview'
-import ValidatedTextArea from '../../../components/ValidatedTextArea'
+} from 'lib/safety'
+import { HOME_DOMAIN } from 'lib/env'
+import AntiCSRFForm from 'components/AntiCSRFForm'
+import FallibleInput from 'components/FallibleInput'
+import Field from 'components/Field'
+import Preview from 'components/Preview'
+import ValidatedTextArea from 'components/ValidatedTextArea'
 
 interface Data {
   name?: string

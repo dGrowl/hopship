@@ -1,6 +1,6 @@
 import { memo, ReactNode } from 'react'
 
-import styles from '../styles/Field.module.css'
+import styles from 'styles/Field.module.css'
 
 interface Props {
   name: string

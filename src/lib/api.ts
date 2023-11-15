@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import { TObject } from '@sinclair/typebox'
 import { TypeCompiler } from '@sinclair/typebox/compiler'
 import * as jose from 'jose'
@@ -7,8 +8,7 @@ import argon2 from 'argon2'
 import { hasKey } from './util'
 import { JsonObject } from './types'
 import { JWT_AUTH_SECRET } from './env'
-import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
-import db, { validateUserData } from '../lib/db'
+import db, { validateUserData } from 'lib/db'
 
 export interface AuthPayload extends jose.JWTPayload {
   sub: string

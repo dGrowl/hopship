@@ -6,7 +6,7 @@ import {
 } from 'react-icons/bs'
 import Link from 'next/link'
 
-import styles from '../../../styles/About.module.css'
+import styles from 'styles/About.module.css'
 
 const Help = (
   <article id={styles.content}>

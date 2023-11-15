@@ -2,9 +2,9 @@ import { BsArrowRightCircle } from 'react-icons/bs'
 import { ReactNode } from 'react'
 import Link from 'next/link'
 
-import OrbitAnimation from './home/OrbitAnimation'
+import OrbitAnimation from '@/home/OrbitAnimation'
 
-import styles from '../styles/Home.module.css'
+import styles from 'styles/Home.module.css'
 
 interface QuestionProps {
   children: ReactNode

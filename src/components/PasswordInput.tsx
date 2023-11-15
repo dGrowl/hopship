@@ -1,10 +1,10 @@
 import { BsEye, BsEyeSlash } from 'react-icons/bs'
 import { InputHTMLAttributes, DetailedHTMLProps, useState } from 'react'
 
-import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '../lib/safety'
+import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from 'lib/safety'
 import FallibleInput from './FallibleInput'
 
-import styles from '../styles/PasswordInput.module.css'
+import styles from 'styles/PasswordInput.module.css'
 
 interface Props
   extends DetailedHTMLProps<

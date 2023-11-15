@@ -1,8 +1,8 @@
 import Link from 'next/link'
 
-import { LinkDatum } from '../lib/types'
+import { LinkDatum } from 'lib/types'
 
-import styles from '../styles/SideNav.module.css'
+import styles from 'styles/SideNav.module.css'
 
 interface Props {
   current: string

@@ -1,10 +1,11 @@
 'use client'
+
 import { useState } from 'react'
 
 import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
 
-import styles from '../../styles/Login.module.css'
+import styles from 'styles/Login.module.css'
 
 const Switcher = () => {
   const [registerMode, setRegisterMode] = useState(false)

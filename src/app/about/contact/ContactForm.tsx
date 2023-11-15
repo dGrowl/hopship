@@ -3,17 +3,17 @@
 import { BsCheckLg, BsXLg } from 'react-icons/bs'
 import { Dispatch, FormEvent, useState } from 'react'
 
-import { CSRFFormFields } from '../../../lib/types'
-import { csrfHeaders } from '../../../lib/util'
+import { CSRFFormFields } from 'lib/types'
+import { csrfHeaders } from 'lib/util'
 import {
   EMAIL_MAX_LENGTH,
   EMAIL_REGEX,
   MESSAGE_MAX_LENGTH,
   MESSAGE_MIN_LENGTH,
-} from '../../../lib/safety'
-import AntiCSRFForm from '../../../components/AntiCSRFForm'
-import Explanation from '../../../components/Explanation'
-import Field from '../../../components/Field'
+} from 'lib/safety'
+import AntiCSRFForm from 'components/AntiCSRFForm'
+import Explanation from 'components/Explanation'
+import Field from 'components/Field'
 
 interface Fields extends CSRFFormFields, EventTarget {
   email: HTMLInputElement

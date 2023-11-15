@@ -1,17 +1,13 @@
 import { Dispatch, FormEvent, useReducer } from 'react'
 import { useRouter } from 'next/navigation'
 
-import { AppRouter } from '../../lib/types'
-import { csrfHeaders, objectReducer } from '../../lib/util'
-import {
-  EMAIL_MAX_LENGTH,
-  EMAIL_MIN_LENGTH,
-  EMAIL_REGEX,
-} from '../../lib/safety'
-import AntiCSRFForm from '../../components/AntiCSRFForm'
-import FallibleInput from '../../components/FallibleInput'
-import Field from '../../components/Field'
-import PasswordInput from '../../components/PasswordInput'
+import { AppRouter } from 'lib/types'
+import { csrfHeaders, objectReducer } from 'lib/util'
+import { EMAIL_MAX_LENGTH, EMAIL_MIN_LENGTH, EMAIL_REGEX } from 'lib/safety'
+import AntiCSRFForm from 'components/AntiCSRFForm'
+import FallibleInput from 'components/FallibleInput'
+import Field from 'components/Field'
+import PasswordInput from 'components/PasswordInput'
 
 interface LoginFormFields extends EventTarget {
   csrf: HTMLInputElement

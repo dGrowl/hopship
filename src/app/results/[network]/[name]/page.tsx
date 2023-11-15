@@ -1,15 +1,12 @@
 import { BsEmojiFrownFill } from 'react-icons/bs'
 import { Metadata } from 'next'
 
-import { getSpecificNetworkName, NETWORKS } from '../../../../lib/util'
-import {
-  NETWORK_MAX_LENGTH,
-  NETWORK_NAME_MAX_LENGTH,
-} from '../../../../lib/safety'
+import { getSpecificNetworkName, NETWORKS } from 'lib/util'
+import { NETWORK_MAX_LENGTH, NETWORK_NAME_MAX_LENGTH } from 'lib/safety'
 import { redirect } from 'next/navigation'
-import db from '../../../../lib/db'
+import db from 'lib/db'
 
-import styles from '../../../../styles/Results.module.css'
+import styles from 'styles/Results.module.css'
 
 interface Params {
   network: string

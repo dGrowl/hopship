@@ -1,13 +1,8 @@
 import { Static, Type } from '@sinclair/typebox'
 
-import {
-  chain,
-  checkCSRF,
-  getUserData,
-  validateRequestBody,
-} from '../../../lib/api'
-import { EmailType, PasswordType } from '../../../lib/safety'
-import { genAuthCookie } from '../../../lib/cookies'
+import { chain, checkCSRF, getUserData, validateRequestBody } from 'lib/api'
+import { EmailType, PasswordType } from 'lib/safety'
+import { genAuthCookie } from 'lib/cookies'
 
 const WEEK_IN_SECONDS = 60 * 60 * 24 * 7
 

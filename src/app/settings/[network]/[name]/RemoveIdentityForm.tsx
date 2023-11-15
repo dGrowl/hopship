@@ -3,10 +3,10 @@
 import { Dispatch, FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-import { AppRouter, CSRFFormFields, Identity } from '../../../../lib/types'
-import { DECENTRALIZED_NETWORKS, csrfHeaders } from '../../../../lib/util'
-import { invalidatePath } from '../../../../lib/actions'
-import AntiCSRFForm from '../../../../components/AntiCSRFForm'
+import { AppRouter, CSRFFormFields, Identity } from 'lib/types'
+import { DECENTRALIZED_NETWORKS, csrfHeaders } from 'lib/util'
+import { invalidatePath } from 'lib/actions'
+import AntiCSRFForm from 'components/AntiCSRFForm'
 
 type Fields = EventTarget &
   CSRFFormFields & {

@@ -11,11 +11,11 @@ import {
 import { ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
 
-import { LinkDatum } from '../../lib/types'
-import DropNav from '../../components/DropNav'
-import SideNav from '../../components/SideNav'
+import { LinkDatum } from 'lib/types'
+import DropNav from 'components/DropNav'
+import SideNav from 'components/SideNav'
 
-import styles from '../../styles/Settings.module.css'
+import styles from 'styles/Settings.module.css'
 
 const LINK_DATA = [
   {

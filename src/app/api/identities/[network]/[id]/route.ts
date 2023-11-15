@@ -1,14 +1,9 @@
 import { Static, Type } from '@sinclair/typebox'
 
-import {
-  chain,
-  checkAuth,
-  checkCSRF,
-  validateRequestBody,
-} from '../../../../../lib/api'
-import { DescriptionType, parsePostgresError } from '../../../../../lib/safety'
-import { PostgresError } from '../../../../../lib/types'
-import db from '../../../../../lib/db'
+import { chain, checkAuth, checkCSRF, validateRequestBody } from 'lib/api'
+import { DescriptionType, parsePostgresError } from 'lib/safety'
+import { PostgresError } from 'lib/types'
+import db from 'lib/db'
 
 const patchReqBody = Type.Object({
   desc: Type.Optional(DescriptionType),

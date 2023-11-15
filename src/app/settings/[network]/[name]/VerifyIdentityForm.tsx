@@ -8,13 +8,13 @@ import {
   CSRFFormFields,
   Identity,
   VerificationDetails,
-} from '../../../../lib/types'
-import { buildMessageURL, csrfHeaders } from '../../../../lib/util'
-import { HOME_DOMAIN } from '../../../../lib/env'
-import AntiCSRFForm from '../../../../components/AntiCSRFForm'
-import Preview from '../../../../components/Preview'
+} from 'lib/types'
+import { buildMessageURL, csrfHeaders } from 'lib/util'
+import { HOME_DOMAIN } from 'lib/env'
+import AntiCSRFForm from 'components/AntiCSRFForm'
+import Preview from 'components/Preview'
 
-import styles from '../../../../styles/VerifyIdentityForm.module.css'
+import styles from 'styles/VerifyIdentityForm.module.css'
 
 type Fields = EventTarget &
   CSRFFormFields & {

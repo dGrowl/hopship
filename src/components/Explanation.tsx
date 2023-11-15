@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-import styles from '../styles/Explanation.module.css'
+import styles from 'styles/Explanation.module.css'
 
 interface Props {
   cause: string

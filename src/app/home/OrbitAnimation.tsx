@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect } from 'react'
 
-import { hasKey } from '../../lib/util'
+import { hasKey } from 'lib/util'
 
 const TWO_PI = 2 * Math.PI
 

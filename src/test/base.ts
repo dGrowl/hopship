@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import * as jose from 'jose'
 
-import { JsonObject } from '../lib/types'
-import { JWT_AUTH_SECRET } from '../lib/env'
+import { JsonObject } from 'lib/types'
+import { JWT_AUTH_SECRET } from 'lib/env'
 
 export const cookies = {
   auth: '',

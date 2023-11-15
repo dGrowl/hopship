@@ -8,10 +8,10 @@ import {
   PasswordType,
   sanitizeName,
   UserNameType,
-} from '../../../lib/safety'
-import { chain, checkCSRF, validateRequestBody } from '../../../lib/api'
-import { PostgresError } from '../../../lib/types'
-import db from '../../../lib/db'
+} from 'lib/safety'
+import { chain, checkCSRF, validateRequestBody } from 'lib/api'
+import { PostgresError } from 'lib/types'
+import db from 'lib/db'
 
 const reqBody = Type.Object({
   email: EmailType,

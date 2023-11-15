@@ -3,7 +3,7 @@ import { InputHTMLAttributes, DetailedHTMLProps, useState } from 'react'
 
 import Explanation from './Explanation'
 
-import styles from '../styles/FallibleInput.module.css'
+import styles from 'styles/FallibleInput.module.css'
 
 interface Props
   extends DetailedHTMLProps<

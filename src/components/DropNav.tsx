@@ -3,9 +3,9 @@
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
-import { LinkDatum } from '../lib/types'
+import { LinkDatum } from 'lib/types'
 
-import styles from '../styles/DropNav.module.css'
+import styles from 'styles/DropNav.module.css'
 
 interface Props {
   current: string

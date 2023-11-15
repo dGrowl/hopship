@@ -2,8 +2,8 @@ import { Dispatch, FormEvent, useReducer, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
-import { AppRouter } from '../../lib/types'
-import { csrfHeaders, objectReducer } from '../../lib/util'
+import { AppRouter } from 'lib/types'
+import { csrfHeaders, objectReducer } from 'lib/util'
 import {
   EMAIL_MAX_LENGTH,
   EMAIL_MIN_LENGTH,
@@ -11,13 +11,13 @@ import {
   USER_NAME_MAX_LENGTH,
   USER_NAME_MIN_LENGTH,
   USER_NAME_REGEX,
-} from '../../lib/safety'
-import { HOME_DOMAIN } from '../../lib/env'
-import AntiCSRFForm from '../../components/AntiCSRFForm'
-import FallibleInput from '../../components/FallibleInput'
-import Field from '../../components/Field'
-import PasswordInput from '../../components/PasswordInput'
-import Preview from '../../components/Preview'
+} from 'lib/safety'
+import { HOME_DOMAIN } from 'lib/env'
+import AntiCSRFForm from 'components/AntiCSRFForm'
+import FallibleInput from 'components/FallibleInput'
+import Field from 'components/Field'
+import PasswordInput from 'components/PasswordInput'
+import Preview from 'components/Preview'
 
 interface RegisterFormFields extends EventTarget {
   csrf: HTMLInputElement

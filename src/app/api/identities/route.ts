@@ -1,11 +1,6 @@
 import { Static, Type } from '@sinclair/typebox'
 
-import {
-  chain,
-  checkAuth,
-  checkCSRF,
-  validateRequestBody,
-} from '../../../lib/api'
+import { chain, checkAuth, checkCSRF, validateRequestBody } from 'lib/api'
 import {
   DESCRIPTION_MAX_LENGTH,
   DESCRIPTION_REGEX,
@@ -13,8 +8,8 @@ import {
   NetworkType,
   parsePostgresError,
 } from '../../../lib/safety'
-import { PostgresError } from '../../../lib/types'
-import db from '../../../lib/db'
+import { PostgresError } from 'lib/types'
+import db from 'lib/db'
 
 const reqBody = Type.Object({
   network: NetworkType,

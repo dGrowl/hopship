@@ -1,7 +1,7 @@
 import { beforeAll, vi } from 'vitest'
 
 import env from './testEnv'
-import db from '../lib/db'
+import db from 'lib/db'
 
 beforeAll(() => {
   vi.mock('../lib/env.ts', () => env)

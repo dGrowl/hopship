@@ -6,13 +6,13 @@ import {
 } from 'react-icons/bs'
 import { redirect } from 'next/navigation'
 
-import { Identity } from '../../../lib/types'
-import { NETWORK_PLATFORM } from '../../../lib/util'
-import { USER_NAME_MAX_LENGTH } from '../../../lib/safety'
-import db, { fetchBio } from '../../../lib/db'
-import IdentityBox from '../../../components/IdentityBox'
+import { Identity } from 'lib/types'
+import { NETWORK_PLATFORM } from 'lib/util'
+import { USER_NAME_MAX_LENGTH } from 'lib/safety'
+import db, { fetchBio } from 'lib/db'
+import IdentityBox from 'components/IdentityBox'
 
-import styles from '../../../styles/UserPage.module.css'
+import styles from 'styles/UserPage.module.css'
 
 export const generateMetadata = ({ params }: Props) => ({
   title: 'hopship: ' + params.name,

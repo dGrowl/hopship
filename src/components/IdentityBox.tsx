@@ -21,8 +21,8 @@ import {
   DECENTRALIZED_NETWORKS,
   PLATFORM_NETWORKS,
   PLATFORMS,
-} from '../lib/util'
-import { CSRFFormFields, Identity } from '../lib/types'
+} from 'lib/util'
+import { CSRFFormFields, Identity } from 'lib/types'
 import {
   DESCRIPTION_MAX_LENGTH,
   DESCRIPTION_REGEX,
@@ -33,7 +33,7 @@ import {
 import AntiCSRFForm from './AntiCSRFForm'
 import ValidatedTextArea from './ValidatedTextArea'
 
-import styles from '../styles/IdentityBox.module.css'
+import styles from 'styles/IdentityBox.module.css'
 
 const getPlatformBadge = (platform: string, size: string) => {
   switch (platform) {

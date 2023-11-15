@@ -6,7 +6,7 @@ import {
 } from 'react'
 import * as jose from 'jose'
 
-import { CSRFPayload } from '../lib/api'
+import { CSRFPayload } from 'lib/api'
 
 const csrfCookieRegex = /csrf=([a-zA-Z0-9-_.]+)/
 
