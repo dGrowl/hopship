@@ -1,0 +1,8 @@
+BEGIN;
+
+\i tables.sql
+\i functions.sql
+\i constants.sql
+\i grants.sql
+
+COMMIT;
