@@ -16,6 +16,7 @@ import typesPg from './licenses/types-pg'
 import typesReact from './licenses/types-react'
 import typesReactDom from './licenses/types-react-dom'
 import vitest from './licenses/vitest'
+import viteTsConfigPaths from './licenses/vite-tsconfig-paths'
 
 interface PackageData {
   readonly name: string
@@ -90,6 +91,10 @@ const PACKAGES = [
   {
     name: 'prettier',
     license: prettier,
+  },
+  {
+    name: 'vite-tsconfig-paths',
+    license: viteTsConfigPaths,
   },
   {
     name: 'vitest',
