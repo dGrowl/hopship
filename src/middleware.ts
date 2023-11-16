@@ -36,7 +36,7 @@ const addCSRFCookie = async (
   authState: AuthState
 ) => {
   await processAuth(req, authState)
-  const code = genHexString(32)
+  const code = genHexString(16)
   const claims = { code } as jose.JWTPayload
   if (authState.name) {
     claims.sub = authState.name
@@ -124,6 +124,26 @@ const handleLogout = async (req: NextRequest) => {
   return res
 }
 
+const addCSPHeaders = (res: NextResponse) => {
+  if (process.env.NODE_ENV === 'development') {
+    return
+  }
+  const nonce = genHexString(16)
+  const directives = [
+    `default-src 'self';`,
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic';`,
+    `style-src 'self' 'nonce-${nonce}';`,
+    `img-src 'self' blob: data:;`,
+    `font-src 'self';`,
+    `object-src 'none';`,
+    `base-uri 'self';`,
+    `form-action 'self';`,
+    `frame-ancestors 'none';`,
+    `upgrade-insecure-requests;`,
+  ].join('')
+  res.headers.set('Content-Security-Policy', directives)
+}
+
 export const middleware = async (req: NextRequest) => {
   if (req.nextUrl.pathname.startsWith('/logout')) {
     return handleLogout(req)
@@ -131,6 +151,7 @@ export const middleware = async (req: NextRequest) => {
   const authState = { name: null, processed: false }
   const res = await checkAuthRedirect(req, authState)
   await checkCSRFCookie(req, res, authState)
+  addCSPHeaders(res)
   return res
 }
 
