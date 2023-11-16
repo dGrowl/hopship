@@ -1,11 +1,6 @@
-import { beforeAll, vi } from 'vitest'
+import { beforeAll } from 'vitest'
 
-import env from './testEnv'
 import db from 'lib/db'
-
-beforeAll(() => {
-  vi.mock('../lib/env.ts', () => env)
-})
 
 const stop = () => {
   process.stderr.write('ERROR: Tests must be run on a test database')

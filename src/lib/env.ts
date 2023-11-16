@@ -1,6 +1,9 @@
 const onServer = typeof window === 'undefined'
 
 const load = (variable: string) => {
+  if (process.env.NODE_ENV === 'test') {
+    variable = 'VITE_' + variable
+  }
   const value = process.env[variable]
   if (!value && onServer) {
     throw `Failed to load environment variable ${variable}`
@@ -8,7 +11,7 @@ const load = (variable: string) => {
   return value || ''
 }
 
-export const HOME_DOMAIN = 'hopship.social'
+export const HOME_DOMAIN = load('HOME_DOMAIN')
 export const JWT_AUTH_SECRET = new TextEncoder().encode(load('JWT_AUTH_SECRET'))
 export const PG_CONN = load('PG_CONN')
 export const VERIFICATION_SECRET = new TextEncoder().encode(
