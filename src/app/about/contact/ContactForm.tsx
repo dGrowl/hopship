@@ -15,6 +15,8 @@ import AntiCSRFForm from 'components/AntiCSRFForm'
 import Explanation from 'components/Explanation'
 import Field from 'components/Field'
 
+import styles from 'styles/About.module.css'
+
 interface Fields extends CSRFFormFields, EventTarget {
   email: HTMLInputElement
   message: HTMLTextAreaElement
@@ -85,13 +87,13 @@ const ContactForm = () => {
           </Field>
           <Field name="message">
             <textarea
+              className={styles.contactMessageField}
               disabled={success !== null}
               id="message"
               maxLength={MESSAGE_MAX_LENGTH}
               minLength={MESSAGE_MIN_LENGTH}
               name="message"
               required
-              style={{ height: '128px' }}
             />
           </Field>
           {getResultElement(success)}

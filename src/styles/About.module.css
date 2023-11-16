@@ -32,6 +32,14 @@
   width: 20px;
 }
 
+.contactMessageField {
+  height: 128px;
+}
+
+.largerRowGap {
+  row-gap: 20px;
+}
+
 @media screen and (max-width: 720px) {
   #container {
     gap: 8px;

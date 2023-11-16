@@ -176,7 +176,7 @@ const IdentityBox = ({
           target="_blank"
         >
           {DECENTRALIZED_NETWORKS.includes(network) ? (
-            <p style={{ fontSize: '.8rem' }}>{network}</p>
+            <p className={styles.network}>{network}</p>
           ) : null}
           {name}
         </a>

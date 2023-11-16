@@ -1,6 +1,8 @@
+import styles from 'styles/About.module.css'
+
 const Mission = (
   <article>
-    <section style={{ rowGap: '20px' }}>
+    <section className={styles.largerRowGap}>
       <p>
         <b>hopship</b> is a mission is to empower people by fostering genuine
         connections and promoting freedom of choice. In a world filled with

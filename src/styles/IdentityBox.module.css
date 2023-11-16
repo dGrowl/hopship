@@ -32,6 +32,10 @@
   padding: 1px 0px;
 }
 
+.network {
+  font-size: 0.8rem;
+}
+
 .container input,
 .container textarea,
 .container select,

@@ -197,7 +197,7 @@ const OrbitAnimation = ({ width, height }: Props) => {
       id="surface"
       onClick={() => animation.plause()}
       ref={canvasRef}
-      style={{ cursor: 'pointer' }}
+      className="pointer"
       width={width}
     />
   )
