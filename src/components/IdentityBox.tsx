@@ -5,6 +5,7 @@ import {
   BsGearFill,
   BsMastodon,
   BsQuestionCircle,
+  BsThreads,
   BsTwitch,
   BsTwitter,
   BsXLg,
@@ -13,7 +14,6 @@ import {
 import { FormEvent, useState } from 'react'
 import Link from 'next/link'
 
-import { BsThreads } from './additionalIcons'
 import {
   buildProfileURL,
   cleanSpaces,

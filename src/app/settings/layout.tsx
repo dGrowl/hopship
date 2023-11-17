@@ -6,6 +6,7 @@ import {
   BsMastodon,
   BsPersonCheckFill,
   BsPersonVcard,
+  BsThreads,
   BsTrash3Fill,
   BsTwitch,
   BsTwitter,
@@ -14,7 +15,6 @@ import {
 import { ReactElement, ReactNode } from 'react'
 import { redirect, usePathname } from 'next/navigation'
 
-import { BsThreads } from 'components/additionalIcons'
 import { LinkDatum } from 'lib/types'
 import { NETWORK_NAME_REGEX, NETWORK_REGEX } from 'lib/safety'
 import { NETWORK_PLATFORM } from 'lib/util'
