@@ -69,7 +69,6 @@ const buildIdentityLinkDatum = (
 }
 
 interface Props {
-  page: string
   children: ReactNode
 }
 
