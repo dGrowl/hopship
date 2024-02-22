@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { Static, Type } from '@sinclair/typebox'
+import { Object as ObjectT, Optional, Static, String } from '@sinclair/typebox'
 import argon2 from 'argon2'
 
 import {
@@ -21,12 +21,12 @@ import { genAuthCookie } from 'lib/cookies'
 import { PostgresError } from 'lib/types'
 import db from 'lib/db'
 
-const patchReqBody = Type.Object({
-  name: Type.Optional(Type.String()),
-  email: Type.Optional(Type.String()),
-  bio: Type.Optional(Type.String()),
-  password: Type.Optional(
-    Type.Object({
+const patchReqBody = ObjectT({
+  name: Optional(String()),
+  email: Optional(String()),
+  bio: Optional(String()),
+  password: Optional(
+    ObjectT({
       current: PasswordType,
       future: PasswordType,
     })

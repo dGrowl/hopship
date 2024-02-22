@@ -1,4 +1,4 @@
-import { Static, Type } from '@sinclair/typebox'
+import { Object as ObjectT, Static } from '@sinclair/typebox'
 import argon2 from 'argon2'
 
 import {
@@ -13,7 +13,7 @@ import { chain, checkCSRF, validateRequestBody } from 'lib/api'
 import { PostgresError } from 'lib/types'
 import db from 'lib/db'
 
-const reqBody = Type.Object({
+const reqBody = ObjectT({
   email: EmailType,
   name: UserNameType,
   password: PasswordType,

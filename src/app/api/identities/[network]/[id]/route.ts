@@ -1,12 +1,12 @@
-import { Static, Type } from '@sinclair/typebox'
+import { Object as ObjectT, Optional, Static } from '@sinclair/typebox'
 
 import { chain, checkAuth, checkCSRF, validateRequestBody } from 'lib/api'
 import { DescriptionType, parsePostgresError } from 'lib/safety'
 import { PostgresError } from 'lib/types'
 import db from 'lib/db'
 
-const patchReqBody = Type.Object({
-  desc: Type.Optional(DescriptionType),
+const patchReqBody = ObjectT({
+  desc: Optional(DescriptionType),
 })
 
 type PatchRequestBody = Static<typeof patchReqBody>

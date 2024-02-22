@@ -1,17 +1,17 @@
-import { Static, Type } from '@sinclair/typebox'
+import { Object as ObjectT, Optional, Static, String } from '@sinclair/typebox'
 
 import { chain, checkAuth, checkCSRF, validateRequestBody } from 'lib/api'
 import { NetworkNameType, NetworkType, parsePostgresError } from 'lib/safety'
 import { PostgresError } from 'lib/types'
 import db from 'lib/db'
 
-const reqBody = Type.Object({
+const reqBody = ObjectT({
   network: NetworkType,
   name: NetworkNameType,
-  timestampMs: Type.String({ pattern: '\\d+' }),
-  proof: Type.Object({
-    url: Type.String(),
-    messageID: Type.Optional(Type.String()),
+  timestampMs: String({ pattern: '\\d+' }),
+  proof: ObjectT({
+    url: String(),
+    messageID: Optional(String()),
   }),
 })
 

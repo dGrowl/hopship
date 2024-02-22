@@ -1,4 +1,4 @@
-import { Static, Type } from '@sinclair/typebox'
+import { Object as ObjectT, Static, String } from '@sinclair/typebox'
 
 import { chain, checkAuth, checkCSRF, validateRequestBody } from 'lib/api'
 import {
@@ -11,10 +11,10 @@ import {
 import { PostgresError } from 'lib/types'
 import db from 'lib/db'
 
-const reqBody = Type.Object({
+const reqBody = ObjectT({
   network: NetworkType,
   name: NetworkNameType,
-  desc: Type.String({
+  desc: String({
     maxLength: DESCRIPTION_MAX_LENGTH,
     pattern: DESCRIPTION_REGEX,
   }),

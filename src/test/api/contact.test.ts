@@ -1,5 +1,13 @@
 import { afterEach, describe, expect, test } from 'vitest'
-import { Static, Type } from '@sinclair/typebox'
+import {
+  Date as DateT,
+  Literal,
+  Null,
+  Number,
+  Object as ObjectT,
+  Static,
+  Union,
+} from '@sinclair/typebox'
 import { TypeCompiler } from '@sinclair/typebox/compiler'
 
 import { cookies, codes, RequestState } from '../base'
@@ -27,12 +35,12 @@ const genBody = (): JsonObject => ({
   message: 'Test message.',
 })
 
-const AdminMessageRowType = Type.Object({
-  email: Type.Union([EmailType, Type.Null()]),
+const AdminMessageRowType = ObjectT({
+  email: Union([EmailType, Null()]),
   message: MessageType,
-  id: Type.Number({ minimum: 1 }),
-  read: Type.Literal(false),
-  timestamp: Type.Date({
+  id: Number({ minimum: 1 }),
+  read: Literal(false),
+  timestamp: DateT({
     minimumTimestamp: Date.now() - 1000,
   }),
 })
