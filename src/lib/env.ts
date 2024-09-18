@@ -11,7 +11,8 @@ const load = (variable: string) => {
   return value || ''
 }
 
-export const HOME_DOMAIN = load('HOME_DOMAIN')
+export const HOME_DOMAIN =
+  process.env.NEXT_PUBLIC_HOME_DOMAIN || load('NEXT_PUBLIC_HOME_DOMAIN')
 export const JWT_AUTH_SECRET = new TextEncoder().encode(load('JWT_AUTH_SECRET'))
 export const PG_CONN = load('PG_CONN')
 export const VERIFICATION_SECRET = new TextEncoder().encode(
