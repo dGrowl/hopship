@@ -9,7 +9,11 @@ import UserMenu from './UserMenu'
 
 import styles from 'styles/App.module.css'
 
-const TITLE_FONT = Nunito_Sans({ subsets: ['latin'] })
+const TITLE_FONT = Nunito_Sans({
+  adjustFontFallback: false,
+  display: 'swap',
+  subsets: ['latin'],
+})
 
 interface HomeBarProps {
   userName: string | null
